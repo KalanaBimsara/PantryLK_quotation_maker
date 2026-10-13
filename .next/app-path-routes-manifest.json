@@ -1,0 +1,11 @@
+{
+  "/_global-error/page": "/_global-error",
+  "/_not-found/page": "/_not-found",
+  "/api/products/[id]/route": "/api/products/[id]",
+  "/api/products/reset/route": "/api/products/reset",
+  "/api/products/route": "/api/products",
+  "/api/quotations/[id]/route": "/api/quotations/[id]",
+  "/api/quotations/route": "/api/quotations",
+  "/api/settings/route": "/api/settings",
+  "/page": "/"
+}

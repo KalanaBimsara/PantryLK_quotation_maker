@@ -1,0 +1,11 @@
+{
+  "/_global-error/page": "app/_global-error/page.js",
+  "/_not-found/page": "app/_not-found/page.js",
+  "/api/products/[id]/route": "app/api/products/[id]/route.js",
+  "/api/products/reset/route": "app/api/products/reset/route.js",
+  "/api/products/route": "app/api/products/route.js",
+  "/api/quotations/[id]/route": "app/api/quotations/[id]/route.js",
+  "/api/quotations/route": "app/api/quotations/route.js",
+  "/api/settings/route": "app/api/settings/route.js",
+  "/page": "app/page.js"
+}
