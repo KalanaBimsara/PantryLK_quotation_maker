@@ -21,7 +21,40 @@ function getProductShop(id) {
   return 'PDS';
 }
 
-function filterLocalProducts(prods, { search, category, shops, minPrice, maxPrice, sort, page, limit, isAll }) {
+let productUrlsCache = null;
+
+async function getProductUrls() {
+  if (productUrlsCache) return productUrlsCache;
+  try {
+    const raw = await fs.readFile(path.join(process.cwd(), 'data', 'product_urls.json'), 'utf-8');
+    productUrlsCache = JSON.parse(raw);
+  } catch (e) {
+    productUrlsCache = {};
+  }
+  return productUrlsCache;
+}
+
+function resolveProductSourceUrl(p, urlMap = {}) {
+  if (!p) return null;
+  const m = p.id?.match(/(polimise|noorbhoy).*?(\d{10,16})/);
+  if (m) {
+    const key = m[1] + '_' + m[2];
+    if (urlMap[key]) return urlMap[key];
+  }
+  const cleanName = (p.name || '').replace(/^(Polimise|MM Noorbhoy)\s*-\s*/i, '').trim();
+  const query = p.articleNo || p.article_no || cleanName;
+  const pShop = p.shop || getProductShop(p.id);
+
+  if (pShop === 'Polimise' || p.id?.startsWith('polimise_')) {
+    return `https://polimise.com/search?q=${encodeURIComponent(query)}`;
+  }
+  if (pShop === 'MM Noorbhoy' || p.id?.startsWith('noorbhoy_')) {
+    return `https://noorbhoy.com/search?q=${encodeURIComponent(query)}`;
+  }
+  return `https://www.google.com/search?q=${encodeURIComponent('PDS ' + (p.articleNo || p.article_no ? (p.articleNo || p.article_no) + ' ' : '') + cleanName)}`;
+}
+
+function filterLocalProducts(prods, { search, category, shops, minPrice, maxPrice, sort, page, limit, isAll }, urlMap = {}) {
   let list = prods.filter(p => {
     const pShop = p.shop || getProductShop(p.id);
 
@@ -81,7 +114,8 @@ function filterLocalProducts(prods, { search, category, shops, minPrice, maxPric
     mrp: Number(p.mrp || 0),
     unit: p.unit || 'No',
     description: p.description || '',
-    image: p.image ? (p.image.startsWith('/') ? p.image : '/' + p.image) : '/images/placeholder.svg'
+    image: p.image ? (p.image.startsWith('/') ? p.image : '/' + p.image) : '/images/placeholder.svg',
+    sourceUrl: resolveProductSourceUrl(p, urlMap)
   }));
 
   return {
@@ -108,6 +142,8 @@ export async function GET(request) {
     const format = searchParams.get('format') || '';
     const isAll = searchParams.get('all') === 'true' || limitParam === 'all' || limitParam === '0';
     const limit = isAll ? 0 : Math.max(1, parseInt(limitParam || '18', 10));
+
+    const urlMap = await getProductUrls();
 
     // Try fetching directly from Supabase
     try {
@@ -168,19 +204,29 @@ export async function GET(request) {
       else query = query.order('category', { ascending: true }).order('name', { ascending: true });
 
       // Pagination
-      if (!isAll && limit > 0) {
+      let data = [];
+      let count = null;
+
+      if (isAll) {
+        let from = 0;
+        const chunkSize = 1000;
+        while (true) {
+          const { data: chunk, count: totalRows, error } = await query.range(from, from + chunkSize - 1);
+          if (error) throw error;
+          if (count === null && totalRows !== null && totalRows !== undefined) {
+            count = totalRows;
+          }
+          data = data.concat(chunk || []);
+          if (!chunk || chunk.length < chunkSize) break;
+          from += chunkSize;
+        }
+      } else {
         const from = (page - 1) * limit;
         const to = from + limit - 1;
-        query = query.range(from, to);
-      } else {
-        // If all, handle PostgREST 1000 limit
-        query = query.range(0, 1999);
-      }
-
-      const { data, count, error } = await query;
-
-      if (error) {
-        throw error;
+        const { data: pageData, count: totalRows, error } = await query.range(from, to);
+        if (error) throw error;
+        data = pageData || [];
+        count = totalRows;
       }
 
       const formatted = (data || []).map(p => ({
@@ -192,7 +238,8 @@ export async function GET(request) {
         mrp: Number(p.mrp || 0),
         unit: p.unit || 'No',
         description: p.description || '',
-        image: p.image ? (p.image.startsWith('/') ? p.image : '/' + p.image) : '/images/placeholder.svg'
+        image: p.image ? (p.image.startsWith('/') ? p.image : '/' + p.image) : '/images/placeholder.svg',
+        sourceUrl: resolveProductSourceUrl(p, urlMap)
       }));
 
       const totalCount = count !== null && count !== undefined ? count : formatted.length;
@@ -212,7 +259,7 @@ export async function GET(request) {
     } catch (dbError) {
       console.warn('Supabase products fetch failed, using local JSON fallback:', dbError.message);
       const local = await getLocalProducts();
-      const result = filterLocalProducts(local, { search, category, shops, minPrice, maxPrice, sort, page, limit, isAll });
+      const result = filterLocalProducts(local, { search, category, shops, minPrice, maxPrice, sort, page, limit, isAll }, urlMap);
       if (format === 'array') {
         return NextResponse.json(result.products);
       }

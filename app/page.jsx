@@ -9,7 +9,8 @@ import {
   PackageSearch, ChevronUp, ChevronDown, ArrowRightLeft, ArrowLeft,
   Box, Grid, Sparkles, Wrench, Lightbulb, Droplets, Flame, LayoutGrid, FileText,
   Database, Cloud, UploadCloud, Copy, ExternalLink, ShieldCheck,
-  Lock, Unlock, Eye, EyeOff, KeyRound, LogOut, Store, Package
+  Lock, Unlock, Eye, EyeOff, KeyRound, LogOut, Store, Package,
+  ZoomIn, ZoomOut
 } from 'lucide-react';
 
 export default function PantryQuotationApp() {
@@ -25,7 +26,7 @@ export default function PantryQuotationApp() {
     companyTagline: 'Premium Modern Kitchen & Pantry Solutions',
     companyAddress: 'Colombo, Sri Lanka',
     companyPhone: '+94 77 000 0000',
-    companyEmail: 'sales@pantrylk.com',
+    companyEmail: 'pantrylk2026@gmail.com',
     companyWeb: 'www.pantrylk.com',
     labourRatePerSqFt: 1800.0,
     salesCommissionRate: 5.0,
@@ -97,13 +98,33 @@ export default function PantryQuotationApp() {
     return () => { if (ro) ro.disconnect(); window.removeEventListener('resize', update); };
   }, [isQuoteModalOpen, sheetFit]);
 
-  // Stop the page behind from scrolling while a sheet/modal is open on mobile
+  // Product Detail & Zoom Modal State
+  const [selectedProductForZoom, setSelectedProductForZoom] = useState(null);
+  const [zoomPosition, setZoomPosition] = useState({ x: 50, y: 50 });
+  const [isHoverZooming, setIsHoverZooming] = useState(false);
+  const [isMagnified, setIsMagnified] = useState(false);
+
+  // Close zoom modal on Escape key
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape' && selectedProductForZoom) {
+        setSelectedProductForZoom(null);
+        setIsMagnified(false);
+        setIsHoverZooming(false);
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [selectedProductForZoom]);
+
+  // Stop the page behind from scrolling while a sheet/modal is open
   useEffect(() => {
     if (typeof document === 'undefined') return;
-    const locked = isQuoteModalOpen || isMobileDrawerOpen;
+    const locked = isQuoteModalOpen || isMobileDrawerOpen || Boolean(selectedProductForZoom);
     document.body.style.overflow = locked ? 'hidden' : '';
     return () => { document.body.style.overflow = ''; };
-  }, [isQuoteModalOpen, isMobileDrawerOpen]);
+  }, [isQuoteModalOpen, isMobileDrawerOpen, selectedProductForZoom]);
+
   const [isProductModalOpen, setIsProductModalOpen] = useState(false);
   const [editingProduct, setEditingProduct] = useState(null);
   const [isSqlModalOpen, setIsSqlModalOpen] = useState(false);
@@ -142,6 +163,18 @@ export default function PantryQuotationApp() {
   const resolveProductImage = (img) => {
     if (!img) return '/images/placeholder.svg';
     return img.startsWith('/') ? img : '/' + img;
+  };
+
+  // Original website URL resolver for each product
+  const getProductSourceUrl = (p) => {
+    if (!p) return '#';
+    if (p.sourceUrl) return p.sourceUrl;
+    const cleanName = (p.name || '').replace(/^(Polimise|MM Noorbhoy)\s*-\s*/i, '').trim();
+    const query = p.articleNo || cleanName;
+    const pShop = getProductShop(p);
+    if (pShop === 'Polimise') return `https://polimise.com/search?q=${encodeURIComponent(query)}`;
+    if (pShop === 'MM Noorbhoy') return `https://noorbhoy.com/search?q=${encodeURIComponent(query)}`;
+    return `https://www.google.com/search?q=${encodeURIComponent('PDS ' + (p.articleNo ? p.articleNo + ' ' : '') + cleanName)}`;
   };
 
   // Toast trigger
@@ -725,14 +758,23 @@ _Hotline: ${appSettings.companyPhone}_`;
   // Category Icon helper
   const getCategoryIcon = (cat, isAct = false) => {
     const iconClass = `w-4 h-4 sm:w-5 sm:h-5 shrink-0 ${isAct ? 'text-[#D9C9A6]' : ''}`;
-    if (cat === 'Boards & Panels' || cat.includes('Boards') || cat.includes('AGT') || cat.includes('HeveaBoard') || cat.includes('HMR')) {
+    if (cat === 'Boards' || cat === 'Boards & Panels' || cat.includes('Boards') || cat.includes('AGT') || cat.includes('HeveaBoard') || cat.includes('HMR')) {
       return <Box className={`${iconClass} ${!isAct ? 'text-[#7A602F]' : ''}`} />;
+    }
+    if (cat === 'PVC Panels' || cat.includes('PVC')) {
+      return <LayoutGrid className={`${iconClass} ${!isAct ? 'text-[#7A602F]' : ''}`} />;
+    }
+    if (cat === 'Solid Surfaces' || cat === 'Solid Surfaces & Wall Panels' || cat.includes('Solid') || cat.includes('HI-MACS')) {
+      return <Sparkles className={`${iconClass} ${!isAct ? 'text-[#7A602F]' : ''}`} />;
+    }
+    if (cat === 'Hinges' || cat.includes('Hinges')) {
+      return <RotateCcw className={`${iconClass} ${!isAct ? 'text-[#7A602F]' : ''}`} />;
+    }
+    if (cat === 'Drawer Systems' || cat.includes('Drawer Systems') || cat.includes('Drawer')) {
+      return <Layers className={`${iconClass} ${!isAct ? 'text-[#7A602F]' : ''}`} />;
     }
     if (cat === 'Edge Banding' || cat.includes('Edge Band')) {
       return <Layers className={`${iconClass} ${!isAct ? 'text-[#7A602F]' : ''}`} />;
-    }
-    if (cat === 'Solid Surfaces & Wall Panels' || cat.includes('Solid') || cat.includes('Wall Panels') || cat.includes('HI-MACS')) {
-      return <Sparkles className={`${iconClass} ${!isAct ? 'text-[#7A602F]' : ''}`} />;
     }
     if (cat === 'Kitchen Pullouts & Storage Racks' || cat.includes('Pullout') || cat.includes('Storage Racks') || cat.includes('Kitchen Tall')) {
       return <Building2 className={`${iconClass} ${!isAct ? 'text-[#7A602F]' : ''}`} />;
@@ -746,7 +788,7 @@ _Hotline: ${appSettings.companyPhone}_`;
     if (cat === 'Wardrobe Accessories' || cat.includes('Wardrobe')) {
       return <Sliders className={`${iconClass} ${!isAct ? 'text-[#7A602F]' : ''}`} />;
     }
-    if (cat === 'Hardware, Hinges & Drawer Systems' || cat.includes('Hardware') || cat.includes('Hinges') || cat.includes('Drawer Systems')) {
+    if (cat === 'Hardware, Hinges & Drawer Systems' || cat.includes('Hardware')) {
       return <Wrench className={`${iconClass} ${!isAct ? 'text-[#7A602F]' : ''}`} />;
     }
     if (cat === 'Aluminium Profiles & Handles' || cat.includes('Aluminium') || cat.includes('Handles')) {
@@ -1339,7 +1381,16 @@ _Hotline: ${appSettings.companyPhone}_`;
                             </span>
                           </div>
 
-                          <div className="w-full h-28 sm:h-36 bg-[#FAF8F3] rounded-xl overflow-hidden mb-2.5 border border-[#EFEBE2] flex items-center justify-center relative p-2">
+                          <div
+                            onClick={() => {
+                              setSelectedProductForZoom(p);
+                              setIsMagnified(false);
+                              setIsHoverZooming(false);
+                              setZoomPosition({ x: 50, y: 50 });
+                            }}
+                            className="w-full h-28 sm:h-36 bg-[#FAF8F3] rounded-xl overflow-hidden mb-2.5 border border-[#EFEBE2] flex items-center justify-center relative p-2 cursor-pointer group/img"
+                            title="Click to zoom image and view details"
+                          >
                             <img
                               src={resolveProductImage(p.image)}
                               alt={p.name}
@@ -1348,21 +1399,61 @@ _Hotline: ${appSettings.companyPhone}_`;
                                 e.currentTarget.onerror = null;
                                 e.currentTarget.src = '/images/placeholder.svg';
                               }}
-                              className="max-h-full max-w-full object-contain transition-transform duration-300 group-hover:scale-105"
+                              className="max-h-full max-w-full object-contain transition-transform duration-300 group-hover/img:scale-110"
                             />
                             {qty > 0 && (
-                              <span className="absolute top-2 right-2 bg-[#1F3A5A] text-white text-[11px] font-bold px-2 py-0.5 rounded-full shadow-xs">
+                              <span className="absolute top-2 right-2 bg-[#1F3A5A] text-white text-[11px] font-bold px-2 py-0.5 rounded-full shadow-xs z-10">
                                 In Quote ({qty})
                               </span>
                             )}
+                            {/* Hover Zoom & Quick View Badge */}
+                            <div className="absolute inset-0 bg-[#14263D]/25 opacity-0 group-hover/img:opacity-100 transition-opacity flex items-center justify-center rounded-xl backdrop-blur-[1px]">
+                              <span className="bg-white/95 text-[#14263D] text-[11px] font-bold px-2.5 py-1 rounded-full shadow-md flex items-center space-x-1 scale-95 group-hover/img:scale-100 transition-transform">
+                                <ZoomIn className="w-3.5 h-3.5 text-[#1F3A5A]" />
+                                <span>Zoom & Details</span>
+                              </span>
+                            </div>
                           </div>
 
-                          <h4 className="font-bold text-[13px] sm:text-xs text-[#14263D] leading-snug line-clamp-2" title={p.name}>
+                          <h4 
+                            onClick={() => {
+                              setSelectedProductForZoom(p);
+                              setIsMagnified(false);
+                              setIsHoverZooming(false);
+                              setZoomPosition({ x: 50, y: 50 });
+                            }}
+                            className="font-bold text-[13px] sm:text-xs text-[#14263D] leading-snug line-clamp-2 cursor-pointer hover:text-[#1F3A5A] hover:underline decoration-[#B8975A] transition" 
+                            title={p.name}
+                          >
                             {p.name}
                           </h4>
-                          <p className="hidden sm:block text-[12px] text-slate-500 mt-0.5 line-clamp-2" title={p.description}>
+                          <p 
+                            onClick={() => {
+                              setSelectedProductForZoom(p);
+                              setIsMagnified(false);
+                              setIsHoverZooming(false);
+                              setZoomPosition({ x: 50, y: 50 });
+                            }}
+                            className="hidden sm:block text-[12px] text-slate-500 mt-0.5 line-clamp-2 cursor-pointer hover:text-slate-700 transition" 
+                            title={p.description}
+                          >
                             {p.description}
                           </p>
+
+                          <button
+                            type="button"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setSelectedProductForZoom(p);
+                              setIsMagnified(false);
+                              setIsHoverZooming(false);
+                              setZoomPosition({ x: 50, y: 50 });
+                            }}
+                            className="w-full mt-1.5 py-1 px-2 text-[11px] font-semibold text-slate-500 hover:text-[#1F3A5A] bg-slate-50 hover:bg-[#FAF8F3] rounded-lg border border-slate-200/80 flex items-center justify-center space-x-1 transition touch-manipulation"
+                          >
+                            <ZoomIn className="w-3.5 h-3.5 text-[#B8975A]" />
+                            <span>Zoom & Details</span>
+                          </button>
                         </div>
 
                         <div className="mt-3 pt-2.5 border-t border-[#EFEBE2] space-y-2">
@@ -2493,7 +2584,7 @@ create table if not exists public.settings (
   company_tagline text default 'Premium Modern Kitchen & Pantry Solutions',
   company_address text default 'Colombo, Sri Lanka',
   company_phone text default '+94 77 000 0000',
-  company_email text default 'sales@pantrylk.com',
+  company_email text default 'pantrylk2026@gmail.com',
   company_web text default 'www.pantrylk.com',
   labour_rate_per_sq_ft numeric default 1800.0,
   sales_commission_rate numeric default 5.0,
@@ -2570,7 +2661,7 @@ create table if not exists public.settings (
   company_tagline text default 'Premium Modern Kitchen & Pantry Solutions',
   company_address text default 'Colombo, Sri Lanka',
   company_phone text default '+94 77 000 0000',
-  company_email text default 'sales@pantrylk.com',
+  company_email text default 'pantrylk2026@gmail.com',
   company_web text default 'www.pantrylk.com',
   labour_rate_per_sq_ft numeric default 1800.0,
   sales_commission_rate numeric default 5.0,
@@ -2621,6 +2712,219 @@ create policy "Allow public update settings" on public.settings for update to an
                   Done
                 </button>
               </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* MODAL: PRODUCT ZOOM & DETAILS */}
+      {selectedProductForZoom && (
+        <div 
+          className="fixed inset-0 z-50 bg-[#14263D]/75 backdrop-blur-sm p-3 sm:p-5 flex items-center justify-center"
+          onClick={() => {
+            setSelectedProductForZoom(null);
+            setIsMagnified(false);
+            setIsHoverZooming(false);
+          }}
+        >
+          <div 
+            className="bg-white w-full max-w-4xl max-h-[92vh] rounded-3xl shadow-2xl border border-[#E4E0D6] overflow-hidden flex flex-col"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Modal Header */}
+            <div className="flex items-center justify-between px-4 sm:px-6 py-3.5 border-b border-[#EFEBE2] bg-[#FAF8F3]">
+              <div className="flex flex-wrap items-center gap-1.5 sm:gap-2">
+                <span className="badge-tag bg-[#14263D] text-white font-mono font-bold text-[11px] sm:text-xs px-2.5 py-0.5 rounded-lg">
+                  {selectedProductForZoom.articleNo}
+                </span>
+                {getShopBadge(getProductShop(selectedProductForZoom))}
+                <span className="text-[11px] sm:text-xs bg-[#F0EDE6] text-slate-700 font-medium px-2.5 py-0.5 rounded-full truncate max-w-[200px]">
+                  {selectedProductForZoom.category}
+                </span>
+              </div>
+              <button 
+                onClick={() => {
+                  setSelectedProductForZoom(null);
+                  setIsMagnified(false);
+                  setIsHoverZooming(false);
+                }} 
+                className="p-1.5 rounded-full text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition"
+                title="Close (Esc)"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            {/* Modal Body */}
+            <div className="flex-1 overflow-y-auto p-4 sm:p-6 grid grid-cols-1 md:grid-cols-12 gap-5 sm:gap-7 items-start">
+              
+              {/* Left Column: Interactive Image Zoom & Pan */}
+              <div className="md:col-span-6 flex flex-col items-center">
+                <div 
+                  className="relative w-full h-64 sm:h-96 rounded-2xl bg-[#FAF8F3] border border-[#E4E0D6] overflow-hidden flex items-center justify-center cursor-crosshair select-none group/lens"
+                  onMouseEnter={() => setIsHoverZooming(true)}
+                  onMouseLeave={() => {
+                    setIsHoverZooming(false);
+                    if (!isMagnified) setZoomPosition({ x: 50, y: 50 });
+                  }}
+                  onMouseMove={(e) => {
+                    const rect = e.currentTarget.getBoundingClientRect();
+                    const x = Math.max(0, Math.min(100, ((e.clientX - rect.left) / rect.width) * 100));
+                    const y = Math.max(0, Math.min(100, ((e.clientY - rect.top) / rect.height) * 100));
+                    setZoomPosition({ x, y });
+                  }}
+                  onClick={() => setIsMagnified(prev => !prev)}
+                >
+                  <img
+                    src={resolveProductImage(selectedProductForZoom.image)}
+                    alt={selectedProductForZoom.name}
+                    className="max-h-full max-w-full object-contain pointer-events-none transition-transform duration-75 ease-out"
+                    style={{
+                      transformOrigin: `${zoomPosition.x}% ${zoomPosition.y}%`,
+                      transform: (isMagnified || isHoverZooming) ? 'scale(2.5)' : 'scale(1)',
+                    }}
+                    onError={(e) => {
+                      e.currentTarget.onerror = null;
+                      e.currentTarget.src = '/images/placeholder.svg';
+                    }}
+                  />
+
+                  {/* Zoom Status Badge */}
+                  <div className="absolute bottom-3 left-3 bg-[#14263D]/80 text-white text-[11px] font-medium px-3 py-1 rounded-full backdrop-blur-xs flex items-center space-x-1.5 pointer-events-none shadow-sm">
+                    {isMagnified || isHoverZooming ? (
+                      <>
+                        <ZoomOut className="w-3.5 h-3.5 text-[#E6D6B0]" />
+                        <span>2.5x Zoom Active (Click to toggle)</span>
+                      </>
+                    ) : (
+                      <>
+                        <ZoomIn className="w-3.5 h-3.5 text-[#E6D6B0]" />
+                        <span>Hover or Click to Zoom In</span>
+                      </>
+                    )}
+                  </div>
+                </div>
+
+                {/* Zoom Controls Helper */}
+                <div className="w-full flex items-center justify-between mt-2.5 text-xs text-slate-500 px-1">
+                  <span className="text-[11px] text-slate-400">Move cursor or tap to pan across details</span>
+                  <button
+                    type="button"
+                    onClick={() => setIsMagnified(prev => !prev)}
+                    className="px-2.5 py-1 bg-[#F0EDE6] hover:bg-[#E4E0D6] text-[#14263D] rounded-lg font-semibold text-[11px] flex items-center space-x-1 transition"
+                  >
+                    {isMagnified ? <ZoomOut className="w-3.5 h-3.5" /> : <ZoomIn className="w-3.5 h-3.5" />}
+                    <span>{isMagnified ? 'Reset: 1x View' : 'Lock: 2.5x Zoom'}</span>
+                  </button>
+                </div>
+              </div>
+
+              {/* Right Column: Details & Actions */}
+              <div className="md:col-span-6 flex flex-col justify-between space-y-4">
+                <div>
+                  <h3 className="font-extrabold text-base sm:text-lg text-[#14263D] leading-snug">
+                    {selectedProductForZoom.name}
+                  </h3>
+
+                  <div className="mt-2.5 flex flex-wrap items-baseline gap-2">
+                    <span className="text-xl sm:text-2xl font-black text-[#14263D] font-mono tabular-nums">
+                      {formatLKR(selectedProductForZoom.mrp)}
+                    </span>
+                    <span className="text-xs text-slate-500 font-semibold">
+                      / {selectedProductForZoom.unit}
+                    </span>
+                    {selectedProductForZoom.perSqfRate && (
+                      <span className="text-xs text-[#1F3A5A] font-bold bg-[#EEF2F7] px-2.5 py-0.5 rounded-full ml-1">
+                        Rs. {selectedProductForZoom.perSqfRate}/sqf
+                      </span>
+                    )}
+                  </div>
+
+                  {/* Description Box */}
+                  <div className="mt-3.5 p-3.5 bg-[#FAF8F3] rounded-2xl border border-[#EFEBE2] space-y-1.5">
+                    <div className="text-[10px] font-bold uppercase tracking-wider text-slate-400">
+                      Product Specifications
+                    </div>
+                    <p className="text-xs sm:text-[13px] text-slate-700 leading-relaxed whitespace-pre-line">
+                      {selectedProductForZoom.description || 'Standard pantry manufacturing component with certified specifications.'}
+                    </p>
+                  </div>
+
+                  {/* Metadata Chips */}
+                  <div className="mt-3 grid grid-cols-2 gap-2 text-xs">
+                    <div className="p-2.5 bg-slate-50 rounded-xl border border-slate-100">
+                      <span className="text-slate-400 text-[10px] uppercase font-bold block">Supplier Shop</span>
+                      <span className="font-bold text-slate-800 text-[12px]">{getProductShop(selectedProductForZoom)}</span>
+                    </div>
+                    <div className="p-2.5 bg-slate-50 rounded-xl border border-slate-100">
+                      <span className="text-slate-400 text-[10px] uppercase font-bold block">Catalog / Category</span>
+                      <span className="font-bold text-slate-800 text-[12px] truncate block">{selectedProductForZoom.category}</span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Action Buttons */}
+                <div className="pt-3.5 border-t border-[#EFEBE2] space-y-2.5">
+                  {/* Visit Supplier Website Button */}
+                  <a
+                    href={getProductSourceUrl(selectedProductForZoom)}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="w-full py-3 px-4 bg-white hover:bg-[#FAF8F3] text-[#14263D] border-2 border-[#1F3A5A] rounded-2xl text-xs sm:text-sm font-bold flex items-center justify-center space-x-2 transition shadow-xs group"
+                  >
+                    <Store className="w-4 h-4 text-[#1F3A5A]" />
+                    <span>Visit {getProductShop(selectedProductForZoom)} Original Website</span>
+                    <ExternalLink className="w-4 h-4 text-[#1F3A5A] group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
+                  </a>
+
+                  {/* Add to Quotation / Qty Stepper */}
+                  {(() => {
+                    const inCart = currentQuote.items.find(i => i.id === selectedProductForZoom.id);
+                    const qty = inCart ? inCart.quantity : 0;
+                    if (qty > 0) {
+                      return (
+                        <div className="flex items-center justify-between bg-[#EEF2F7] border border-[#C3CFDD] rounded-2xl p-2">
+                          <div className="pl-2">
+                            <span className="text-xs font-bold text-[#14263D] block">In Quotation:</span>
+                            <span className="text-[11px] text-slate-500 font-mono">{formatLKR(selectedProductForZoom.mrp * qty)}</span>
+                          </div>
+                          <div className="flex items-center space-x-2">
+                            <button 
+                              onClick={() => updateItemQty(selectedProductForZoom.id, -1)} 
+                              className="w-9 h-9 rounded-xl bg-white text-[#14263D] hover:bg-[#DCE4EE] flex items-center justify-center font-bold text-base shadow-xs touch-manipulation"
+                            >
+                              -
+                            </button>
+                            <span className="w-10 text-center font-mono font-bold text-sm text-[#14263D]">
+                              {qty}
+                            </span>
+                            <button 
+                              onClick={() => updateItemQty(selectedProductForZoom.id, 1)} 
+                              className="w-9 h-9 rounded-xl bg-[#1F3A5A] text-white hover:bg-[#2C4D74] flex items-center justify-center font-bold text-base shadow-xs touch-manipulation"
+                            >
+                              +
+                            </button>
+                          </div>
+                        </div>
+                      );
+                    }
+                    return (
+                      <button
+                        onClick={() => {
+                          addItemToQuote(selectedProductForZoom, 1);
+                          showToast(`Added ${selectedProductForZoom.name} to quote`);
+                        }}
+                        className="w-full py-3.5 px-4 bg-[#1F3A5A] hover:bg-[#2C4D74] active:scale-98 text-white rounded-2xl text-xs sm:text-sm font-bold flex items-center justify-center space-x-2 shadow-sm transition touch-manipulation"
+                      >
+                        <Plus className="w-4 h-4" />
+                        <span>Add to Current Quotation</span>
+                      </button>
+                    );
+                  })()}
+                </div>
+
+              </div>
+
             </div>
           </div>
         </div>

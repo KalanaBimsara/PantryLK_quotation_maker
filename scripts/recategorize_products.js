@@ -17,70 +17,66 @@ function getShop(p) {
 }
 
 function getCleanCategory(p) {
+  const cat = p.category;
   const name = (p.name || '').toLowerCase();
   const desc = (p.description || '').toLowerCase();
-  const catalog = p.catalog || '';
-  const sub = p.subcategory || '';
-  const shop = getShop(p);
+  const sub = (p.subcategory || '').toLowerCase();
+  const text = (name + ' ' + desc + ' ' + sub);
 
-  // 1. MM Noorbhoy
-  if (shop === 'MM Noorbhoy') {
-    const s = nbMap.get(p.id) || '';
-    if (s === 'Sinks & Taps') return 'Sinks & Mixer Taps';
-    if (s === 'Edge Banding') return 'Edge Banding';
-    if (s === 'HMR Boards') return 'Boards & Panels';
-    if (s === 'Wardrobe Fittings') return 'Wardrobe Accessories';
-    if (s === 'Pullouts & Baskets') {
-      if (name.includes('cutlery') || name.includes('dustbin') || name.includes('waste bin')) {
-        return 'Cutlery Trays & Waste Bins';
-      }
-      return 'Kitchen Pullouts & Storage Racks';
-    }
-    if (s === 'Hardware & Slides') {
-      if (name.includes('handle') || name.includes('knob')) {
-        return 'Aluminium Profiles & Handles';
-      }
-      if (name.includes('ironing board')) {
-        return 'Wardrobe Accessories';
-      }
-      return 'Hardware, Hinges & Drawer Systems';
+  // Carbon crystal board -> Boards
+  if (name.includes('carbon crystal') || desc.includes('carbon crystal')) {
+    return 'Boards';
+  }
+
+  // All aluminium items (include aluminum word in the title) from PVC -> Aluminium Profiles & Handles
+  if (/alumin[i]?um/i.test(name)) {
+    if (cat === 'PVC Panels' || sub.includes('pvc wall') || name.includes('end cap') || name.includes('joiner') || name.includes('corner') || name.includes('panel seperator')) {
+      return 'Aluminium Profiles & Handles';
     }
   }
 
-  // 2. Polimise
-  if (shop === 'Polimise') {
-    if (name.includes('sink')) return 'Sinks & Mixer Taps';
-    if (name.includes('cutlery') || name.includes('dustbin') || name.includes('waste bin')) return 'Cutlery Trays & Waste Bins';
-    if (name.includes('wardrobe') || name.includes('wardobe') || name.includes('trouser') || name.includes('mirror') || name.includes('winder') || name.includes('clothes') || name.includes('hanger')) {
+  // 1. Boards & Panels -> Boards
+  if (cat === 'Boards & Panels' || cat === 'Boards') {
+    return 'Boards';
+  }
+
+  // 2. Solid Surfaces & Wall Panels -> PVC Panels vs Solid Surfaces
+  if (cat === 'Solid Surfaces & Wall Panels' || cat === 'PVC Panels' || cat === 'Solid Surfaces') {
+    if (name.includes('flute panel') || name.includes('pvc wall paneling sheets') || sub.includes('pvc wall')) {
+      return 'PVC Panels';
+    }
+    return 'Solid Surfaces';
+  }
+
+  // 3. Hardware, Hinges & Drawer Systems -> Hinges vs Drawer Systems
+  if (cat === 'Hardware, Hinges & Drawer Systems' || cat === 'Hinges' || cat === 'Drawer Systems') {
+    if (name.includes('yarım ay') || name.includes('kio 160mm') || name.includes('ren 916mm') || name.includes('roma 256mm') || name.includes('handle') || name.includes('knob')) {
+      return 'Aluminium Profiles & Handles';
+    }
+    if (name.includes('iron board') || name.includes('ironing board')) {
       return 'Wardrobe Accessories';
     }
-    return 'Kitchen Pullouts & Storage Racks';
+    if (name.includes('fruit tray')) {
+      return 'Cutlery Trays & Waste Bins';
+    }
+    if (name.includes('cup & saucer') || name.includes('drawer basket') || name.includes('cargoplus')) {
+      return 'Kitchen Pullouts & Storage Racks';
+    }
+
+    const isHinge = text.includes('hinge') || text.includes('lift system') || text.includes('lift up') || text.includes('folding door') || text.includes('lidstay') || text.includes('flap stay') || text.includes('cabinet stay') || text.includes('slide on') || text.includes('sensys') || text.includes('plaf');
+    const isDrawer = text.includes('drawer') || text.includes('railing') || text.includes('drawer slide') || text.includes('bearing slide') || text.includes('slim box') || text.includes('slimbox') || text.includes('double wall') || text.includes('innotech') || text.includes('innotect') || text.includes('front clip') || text.includes('front panel') || text.includes('wood panel without railing') || text.includes('heavy duty drawer');
+
+    if (isHinge && !isDrawer) return 'Hinges';
+    if (isDrawer && !isHinge) return 'Drawer Systems';
+    if (isHinge && isDrawer) {
+      if (text.includes('lift') || text.includes('hinge') || text.includes('slide on')) return 'Hinges';
+      return 'Drawer Systems';
+    }
+    if (name.includes('plastic corner')) return 'Hinges';
+    return 'Hinges';
   }
 
-  // 3. PDS (by clean catalog and subcategory)
-  if (sub === 'Edge Banding' || (catalog === 'AGT' && p.unit === 'Mtr') || name.includes('edge band') || name.includes('pvc edge')) {
-    return 'Edge Banding';
-  }
-  if (catalog === 'SCHOCK Germany' || name.includes('schock') || desc.includes('schock') || name.includes('granite kitchen sink')) {
-    return 'Sinks & Mixer Taps';
-  }
-  if (catalog === 'VESTEL Appliances') return 'Kitchen Appliances';
-  if (catalog === 'LG HI-MACS' || catalog === 'PDS Wall Paneling') return 'Solid Surfaces & Wall Panels';
-  if (catalog === 'PDS Lighting') return 'LED Lighting & Electrical';
-  if (catalog === 'PDS PVC & Dustbins') return 'Cutlery Trays & Waste Bins';
-  if (catalog === 'PDS Wardrobe') return 'Wardrobe Accessories';
-  if (catalog === 'PDS Kitchen Storage') return 'Kitchen Pullouts & Storage Racks';
-  if (catalog === 'PDS Aluminium Profiles' || name.includes('handle') || name.includes('knob')) {
-    return 'Aluminium Profiles & Handles';
-  }
-  if (catalog === 'HeveaBoard' || catalog === 'AGT') {
-    return 'Boards & Panels';
-  }
-  if (catalog === 'PDS Hardware & Handles') {
-    return 'Hardware, Hinges & Drawer Systems';
-  }
-
-  return 'Hardware, Hinges & Drawer Systems';
+  return cat;
 }
 
 function processFile(filePath) {
