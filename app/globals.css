@@ -1,12 +1,15 @@
-@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap');
 @import "tailwindcss";
 
 :root {
-  --primary: #0f2744;
-  --primary-light: #1e3a5f;
-  --emerald: #0d9488;
-  --emerald-dark: #0f766e;
-  --amber: #d97706;
+  /* Pantry LK brand — taken from the logo */
+  --navy-900: #14263D;
+  --navy-700: #1F3A5A;
+  --navy-500: #2C4D74;
+  --gold-500: #B8975A;
+  --gold-700: #7A602F;
+  --gold-50: #F7F1E6;
+  --ground: #F6F4EF;
+  --line: #E4E0D6;
 }
 
 * {
@@ -16,8 +19,9 @@
 }
 
 body {
-  background-color: #f1f5f9;
-  color: #0f172a;
+  background-color: var(--ground) !important;
+  color: var(--navy-900);
+  font-variant-numeric: tabular-nums;
   min-height: 100vh;
   -webkit-font-smoothing: antialiased;
   overflow-x: hidden;
@@ -29,14 +33,14 @@ body {
   height: 6px;
 }
 ::-webkit-scrollbar-track {
-  background: #f1f5f9;
+  background: var(--ground);
 }
 ::-webkit-scrollbar-thumb {
-  background: #cbd5e1;
+  background: #D6D0C2;
   border-radius: 4px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #94a3b8;
+  background: #B8975A;
 }
 
 .scrollbar-none::-webkit-scrollbar {
@@ -49,13 +53,25 @@ body {
 
 .product-card {
   transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-  border: 1px solid #e2e8f0;
+  border: 1px solid var(--line);
+}
+
+/* Headings in Montserrat to match the logo wordmark */
+h1, h2, h3 {
+  font-family: 'Montserrat', 'Plus Jakarta Sans', sans-serif;
+  letter-spacing: -0.01em;
+}
+
+/* Brand focus ring for keyboard users */
+:focus-visible {
+  outline: 2px solid var(--gold-500);
+  outline-offset: 2px;
 }
 
 .product-card:hover {
   transform: translateY(-2px);
-  box-shadow: 0 10px 15px -3px rgba(0,0,0,0.08);
-  border-color: #93c5fd;
+  box-shadow: 0 10px 20px -6px rgba(20,38,61,0.14);
+  border-color: var(--gold-500);
 }
 
 .badge-tag {
@@ -72,16 +88,20 @@ body {
   top: 80px;
 }
 
-/* Print Stylesheet for Formal Quotation - Fits Single A4 Page Cleanly */
+.qt-display {
+  font-family: 'Montserrat', 'Plus Jakarta Sans', sans-serif;
+}
+
+/* Print / Save-as-PDF: the branded A4 customer quotation */
 @media print {
   @page {
     size: A4 portrait;
-    margin: 8mm 10mm;
+    margin: 8mm;
   }
 
   html, body {
     background: #ffffff !important;
-    color: #0f172a !important;
+    color: #14263D !important;
     height: auto !important;
     min-height: 0 !important;
     margin: 0 !important;
@@ -91,7 +111,7 @@ body {
     print-color-adjust: exact !important;
   }
 
-  /* Hide all background and UI elements */
+  /* Hide the app around the sheet */
   .no-print,
   nav,
   main,
@@ -106,81 +126,51 @@ body {
     display: none !important;
   }
 
-  /* Reset modal overlay so it becomes a standard document block */
-  .print-modal-overlay {
+  .app-root {
+    min-height: 0 !important;
+    padding: 0 !important;
+    background: #ffffff !important;
+  }
+
+  /* Turn the modal into a plain document block */
+  .print-modal-overlay,
+  .print-modal-card,
+  .sheet-scroll,
+  .sheet-scale-wrap {
     position: static !important;
     display: block !important;
-    background: transparent !important;
+    background: #ffffff !important;
     padding: 0 !important;
     margin: 0 !important;
     overflow: visible !important;
     height: auto !important;
     width: 100% !important;
+    max-width: 100% !important;
     max-height: none !important;
     inset: auto !important;
     z-index: auto !important;
-  }
-
-  .print-modal-card {
-    position: static !important;
-    display: block !important;
-    max-width: 100% !important;
-    width: 100% !important;
-    height: auto !important;
-    max-height: none !important;
     border: none !important;
-    box-shadow: none !important;
     border-radius: 0 !important;
-    padding: 0 !important;
-    margin: 0 !important;
-    overflow: visible !important;
+    box-shadow: none !important;
+    backdrop-filter: none !important;
   }
 
+  /* Undo the on-screen phone scaling */
   #printable-quotation-sheet {
-    display: block !important;
-    position: static !important;
+    transform: none !important;
     width: 100% !important;
     max-width: 100% !important;
-    padding: 0 !important;
+    min-height: 272mm !important;
     margin: 0 !important;
     box-shadow: none !important;
-    border: none !important;
-    overflow: visible !important;
-    page-break-after: avoid !important;
-    page-break-inside: avoid !important;
-    break-inside: avoid !important;
-    background: white !important;
   }
 
-  /* Compact table styling for A4 fit */
-  .quotation-table {
-    width: 100% !important;
-    border-collapse: collapse !important;
+  .qt-table thead {
+    display: table-header-group;
   }
 
-  .quotation-table th,
-  .quotation-table td {
-    padding-top: 1.8px !important;
-    padding-bottom: 1.8px !important;
-    padding-left: 5px !important;
-    padding-right: 5px !important;
-  }
-
-  /* Force tfoot to never repeat across pages */
-  tfoot {
-    display: none !important;
-  }
-
-  .quotation-item-img {
-    height: 20px !important;
-    width: 20px !important;
-    max-height: 20px !important;
-    max-width: 20px !important;
-    object-fit: contain !important;
-  }
-
-  /* Prevent awkward splits */
-  tr, .print-avoid-break {
+  .qt-avoid,
+  .qt-table tr {
     page-break-inside: avoid !important;
     break-inside: avoid !important;
   }

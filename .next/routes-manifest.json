@@ -59,6 +59,12 @@
       "namedRegex": "^/_not\\-found(?:/)?$"
     },
     {
+      "page": "/api/admin/verify",
+      "regex": "^/api/admin/verify(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/api/admin/verify(?:/)?$"
+    },
+    {
       "page": "/api/products",
       "regex": "^/api/products(?:/)?$",
       "routeKeys": {},
@@ -81,6 +87,18 @@
       "regex": "^/api/settings(?:/)?$",
       "routeKeys": {},
       "namedRegex": "^/api/settings(?:/)?$"
+    },
+    {
+      "page": "/api/supabase/status",
+      "regex": "^/api/supabase/status(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/api/supabase/status(?:/)?$"
+    },
+    {
+      "page": "/api/supabase/sync",
+      "regex": "^/api/supabase/sync(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/api/supabase/sync(?:/)?$"
     }
   ],
   "dataRoutes": [],

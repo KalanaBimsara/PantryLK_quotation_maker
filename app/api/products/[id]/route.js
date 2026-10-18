@@ -1,23 +1,28 @@
 import { NextResponse } from 'next/server';
-import fs from 'fs/promises';
-import path from 'path';
-
-const dataPath = path.join(process.cwd(), 'data', 'products.json');
+import { supabase } from '@/utils/supabase/db';
 
 export async function PUT(request, { params }) {
   try {
     const { id } = await params;
     const updated = await request.json();
-    const fileData = await fs.readFile(dataPath, 'utf-8');
-    let products = JSON.parse(fileData);
 
-    const index = products.findIndex((p) => p.id === id);
-    if (index >= 0) {
-      products[index] = { ...products[index], ...updated };
-      await fs.writeFile(dataPath, JSON.stringify(products, null, 2), 'utf-8');
-      return NextResponse.json({ success: true, product: products[index] });
+    const supaPayload = {};
+    if (updated.articleNo !== undefined) supaPayload.article_no = String(updated.articleNo);
+    if (updated.name !== undefined) supaPayload.name = String(updated.name);
+    if (updated.category !== undefined) supaPayload.category = String(updated.category);
+    if (updated.mrp !== undefined) supaPayload.mrp = Number(updated.mrp);
+    if (updated.unit !== undefined) supaPayload.unit = String(updated.unit);
+    if (updated.description !== undefined) supaPayload.description = String(updated.description);
+    if (updated.image !== undefined) supaPayload.image = String(updated.image);
+
+    const { error } = await supabase.from('products').update(supaPayload).eq('id', id);
+
+    if (error) {
+      console.error('Error updating product in Supabase:', error);
+      return NextResponse.json({ error: error.message }, { status: 500 });
     }
-    return NextResponse.json({ error: 'Product not found' }, { status: 404 });
+
+    return NextResponse.json({ success: true, id });
   } catch (error) {
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
@@ -26,11 +31,14 @@ export async function PUT(request, { params }) {
 export async function DELETE(request, { params }) {
   try {
     const { id } = await params;
-    const fileData = await fs.readFile(dataPath, 'utf-8');
-    let products = JSON.parse(fileData);
 
-    products = products.filter((p) => p.id !== id);
-    await fs.writeFile(dataPath, JSON.stringify(products, null, 2), 'utf-8');
+    const { error } = await supabase.from('products').delete().eq('id', id);
+
+    if (error) {
+      console.error('Error deleting product from Supabase:', error);
+      return NextResponse.json({ error: error.message }, { status: 500 });
+    }
+
     return NextResponse.json({ success: true, deleted: id });
   } catch (error) {
     return NextResponse.json({ error: error.message }, { status: 500 });

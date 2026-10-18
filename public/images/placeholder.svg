@@ -1,0 +1,7 @@
+<svg xmlns='http://www.w3.org/2000/svg' width='300' height='300' viewBox='0 0 300 300' fill='none'>
+  <rect width='300' height='300' fill='#F8FAFC'/>
+  <rect x='1' y='1' width='298' height='298' rx='16' stroke='#E2E8F0' stroke-width='2'/>
+  <path d='M150 110L190 132.5V177.5L150 200L110 177.5V132.5L150 110Z' stroke='#94A3B8' stroke-width='4' stroke-linejoin='round'/>
+  <path d='M150 155L190 132.5M150 155L110 132.5M150 155V200' stroke='#94A3B8' stroke-width='4' stroke-linejoin='round'/>
+  <text x='150' y='230' text-anchor='middle' font-family='sans-serif' font-size='13' font-weight='600' fill='#64748B'>Pantry LK Component</text>
+</svg>

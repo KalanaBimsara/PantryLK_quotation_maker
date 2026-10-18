@@ -1,11 +1,14 @@
 {
   "/_global-error/page": "app/_global-error/page.js",
   "/_not-found/page": "app/_not-found/page.js",
+  "/api/admin/verify/route": "app/api/admin/verify/route.js",
   "/api/products/[id]/route": "app/api/products/[id]/route.js",
   "/api/products/reset/route": "app/api/products/reset/route.js",
   "/api/products/route": "app/api/products/route.js",
   "/api/quotations/[id]/route": "app/api/quotations/[id]/route.js",
   "/api/quotations/route": "app/api/quotations/route.js",
   "/api/settings/route": "app/api/settings/route.js",
+  "/api/supabase/status/route": "app/api/supabase/status/route.js",
+  "/api/supabase/sync/route": "app/api/supabase/sync/route.js",
   "/page": "app/page.js"
 }
