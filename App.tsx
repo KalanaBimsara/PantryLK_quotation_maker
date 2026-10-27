@@ -20,6 +20,7 @@ import { StatsSummary } from './components/StatsSummary';
 import { Visualizer } from './components/Visualizer';
 import { InventoryView } from './components/InventoryView';
 import { JobBar } from './components/JobBar';
+import { CabinetBuilder } from './components/CabinetBuilder';
 import { SettingsDrawer } from './components/SettingsDrawer';
 import { useLanguage } from './contexts/LanguageContext';
 
@@ -132,7 +133,13 @@ const App: React.FC = () => {
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 print:block">
             {/* Columna Izquierda: armar el trabajo */}
             <div className="lg:col-span-5 space-y-5 no-print">
-              {/* Tabla de Piezas */}
+              {/* Agregar gabinete (estándar o a medida) */}
+              <CabinetBuilder
+                darkMode={darkMode}
+                onAdd={(newPieces) => handlePiecesChange([...pieces, ...newPieces])}
+              />
+
+              {/* Lista de corte agrupada por gabinete */}
               <PieceList
                 pieces={pieces}
                 onChange={handlePiecesChange}
