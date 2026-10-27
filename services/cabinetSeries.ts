@@ -107,7 +107,8 @@ const fronts = (w: number, drawers: boolean): { parts: CabinetPart[]; hardware: 
   }
   const doors = w > MAX_SINGLE_DOOR_WIDTH ? 2 : 1;
   return {
-    parts: [part('door', w / doors, CABINET_HEIGHT, doors)],
+    // 750 first, like the sides: grain-locked parts keep their first size along the board's grain
+    parts: [part('door', CABINET_HEIGHT, w / doors, doors)],
     hardware: [
       { key: 'hinges', quantity: 2 * doors },
       { key: 'handles', quantity: doors },

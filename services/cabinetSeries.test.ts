@@ -15,7 +15,7 @@ const hw = (b: CabinetBuild) =>
 describe('buildCabinet', () => {
   it('deep 600 matches the source list', () => {
     const b = buildCabinet('deep-560', 600, { drawers: false });
-    expect(sizes(b)).toEqual(['bottom:600x560x1', 'shelf:564x550x1', 'side:750x560x2', 'back:750x600x1', 'topRail:564x100x2', 'door:600x750x1']);
+    expect(sizes(b)).toEqual(['bottom:600x560x1', 'shelf:564x550x1', 'side:750x560x2', 'back:750x600x1', 'topRail:564x100x2', 'door:750x600x1']);
     expect(hw(b)).toEqual({ legs: 4, hinges: 2, handles: 1 });
     expect(b.extraBoards).toBe(0);
     expect([b.depth, b.height]).toEqual([560, 750]);
@@ -23,13 +23,21 @@ describe('buildCabinet', () => {
 
   it('shallow 600 matches the source list', () => {
     const b = buildCabinet('shallow-300', 600, { drawers: false });
-    expect(sizes(b)).toEqual(['bottom:300x564x1', 'top:300x564x1', 'shelf:300x564x1', 'side:750x300x2', 'back:750x600x1', 'backSupport:564x100x2', 'door:600x750x1']);
+    expect(sizes(b)).toEqual(['bottom:300x564x1', 'top:300x564x1', 'shelf:300x564x1', 'side:750x300x2', 'back:750x600x1', 'backSupport:564x100x2', 'door:750x600x1']);
     expect(hw(b)).toEqual({ hinges: 2, handles: 1 });
   });
 
   it('splits doors above 600', () => {
-    expect(sizes(buildCabinet('deep-560', 700, { drawers: false }))).toContain('door:350x750x2');
+    expect(sizes(buildCabinet('deep-560', 700, { drawers: false }))).toContain('door:750x350x2');
     expect(hw(buildCabinet('shallow-300', 1200, { drawers: false }))).toEqual({ hinges: 4, handles: 2 });
+  });
+
+  it('cuts doors with the 750 height first so their grain runs vertically like the sides', () => {
+    const b = buildCabinet('shallow-300', 1200, { drawers: false });
+    const door = b.parts.find((p) => p.key === 'door')!;
+    const side = b.parts.find((p) => p.key === 'side')!;
+    expect([door.width, door.height]).toEqual([750, 600]);
+    expect(door.width).toBe(side.width);
   });
 
   it('drawer variant swaps the door for 3 fronts', () => {

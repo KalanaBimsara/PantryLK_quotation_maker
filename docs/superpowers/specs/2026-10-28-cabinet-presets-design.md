@@ -60,13 +60,13 @@ Hardware: no legs, plus whatever the fronts need.
 
 ### Fronts (both series)
 
-- **W ≤ 600:** 1 door, W × 750. Hardware: 2 hinges, 1 handle.
-- **W > 600:** 2 doors, (W ÷ 2) × 750. Hardware: 4 hinges, 2 handles.
+- **W ≤ 600:** 1 door, 750 × W (height first, so the grain runs vertically like the sides). Hardware: 2 hinges, 1 handle.
+- **W > 600:** 2 doors, 750 × (W ÷ 2). Hardware: 4 hinges, 2 handles.
 - **Drawers** (deep series only, W ≥ 300): no doors. Instead there are 3 drawer fronts of W × 250, grain locked. Hardware: 3 handles, 3 pairs of drawer rails, no hinges. The cabinet also needs **1 extra 8×4 ft board** for the drawer boxes.
 
 Drawers are not offered for the shallow series or for widths 150 and 200.
 
-Check value (deep 600, no drawers): bottom 600×560, shelf 564×550, 2 sides 750×560, back 750×600, 2 top rails 564×100, door 600×750; 4 legs, 2 hinges, 1 handle. This matches the source list exactly.
+Check value (deep 600, no drawers): bottom 600×560, shelf 564×550, 2 sides 750×560, back 750×600, 2 top rails 564×100, door 750×600; 4 legs, 2 hinges, 1 handle. This matches the source list, except that the door is written 750 × 600 (changed 2026-10-28 so door grain runs vertically like the sides).
 
 ## Module: `services/cabinetSeries.ts`
 
