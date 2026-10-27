@@ -1,5 +1,6 @@
 import { Piece, Settings, Template, InventoryItem } from '../types';
 import { isCabinetSeriesId } from './cabinetSeries';
+import { DEFAULT_CUT_SETTINGS } from './optimizer';
 
 const STORAGE_KEYS = {
   PIECES: 'cutwizard_pieces_v2',
@@ -7,13 +8,7 @@ const STORAGE_KEYS = {
   THEME: 'cutwizard_theme_v2',
 };
 
-export const DEFAULT_SETTINGS: Settings = {
-  boardWidth: 2440,
-  boardHeight: 1220,
-  kerf: 3,
-  trimMargin: 10,
-  enableTrimMargin: false, // Desactivado por defecto
-};
+export const DEFAULT_SETTINGS: Settings = { ...DEFAULT_CUT_SETTINGS };
 
 export const DEFAULT_PIECES: Piece[] = [
   { id: '1', name: 'Lateral Izquierdo', width: 600, height: 750, quantity: 2, canRotate: false },
