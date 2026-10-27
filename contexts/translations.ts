@@ -82,6 +82,7 @@ export const translations = {
     category: "Category",
     deleteItemConfirm: "Are you sure you want to delete this item?",
     optimizer: "Optimizer",
+    forDrawers: "for drawers",
   },
   es: {
     productionReport: "Reporte de Producción",
@@ -164,6 +165,7 @@ export const translations = {
     category: "Categoría",
     deleteItemConfirm: "¿Seguro que quieres eliminar este artículo?",
     optimizer: "Optimizador",
+    forDrawers: "para cajones",
   },
   si: {
     productionReport: "නිෂ්පාදන වාර්තාව",
@@ -246,6 +248,7 @@ export const translations = {
     category: "වර්ගය",
     deleteItemConfirm: "ඔබට මෙම අයිතමය මකා දැමීමට අවශ්‍ය බව විශ්වාසද?",
     optimizer: "ප්‍රශස්තකරණය",
+    forDrawers: "ලාච්චු සඳහා",
   }
 };
 

@@ -9,9 +9,10 @@ interface StatsSummaryProps {
   settings: Settings;
   darkMode: boolean;
   onExportPDF: () => void;
+  extraBoards: number;
 }
 
-export const StatsSummary: React.FC<StatsSummaryProps> = ({ result, settings, darkMode, onExportPDF }) => {
+export const StatsSummary: React.FC<StatsSummaryProps> = ({ result, settings, darkMode, onExportPDF, extraBoards }) => {
   const { t } = useLanguage();
 
   if (!result || result.boards.length === 0) {
@@ -58,7 +59,8 @@ export const StatsSummary: React.FC<StatsSummaryProps> = ({ result, settings, da
   // Use user input if provided, otherwise use auto-calculated area
   const frontArea = settings.frontAreaSqFt || autoFrontAreaSqFt;
 
-  const totalCost = (result.totalBoards * boardPrice) + 
+  // Los tableros extra de cajones se compran aparte del plan de corte
+  const totalCost = ((result.totalBoards + extraBoards) * boardPrice) +
                     (edgeBandMeters * edgeBandPrice) + 
                     (frontArea * machineRentPrice) + 
                     (frontArea * laborPrice);
@@ -136,6 +138,11 @@ export const StatsSummary: React.FC<StatsSummaryProps> = ({ result, settings, da
           </div>
           <div className="text-3xl font-extrabold text-blue-600 dark:text-blue-400">
             {result.totalBoards}
+            {extraBoards > 0 && (
+              <span className="ml-1.5 text-xs font-semibold text-blue-500 dark:text-blue-300">
+                + {extraBoards} {t('forDrawers')}
+              </span>
+            )}
           </div>
         </div>
 

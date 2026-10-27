@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { Axe, Calculator, AlertTriangle, Layers } from 'lucide-react';
 import { Piece, Settings, OptimizationResult } from './types';
 import { optimizeCuts } from './services/optimizer';
+import { countExtraBoards } from './services/cabinetPieces';
 import {
   loadStoredPieces,
   saveStoredPieces,
@@ -95,6 +96,9 @@ const App: React.FC = () => {
     return Number(area.toFixed(2));
   }, [pieces]);
 
+  // Tableros 8x4 extra para cajones (no forman parte del plan de corte)
+  const extraBoards = useMemo(() => countExtraBoards(pieces), [pieces]);
+
   return (
     <div
       className={`min-h-screen transition-colors duration-200 ${
@@ -161,6 +165,7 @@ const App: React.FC = () => {
                 settings={settings}
                 darkMode={darkMode}
                 onExportPDF={handleExportPDF}
+                extraBoards={extraBoards}
               />
 
               {/* Planos de Corte y Visualizadores */}
