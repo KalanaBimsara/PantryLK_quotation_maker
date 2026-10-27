@@ -32,6 +32,9 @@ interface InternalPiece {
   color: string;
   label: string;
   canRotate: boolean;
+  groupId?: string;
+  cabinetWidth?: number;
+  cabinetHeight?: number;
 }
 
 const STRATEGY_DEFINITIONS: {
@@ -158,6 +161,9 @@ const runSinglePass = (
           color: piece.color,
           label: piece.label,
           isRotated: bestRotated,
+          groupId: piece.groupId,
+          cabinetWidth: piece.cabinetWidth,
+          cabinetHeight: piece.cabinetHeight,
         });
 
         totalLinearCuts += (placedW + placedH) / 1000;
@@ -252,6 +258,9 @@ const runSinglePass = (
         color: piece.color,
         label: piece.label,
         isRotated: useRotated,
+        groupId: piece.groupId,
+        cabinetWidth: piece.cabinetWidth,
+        cabinetHeight: piece.cabinetHeight,
       });
 
       totalLinearCuts += (placedW + placedH) / 1000;
@@ -342,6 +351,9 @@ export const optimizeCuts = (
         color: p.color || generatePieceColor(idx),
         label: `${p.width} × ${p.height}`,
         canRotate: p.canRotate !== false, // Por defecto rota libremente a menos que se restrinja
+        groupId: p.groupId,
+        cabinetWidth: p.cabinetWidth,
+        cabinetHeight: p.cabinetHeight,
       });
     }
   });

@@ -7,6 +7,10 @@ export interface Piece {
   color?: string;
   label?: string;
   canRotate: boolean; // Control de veta: si es false, no puede girar 90º
+  groupId?: string;
+  groupName?: string;
+  cabinetWidth?: number;
+  cabinetHeight?: number;
 }
 
 export interface Rect {
@@ -23,6 +27,9 @@ export interface PlacedPiece extends Rect {
   color: string;
   label: string;
   isRotated: boolean;
+  groupId?: string;
+  cabinetWidth?: number;
+  cabinetHeight?: number;
 }
 
 export interface Board {
@@ -62,6 +69,12 @@ export interface Settings {
   kerf: number;
   trimMargin: number;
   enableTrimMargin?: boolean;
+  jobNumber?: string;
+  boardPrice?: number;
+  edgeBandPricePerM?: number;
+  machineRentPerSqFt?: number;
+  laborPerSqFt?: number;
+  frontAreaSqFt?: number;
 }
 
 export interface BoardPreset {
@@ -70,4 +83,22 @@ export interface BoardPreset {
   width: number;
   height: number;
   description: string;
+}
+
+export interface Template {
+  id: string;
+  name: string;
+  cabinetWidth?: number;
+  cabinetHeight?: number;
+  pieces: Omit<Piece, 'id'>[];
+}
+
+export type InventoryCategory = 'board' | 'accessory' | 'hardware' | 'other';
+
+export interface InventoryItem {
+  id: string;
+  name: string;
+  category: InventoryCategory;
+  quantity: number;
+  description?: string;
 }

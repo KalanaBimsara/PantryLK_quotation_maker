@@ -1,4 +1,4 @@
-import { Piece, Settings } from '../types';
+import { Piece, Settings, Template, InventoryItem } from '../types';
 
 const STORAGE_KEYS = {
   PIECES: 'cutwizard_pieces_v2',
@@ -91,6 +91,88 @@ export const loadStoredDarkMode = (): boolean => {
 export const saveStoredDarkMode = (isDark: boolean): void => {
   try {
     localStorage.setItem(STORAGE_KEYS.THEME, isDark ? 'dark' : 'light');
+  } catch {
+    // Ignorar
+  }
+};
+
+const generateBaseCabinet = (name: string, width: number, depth: number = 560, height: number = 750): Template => {
+  const pieces: Omit<Piece, 'id'>[] = [
+    { name: 'Side Panel', width: height, height: depth, quantity: 2, canRotate: true },
+    { name: 'Bottom Panel', width: width - 36, height: depth, quantity: 1, canRotate: true },
+    { name: 'Top Rail', width: width - 36, height: 100, quantity: 2, canRotate: true },
+  ];
+
+  if (width <= 600) {
+    pieces.push({ name: 'Door', width: height - 3, height: width - 3, quantity: 1, canRotate: true });
+  } else {
+    pieces.push({ name: 'Door', width: height - 3, height: (width - 6) / 2, quantity: 2, canRotate: true });
+  }
+
+  return {
+    id: `sys-base-${width}`,
+    name,
+    cabinetWidth: width,
+    cabinetHeight: height,
+    pieces
+  };
+};
+
+export const DEFAULT_TEMPLATES: Template[] = [
+  generateBaseCabinet('Slim Base 150', 150),
+  generateBaseCabinet('Single Base 300', 300),
+  generateBaseCabinet('Single Base 400', 400),
+  generateBaseCabinet('Single Base 450', 450),
+  generateBaseCabinet('Single Base 500', 500),
+  generateBaseCabinet('Standard Base 600', 600),
+  generateBaseCabinet('Double Base 800', 800),
+  generateBaseCabinet('Double Base 900', 900),
+  generateBaseCabinet('Double Base 1000', 1000),
+  generateBaseCabinet('Maxi Base 1200', 1200),
+];
+
+export const loadStoredTemplates = (): Template[] => {
+  try {
+    const raw = localStorage.getItem('cutwizard_templates');
+    if (!raw) return DEFAULT_TEMPLATES;
+    const parsed = JSON.parse(raw);
+    
+    // Combine defaults with user templates (user templates take precedence if same ID, though they shouldn't conflict)
+    const userTemplates = Array.isArray(parsed) ? parsed : [];
+    
+    // If the user's stored templates already contain the system ones, we don't want duplicates.
+    // In our case, earlier versions might not have defaults.
+    // Let's just return defaults + custom.
+    const customTemplates = userTemplates.filter((t: Template) => !t.id.startsWith('sys-'));
+    return [...DEFAULT_TEMPLATES, ...customTemplates];
+  } catch {
+    return DEFAULT_TEMPLATES;
+  }
+};
+
+export const saveStoredTemplates = (templates: Template[]): void => {
+  try {
+    // Only save custom templates to avoid storing system ones redundantly
+    const customTemplates = templates.filter(t => !t.id.startsWith('sys-'));
+    localStorage.setItem('cutwizard_templates', JSON.stringify(customTemplates));
+  } catch {
+    // Ignorar
+  }
+};
+
+export const loadStoredInventory = (): InventoryItem[] => {
+  try {
+    const raw = localStorage.getItem('cutwizard_inventory');
+    if (!raw) return [];
+    return JSON.parse(raw);
+  } catch {
+    return [];
+  }
+};
+
+export const saveStoredInventory = (items: InventoryItem[]): void => {
+  try {
+    localStorage.setItem('cutwizard_inventory', JSON.stringify(items));
   } catch {
     // Ignorar
   }

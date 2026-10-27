@@ -37,9 +37,15 @@
 
 /* Soporte para impresión técnica de taller */
 @media print {
+  @page {
+    size: A4 landscape;
+    margin: 1cm;
+  }
   body {
     background-color: #ffffff !important;
     color: #000000 !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
   }
   .no-print {
     display: none !important;
@@ -50,5 +56,12 @@
   .print\:break-inside-avoid {
     break-inside: avoid;
     page-break-inside: avoid;
+  }
+  .board-page {
+    page-break-after: always;
+    overflow: hidden;
+  }
+  .board-page:last-child {
+    page-break-after: auto;
   }
 }

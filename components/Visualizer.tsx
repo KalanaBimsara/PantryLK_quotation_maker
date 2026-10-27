@@ -1,6 +1,7 @@
 import React, { useState, useRef } from 'react';
 import { ZoomIn, ZoomOut, RotateCcw, Maximize2, RotateCw, Lock } from 'lucide-react';
 import { Board, PlacedPiece } from '../types';
+import { useLanguage } from '../contexts/LanguageContext';
 
 interface VisualizerProps {
   board: Board;
@@ -8,6 +9,9 @@ interface VisualizerProps {
   darkMode: boolean;
   hoveredPieceId: string | null;
   onHoverPiece: (id: string | null) => void;
+  jobNumber?: string;
+  boardIndex?: number;
+  totalBoards?: number;
 }
 
 export const Visualizer: React.FC<VisualizerProps> = ({
@@ -16,8 +20,12 @@ export const Visualizer: React.FC<VisualizerProps> = ({
   darkMode,
   hoveredPieceId,
   onHoverPiece,
+  jobNumber,
+  boardIndex,
+  totalBoards,
 }) => {
   const { width, height, placedPieces, freeRects, trimMargin = 0 } = board;
+  const { t } = useLanguage();
 
   // Estados para Zoom y Pan interactivo
   const [zoom, setZoom] = useState(1);
@@ -117,25 +125,56 @@ export const Visualizer: React.FC<VisualizerProps> = ({
     );
   };
 
+  const pieceLegend = React.useMemo(() => {
+    const counts = placedPieces.reduce((acc, p) => {
+      const key = `${p.name || p.label}-${p.w}-${p.h}-${p.color}`;
+      if (!acc[key]) {
+        acc[key] = {
+          name: p.name || p.label,
+          color: p.color,
+          w: p.w,
+          h: p.h,
+          count: 0,
+        };
+      }
+      acc[key].count++;
+      return acc;
+    }, {} as Record<string, {name: string, color: string, w: number, h: number, count: number}>);
+    return Object.values(counts);
+  }, [placedPieces]);
+
   return (
     <div
-      className={`w-full rounded-2xl shadow-sm border p-4 mb-6 transition-colors duration-200 print:shadow-none print:border-gray-800 ${
+      className={`board-page w-full rounded-2xl shadow-sm border p-4 mb-6 transition-colors duration-200 print:shadow-none print:border-none print:mb-0 print:p-0 print:h-[185mm] print:flex print:flex-col ${
         darkMode ? 'bg-gray-800/90 border-gray-700/80 text-gray-100' : 'bg-white border-gray-200 text-gray-800'
       }`}
     >
+      {/* Encabezado técnico exclusivo para impresión por hoja */}
+      <div className="hidden print:flex justify-between items-end mb-2 pb-2 border-b border-gray-400 text-black shrink-0">
+        <div>
+          <h1 className="text-base font-black tracking-tight">Pantry LK CutWIZ {jobNumber ? `- [${jobNumber}]` : ''}</h1>
+          <p className="text-[10px] text-gray-600">
+            {t('date')}: {new Date().toLocaleDateString()} | Board {boardIndex} of {totalBoards}
+          </p>
+        </div>
+        <div className="text-right text-[9px] font-mono text-gray-700">
+          <div>{t('bladeKerf')}: {kerf} mm</div>
+        </div>
+      </div>
+
       {/* Barra superior de placa */}
-      <div className="flex flex-wrap justify-between items-center mb-3 pb-2 border-b border-gray-100 dark:border-gray-700 gap-2">
+      <div className="flex flex-wrap justify-between items-center mb-3 pb-2 print:mb-1 print:pb-1 border-b border-gray-100 dark:border-gray-700 gap-2 print:border-gray-800">
         <div className="flex items-center gap-2">
           <span className="w-2.5 h-2.5 rounded-full bg-blue-500"></span>
-          <h3 className="text-sm font-bold uppercase tracking-wider text-gray-800 dark:text-gray-200">
-            Tablero #{board.id}
+          <h3 className="text-sm font-bold uppercase tracking-wider text-gray-800 dark:text-gray-200 print:text-black">
+            {t('board')} #{board.id}
           </h3>
-          <span className="text-xs font-mono px-2 py-0.5 rounded-md bg-gray-100 dark:bg-gray-750 text-gray-600 dark:text-gray-300">
+          <span className="text-xs font-mono px-2 py-0.5 rounded-md bg-gray-100 dark:bg-gray-750 text-gray-600 dark:text-gray-300 print:bg-gray-100 print:text-black border border-transparent print:border-gray-300">
             {width} × {height} mm
           </span>
           {trimMargin > 0 && (
-            <span className="text-[11px] px-2 py-0.5 rounded-md bg-amber-50 dark:bg-amber-900/40 text-amber-700 dark:text-amber-300 border border-amber-200 dark:border-amber-800">
-              Refilado: {trimMargin} mm
+            <span className="text-[11px] px-2 py-0.5 rounded-md bg-amber-50 dark:bg-amber-900/40 text-amber-700 dark:text-amber-300 border border-amber-200 dark:border-amber-800 print:bg-white print:border-amber-500">
+              {t('trimMargin')}: {trimMargin} mm
             </span>
           )}
         </div>
@@ -143,11 +182,11 @@ export const Visualizer: React.FC<VisualizerProps> = ({
         <div className="flex items-center gap-3">
           <span className="flex items-center gap-1.5 text-xs font-semibold text-green-600 dark:text-green-400">
             <span className="w-2 h-2 rounded-full bg-green-500"></span>
-            {board.efficiency.toFixed(1)}% Usado
+            {board.efficiency.toFixed(1)}%
           </span>
-          <span className="flex items-center gap-1.5 text-xs font-medium text-gray-500 dark:text-gray-400">
+          <span className="flex items-center gap-1.5 text-xs font-medium text-gray-500 dark:text-gray-400 print:text-gray-700">
             <span className="w-2 h-2 rounded-full bg-gray-300 dark:bg-gray-600"></span>
-            {board.waste.toFixed(1)}% Libre
+            {board.waste.toFixed(1)}%
           </span>
         </div>
       </div>
@@ -159,38 +198,34 @@ export const Visualizer: React.FC<VisualizerProps> = ({
         onMouseMove={handleMouseMove}
         onMouseUp={handleMouseUp}
         onMouseLeave={handleMouseUp}
-        className={`relative w-full rounded-xl border overflow-hidden select-none cursor-grab active:cursor-grabbing transition-colors duration-200 ${
+        className={`relative w-full rounded-xl border overflow-hidden select-none cursor-grab active:cursor-grabbing transition-colors duration-200 print:border-gray-300 print:bg-white print:flex-1 print:!min-h-0 print:!max-h-none print:flex print:flex-col ${
           darkMode ? 'bg-gray-900 border-gray-700' : 'bg-gray-100 border-gray-200'
         }`}
-        style={{ minHeight: '420px', maxHeight: '680px' }}
+        style={{ minHeight: '420px', maxHeight: '65vh' }}
       >
         {/* Controles de Zoom Flotantes */}
         <div className="absolute top-3 right-3 z-10 flex items-center gap-1 p-1 bg-white/90 dark:bg-gray-800/90 backdrop-blur-md rounded-xl shadow-md border border-gray-200 dark:border-gray-700 no-print">
           <button
             onClick={handleZoomIn}
             className="p-1.5 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-200 transition-colors"
-            title="Acercar (+)"
           >
             <ZoomIn className="w-4 h-4" />
           </button>
           <button
             onClick={handleZoomOut}
             className="p-1.5 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-200 transition-colors"
-            title="Alejar (-)"
           >
             <ZoomOut className="w-4 h-4" />
           </button>
           <button
             onClick={handleResetZoom}
             className="px-2 py-1 text-[11px] font-mono font-bold rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-200 transition-colors"
-            title="Reiniciar Vista"
           >
             {Math.round(zoom * 100)}%
           </button>
           <button
             onClick={handleResetZoom}
             className="p-1.5 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-200 transition-colors"
-            title="Centrar"
           >
             <Maximize2 className="w-3.5 h-3.5" />
           </button>
@@ -198,16 +233,16 @@ export const Visualizer: React.FC<VisualizerProps> = ({
 
         {/* Tooltip informativo al pasar el cursor sobre una pieza */}
         {activePiece && (
-          <div className="absolute bottom-3 left-3 z-10 p-2.5 bg-gray-900/95 text-white text-xs rounded-xl shadow-lg border border-gray-700 backdrop-blur-md pointer-events-none flex items-center gap-3">
+          <div className="absolute bottom-3 left-3 z-10 p-2.5 bg-gray-900/95 text-white text-xs rounded-xl shadow-lg border border-gray-700 backdrop-blur-md pointer-events-none flex items-center gap-3 no-print">
             <div>
               <div className="font-bold text-blue-300">{activePiece.name || activePiece.label}</div>
               <div className="text-gray-300 text-[11px]">
-                Medidas: <strong>{activePiece.w} × {activePiece.h} mm</strong> | Pos: ({Math.round(activePiece.x)}, {Math.round(activePiece.y)})
+                {activePiece.w} × {activePiece.h} mm | Pos: ({Math.round(activePiece.x)}, {Math.round(activePiece.y)})
               </div>
             </div>
             {activePiece.isRotated && (
               <span className="flex items-center gap-1 text-[10px] px-2 py-0.5 rounded bg-amber-500/20 text-amber-300 border border-amber-500/40">
-                <RotateCw className="w-3 h-3" /> Rotada 90º
+                <RotateCw className="w-3 h-3" />
               </span>
             )}
           </div>
@@ -215,6 +250,7 @@ export const Visualizer: React.FC<VisualizerProps> = ({
 
         {/* Canvas SVG transformable */}
         <div
+          className="print:!transform-none print:!p-1 print:flex-1 print:flex print:items-center print:justify-center"
           style={{
             transform: `translate(${pan.x}px, ${pan.y}px) scale(${zoom})`,
             transformOrigin: 'center center',
@@ -229,11 +265,10 @@ export const Visualizer: React.FC<VisualizerProps> = ({
         >
           <svg
             viewBox={`0 0 ${width} ${height}`}
-            className="w-full h-auto block drop-shadow-xl"
-            style={{ maxHeight: '580px', fontFamily: 'Inter, system-ui, sans-serif' }}
+            className="w-full h-auto block drop-shadow-xl print:drop-shadow-none print:max-h-full"
+            style={{ fontFamily: 'Inter, system-ui, sans-serif' }}
           >
             <defs>
-              {/* Patrón sutil para retazos / desperdicio */}
               <pattern
                 id={`waste-pattern-${board.id}`}
                 width="20"
@@ -252,7 +287,6 @@ export const Visualizer: React.FC<VisualizerProps> = ({
               </pattern>
             </defs>
 
-            {/* Fondo del Tablero */}
             <rect
               x="0"
               y="0"
@@ -264,7 +298,6 @@ export const Visualizer: React.FC<VisualizerProps> = ({
               rx={2}
             />
 
-            {/* Margen de refilado perimetral si existe */}
             {trimMargin > 0 && (
               <rect
                 x={trimMargin}
@@ -278,7 +311,6 @@ export const Visualizer: React.FC<VisualizerProps> = ({
               />
             )}
 
-            {/* Zonas Libres / Desperdicio */}
             {freeRects.map((rect, i) => {
               if (rect.w < 5 || rect.h < 5) return null;
               const isUseful = rect.w >= 300 && rect.h >= 300;
@@ -300,7 +332,6 @@ export const Visualizer: React.FC<VisualizerProps> = ({
               );
             })}
 
-            {/* Piezas Colocadas */}
             {placedPieces.map((p) => {
               const isHighlighted = hoveredPieceId === p.originalId;
 
@@ -331,11 +362,8 @@ export const Visualizer: React.FC<VisualizerProps> = ({
                       filter: isHighlighted ? 'drop-shadow(0 0 10px rgba(37,99,235,0.8))' : 'none',
                     }}
                   />
-
-                  {/* Nombre y medidas */}
                   {renderDimensions(p.x, p.y, p.w, p.h, true)}
 
-                  {/* Indicador de Rotación en la pieza */}
                   {p.isRotated && p.w > baseFontSize * 2 && p.h > baseFontSize * 2 && (
                     <text
                       x={p.x + p.w - baseFontSize * 1.2}
@@ -353,7 +381,6 @@ export const Visualizer: React.FC<VisualizerProps> = ({
               );
             })}
 
-            {/* Borde exterior del tablero */}
             <rect
               x="0"
               y="0"
@@ -366,6 +393,31 @@ export const Visualizer: React.FC<VisualizerProps> = ({
           </svg>
         </div>
       </div>
+
+      {/* Item Mapping (Legend) for Print & Screen */}
+      <div className="mt-4 print:mt-6 hidden print:block mb-4">
+        <h4 className="text-sm font-bold text-gray-800 uppercase tracking-wider mb-2 border-b pb-1">Item Mapping</h4>
+        <div className="grid grid-cols-2 gap-x-4 gap-y-2 text-[11px]">
+          {pieceLegend.map((item, idx) => (
+            <div key={idx} className="flex items-center gap-2 border-b border-gray-100 pb-1">
+              <div 
+                className="w-4 h-4 rounded border border-gray-300 print:border-black shrink-0" 
+                style={{ backgroundColor: item.color }}
+              ></div>
+              <div className="flex-1 font-semibold text-gray-900 truncate">
+                {item.name}
+              </div>
+              <div className="text-gray-600 font-mono whitespace-nowrap">
+                {item.w} × {item.h} mm
+              </div>
+              <div className="font-bold text-gray-900 bg-gray-100 px-1.5 rounded">
+                x{item.count}
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
     </div>
   );
 };
