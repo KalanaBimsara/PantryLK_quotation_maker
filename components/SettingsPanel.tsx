@@ -35,8 +35,7 @@ export const SettingsPanel: React.FC<SettingsPanelProps> = ({ settings, onChange
 
   return (
     <div
-      className={`rounded-2xl shadow-sm border p-5 transition-colors duration-200 ${darkMode ? 'bg-gray-800/80 border-gray-700/80 text-gray-100' : 'bg-white border-gray-200 text-gray-800'
-        }`}
+      className={`transition-colors duration-200 ${darkMode ? 'text-gray-100' : 'text-gray-800'}`}
     >
       <div className="flex items-center justify-between mb-4 pb-3 border-b border-gray-100 dark:border-gray-700">
         <div className="flex items-center gap-2">
@@ -76,22 +75,7 @@ export const SettingsPanel: React.FC<SettingsPanelProps> = ({ settings, onChange
 
       {/* Inputs de Medidas */}
       <div className="space-y-3">
-        <div className="mb-2">
-          <label htmlFor="job-number" className="text-xs font-medium text-gray-600 dark:text-gray-300 block mb-1">
-            Job Number / Name
-          </label>
-          <input
-            id="job-number"
-            name="jobNumber"
-            type="text"
-            value={settings.jobNumber || ''}
-            onChange={(e) => onChange({ ...settings, jobNumber: e.target.value })}
-            placeholder="e.g. PO-12345"
-            className={`w-full px-3 py-2 rounded-lg border text-sm font-semibold outline-none focus:ring-2 focus:ring-blue-500 transition-all ${darkMode ? 'bg-gray-700/60 border-gray-600 text-white' : 'bg-gray-50 border-gray-300 text-gray-900'
-              }`}
-          />
-        </div>
-
+        {/* El nombre del trabajo se edita en la barra del trabajo (JobBar) */}
         <div className="grid grid-cols-2 gap-3">
           <div>
             <label htmlFor="board-width" className="text-xs font-medium text-gray-600 dark:text-gray-300 block mb-1">

@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
-import { Axe, Calculator, AlertTriangle, Layers } from 'lucide-react';
+import { Axe, Layers } from 'lucide-react';
 import { Piece, Settings, OptimizationResult } from './types';
 import { optimizeCuts } from './services/optimizer';
+import { exportOptimizationCSV } from './services/csvHelper';
 import { countExtraBoards } from './services/cabinetPieces';
 import {
   loadStoredPieces,
@@ -18,6 +19,8 @@ import { PieceList } from './components/PieceList';
 import { StatsSummary } from './components/StatsSummary';
 import { Visualizer } from './components/Visualizer';
 import { InventoryView } from './components/InventoryView';
+import { JobBar } from './components/JobBar';
+import { SettingsDrawer } from './components/SettingsDrawer';
 import { useLanguage } from './contexts/LanguageContext';
 
 export type ViewState = 'optimizer' | 'inventory';
@@ -33,7 +36,7 @@ const App: React.FC = () => {
 
   // 2. Resultados de optimización
   const [result, setResult] = useState<OptimizationResult | null>(null);
-  const [isOptimizing, setIsOptimizing] = useState<boolean>(false);
+  const [settingsOpen, setSettingsOpen] = useState<boolean>(false);
 
   // 3. Sincronización visual (Hover bidireccional)
   const [hoveredPieceId, setHoveredPieceId] = useState<string | null>(null);
@@ -63,26 +66,23 @@ const App: React.FC = () => {
     saveStoredPieces(newPieces);
   };
 
-  // Ejecución del Optimizador Multi-Pass
-  const handleOptimize = useCallback(() => {
-    setIsOptimizing(true);
-
-    // Timeout breve para permitir que el spinner de React se renderice fluidamente
-    setTimeout(() => {
-      const outcome = optimizeCuts(pieces, settings);
-      setResult(outcome);
-      setIsOptimizing(false);
-    }, 60);
-  }, [pieces, settings]);
-
-  // Optimización automática al montar o cambiar configuraciones
+  // Optimización automática (Multi-Pass) al montar o cambiar piezas/ajustes.
+  // El pequeño retraso agrupa cambios seguidos (p. ej. al escribir medidas).
   useEffect(() => {
-    handleOptimize();
-  }, [handleOptimize]);
+    const timer = setTimeout(() => setResult(optimizeCuts(pieces, settings)), 60);
+    return () => clearTimeout(timer);
+  }, [pieces, settings]);
 
   const handleExportPDF = () => {
     window.print();
   };
+
+  const handleExportCsv = () => {
+    if (result) exportOptimizationCSV(result);
+  };
+
+  const closeSettings = useCallback(() => setSettingsOpen(false), []);
+  const hasPlan = !!result && result.boards.length > 0;
 
   const autoFrontAreaSqFt = useMemo(() => {
     let area = 0;
@@ -117,17 +117,21 @@ const App: React.FC = () => {
 
       <main className="max-w-7xl mx-auto p-4 lg:p-8 print:p-0">
         {currentView === 'optimizer' ? (
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 print:block">
-            {/* Columna Izquierda: Entradas y Configuración */}
-            <div className="lg:col-span-5 space-y-5 no-print">
-              {/* Panel de Parámetros del Tablero */}
-              <SettingsPanel
-                settings={settings}
-                onChange={handleSettingsChange}
-                darkMode={darkMode}
-                autoFrontAreaSqFt={autoFrontAreaSqFt}
-              />
+          <div className="space-y-5 print:space-y-0">
+            {/* Barra del trabajo: nombre, tablero y acciones */}
+            <JobBar
+              settings={settings}
+              onSettingsChange={handleSettingsChange}
+              onOpenSettings={() => setSettingsOpen(true)}
+              onPrint={handleExportPDF}
+              onExportCsv={handleExportCsv}
+              canExport={hasPlan}
+              darkMode={darkMode}
+            />
 
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 print:block">
+            {/* Columna Izquierda: armar el trabajo */}
+            <div className="lg:col-span-5 space-y-5 no-print">
               {/* Tabla de Piezas */}
               <PieceList
                 pieces={pieces}
@@ -136,25 +140,6 @@ const App: React.FC = () => {
                 hoveredPieceId={hoveredPieceId}
                 onHoverPiece={setHoveredPieceId}
               />
-
-              {/* Botón Principal de Optimización */}
-              <button
-                onClick={handleOptimize}
-                disabled={isOptimizing}
-                className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3.5 px-5 rounded-2xl shadow-md hover:shadow-lg transition-all transform active:scale-[0.99] flex items-center justify-center gap-2.5 disabled:opacity-70 disabled:cursor-not-allowed text-sm"
-              >
-                {isOptimizing ? (
-                  <>
-                    <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                    <span>{t('calculating')}</span>
-                  </>
-                ) : (
-                  <>
-                    <Calculator className="w-5 h-5" />
-                    <span>{t('optimizeCuts')}</span>
-                  </>
-                )}
-              </button>
             </div>
 
             {/* Columna Derecha: Estadísticas y Visualización de Tableros */}
@@ -216,10 +201,21 @@ const App: React.FC = () => {
               </div>
             </div>
           </div>
+          </div>
         ) : (
           <InventoryView darkMode={darkMode} />
         )}
       </main>
+
+      {/* Ajustes del trabajo en panel lateral */}
+      <SettingsDrawer open={settingsOpen} onClose={closeSettings} darkMode={darkMode}>
+        <SettingsPanel
+          settings={settings}
+          onChange={handleSettingsChange}
+          darkMode={darkMode}
+          autoFrontAreaSqFt={autoFrontAreaSqFt}
+        />
+      </SettingsDrawer>
 
       {/* Footer removido para evitar hojas extra en impresión */}
     </div>

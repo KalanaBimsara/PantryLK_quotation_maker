@@ -42,28 +42,32 @@ export const Navbar: React.FC<NavbarProps> = ({
         </div>
 
         {/* Navigation Tabs */}
-        <div className="flex items-center bg-gray-100/50 dark:bg-gray-800/50 rounded-lg p-1 mx-2 sm:mx-4 border border-gray-200 dark:border-gray-700 overflow-x-auto">
+        <div className="flex items-center bg-gray-100/50 dark:bg-gray-800/50 rounded-lg p-1 mx-2 sm:mx-4 border border-gray-200 dark:border-gray-700 shrink-0">
           <button
             onClick={() => onViewChange('optimizer')}
-            className={`px-3 sm:px-4 py-1.5 rounded-md text-xs sm:text-sm font-semibold transition-all flex items-center gap-2 ${
+            aria-label={t('optimizer')}
+            aria-current={currentView === 'optimizer' ? 'page' : undefined}
+            className={`px-3 sm:px-4 py-1.5 rounded-md text-xs sm:text-sm font-semibold transition-all flex items-center gap-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500 ${
               currentView === 'optimizer'
                 ? 'bg-white dark:bg-gray-700 text-blue-600 dark:text-blue-400 shadow-sm'
                 : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200'
             }`}
           >
-            <Calculator className="w-4 h-4" />
-            {t('optimizer')}
+            <Calculator className="w-4 h-4" aria-hidden="true" />
+            <span className="hidden sm:inline">{t('optimizer')}</span>
           </button>
           <button
             onClick={() => onViewChange('inventory')}
-            className={`px-3 sm:px-4 py-1.5 rounded-md text-xs sm:text-sm font-semibold transition-all flex items-center gap-2 ${
+            aria-label={t('inventory')}
+            aria-current={currentView === 'inventory' ? 'page' : undefined}
+            className={`px-3 sm:px-4 py-1.5 rounded-md text-xs sm:text-sm font-semibold transition-all flex items-center gap-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500 ${
               currentView === 'inventory'
                 ? 'bg-white dark:bg-gray-700 text-indigo-600 dark:text-indigo-400 shadow-sm'
                 : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200'
             }`}
           >
-            <PackageSearch className="w-4 h-4" />
-            {t('inventory')}
+            <PackageSearch className="w-4 h-4" aria-hidden="true" />
+            <span className="hidden sm:inline">{t('inventory')}</span>
           </button>
         </div>
 
@@ -73,7 +77,8 @@ export const Navbar: React.FC<NavbarProps> = ({
             <select 
               value={language} 
               onChange={(e) => setLanguage(e.target.value as Language)}
-              className="bg-transparent outline-none cursor-pointer text-gray-700 dark:text-gray-300"
+              aria-label="Language"
+              className="bg-transparent outline-none cursor-pointer text-gray-700 dark:text-gray-300 rounded focus-visible:ring-2 focus-visible:ring-orange-500"
             >
               <option value="en">EN</option>
               <option value="es">ES</option>
