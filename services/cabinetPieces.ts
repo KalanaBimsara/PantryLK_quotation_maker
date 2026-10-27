@@ -8,7 +8,7 @@ export const MAX_CABINET_QUANTITY = 50;
 // Contador de módulo: ids únicos aunque se creen varios en el mismo milisegundo
 // (crypto.randomUUID no existe al abrir la app por IP en HTTP plano).
 let seq = 0;
-const makeId = (prefix: string) => `${prefix}-${Date.now().toString(36)}-${(seq++).toString(36)}`;
+export const makeId = (prefix: string) => `${prefix}-${Date.now().toString(36)}-${(seq++).toString(36)}`;
 
 export function clampCabinetQuantity(value: number): number {
   if (!Number.isFinite(value)) return value === Infinity ? MAX_CABINET_QUANTITY : 1;

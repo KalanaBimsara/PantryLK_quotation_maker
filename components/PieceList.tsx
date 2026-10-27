@@ -5,6 +5,7 @@ import { parsePiecesCSV, exportPiecesListCSV } from '../services/csvHelper';
 import { DEFAULT_PIECES, loadStoredTemplates, saveStoredTemplates } from '../services/storage';
 import { useLanguage } from '../contexts/LanguageContext';
 import { CabinetPresetPicker } from './CabinetPresetPicker';
+import { templatePiecesFrom, piecesFromTemplate } from '../services/templatePieces';
 
 interface PieceListProps {
   pieces: Piece[];
@@ -116,8 +117,8 @@ export const PieceList: React.FC<PieceListProps> = ({
     const name = window.prompt(t('enterTemplateName'));
     if (!name) return;
 
-    // Remove specific IDs and group info when saving a generic template
-    const templatePieces = pieces.map(({ id, groupId, groupName, ...rest }) => rest);
+    // Sin ids; los grupos se guardan como claves locales para recuperar cada gabinete al cargar
+    const templatePieces = templatePiecesFrom(pieces);
 
     const existingIndex = templates.findIndex(t => t.name.toLowerCase() === name.toLowerCase());
     let newTemplates = [...templates];
@@ -145,16 +146,7 @@ export const PieceList: React.FC<PieceListProps> = ({
   };
 
   const loadTemplate = (template: Template) => {
-    const groupId = `group-${Date.now()}-${Math.random().toString(36).substring(2, 6)}`;
-    const newPieces = template.pieces.map((p) => ({
-      ...p,
-      id: `piece-${Date.now()}-${Math.random().toString(36).substring(2, 6)}`,
-      groupId,
-      groupName: template.name,
-      cabinetWidth: template.cabinetWidth,
-      cabinetHeight: template.cabinetHeight,
-    }));
-    onChange([...pieces, ...newPieces]);
+    onChange([...pieces, ...piecesFromTemplate(template)]);
     setShowTemplateModal(false);
   };
   
