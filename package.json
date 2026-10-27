@@ -1,0 +1,34 @@
+{
+  "name": "pantrylk-core",
+  "version": "1.0.0",
+  "description": "Pantry LK cabinet rules, cut optimizer and job contract, shared by CutWizard, the quotation maker and the 3D planner.",
+  "private": true,
+  "type": "module",
+  "sideEffects": false,
+  "files": [
+    "dist"
+  ],
+  "exports": {
+    "./cabinet": {
+      "types": "./dist/cabinet.d.ts",
+      "default": "./dist/cabinet.js"
+    },
+    "./optimizer": {
+      "types": "./dist/optimizer.d.ts",
+      "default": "./dist/optimizer.js"
+    },
+    "./job": {
+      "types": "./dist/job.d.ts",
+      "default": "./dist/job.js"
+    }
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run"
+  },
+  "devDependencies": {
+    "typescript": "~5.8.2",
+    "vitest": "3.2.4"
+  }
+}
