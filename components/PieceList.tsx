@@ -4,6 +4,7 @@ import { Piece, Template } from '../types';
 import { parsePiecesCSV, exportPiecesListCSV } from '../services/csvHelper';
 import { DEFAULT_PIECES, loadStoredTemplates, saveStoredTemplates } from '../services/storage';
 import { useLanguage } from '../contexts/LanguageContext';
+import { CabinetPresetPicker } from './CabinetPresetPicker';
 
 interface PieceListProps {
   pieces: Piece[];
@@ -491,7 +492,18 @@ export const PieceList: React.FC<PieceListProps> = ({
             <h2 className="text-xl font-bold">{t('templates')}</h2>
           </div>
 
-          <div className="max-h-[60vh] overflow-y-auto space-y-2 pr-2 custom-scrollbar">
+          <div className="max-h-[70vh] overflow-y-auto space-y-2 pr-2 custom-scrollbar">
+            <CabinetPresetPicker
+              darkMode={darkMode}
+              onAdd={(newPieces) => {
+                onChange([...pieces, ...newPieces]);
+                setShowTemplateModal(false);
+              }}
+            />
+
+            <h3 className="text-xs font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400 pt-3">
+              {t('myTemplates')}
+            </h3>
             {templates.length === 0 ? (
               <p className="text-sm text-gray-500 text-center py-8">{t('noTemplates')}</p>
             ) : (
@@ -517,18 +529,16 @@ export const PieceList: React.FC<PieceListProps> = ({
                     >
                       {t('loadTemplate')}
                     </button>
-                    {!tpl.id.startsWith('sys-') && (
-                      <button
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          deleteTemplate(tpl.id);
-                        }}
-                        className="p-1.5 text-gray-400 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-900/30 rounded-lg transition-colors opacity-0 group-hover:opacity-100"
-                        title="Delete template"
-                      >
-                        <Trash2 className="w-4 h-4" />
-                      </button>
-                    )}
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        deleteTemplate(tpl.id);
+                      }}
+                      className="p-1.5 text-gray-400 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-900/30 rounded-lg transition-colors opacity-0 group-hover:opacity-100"
+                      title="Delete template"
+                    >
+                      <Trash2 className="w-4 h-4" />
+                    </button>
                   </div>
                 </div>
               ))
