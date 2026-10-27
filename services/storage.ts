@@ -1,4 +1,5 @@
 import { Piece, Settings, Template, InventoryItem } from '../types';
+import { isCabinetSeriesId } from './cabinetSeries';
 
 const STORAGE_KEYS = {
   PIECES: 'cutwizard_pieces_v2',
@@ -22,18 +23,33 @@ export const DEFAULT_PIECES: Piece[] = [
   { id: '5', name: 'Frente Cajón', width: 860, height: 180, quantity: 2, canRotate: false },
 ];
 
+// Número válido o el valor por defecto (evita NaN cuando el campo falta)
+const num = (value: unknown, fallback: number): number => {
+  const n = Number(value);
+  return value !== null && value !== undefined && value !== '' && Number.isFinite(n) ? n : fallback;
+};
+
+const COST_FIELDS = ['boardPrice', 'edgeBandPricePerM', 'machineRentPerSqFt', 'laborPerSqFt', 'frontAreaSqFt'] as const;
+
 export const loadStoredSettings = (): Settings => {
   try {
     const raw = localStorage.getItem(STORAGE_KEYS.SETTINGS);
     if (!raw) return DEFAULT_SETTINGS;
     const parsed = JSON.parse(raw);
-    return {
-      boardWidth: Number(parsed.boardWidth) || DEFAULT_SETTINGS.boardWidth,
-      boardHeight: Number(parsed.boardHeight) || DEFAULT_SETTINGS.boardHeight,
-      kerf: Number(parsed.kerf) ?? DEFAULT_SETTINGS.kerf,
-      trimMargin: Number(parsed.trimMargin) ?? DEFAULT_SETTINGS.trimMargin,
+    const settings: Settings = {
+      boardWidth: num(parsed.boardWidth, DEFAULT_SETTINGS.boardWidth) || DEFAULT_SETTINGS.boardWidth,
+      boardHeight: num(parsed.boardHeight, DEFAULT_SETTINGS.boardHeight) || DEFAULT_SETTINGS.boardHeight,
+      kerf: num(parsed.kerf, DEFAULT_SETTINGS.kerf),
+      trimMargin: num(parsed.trimMargin, DEFAULT_SETTINGS.trimMargin),
       enableTrimMargin: Boolean(parsed.enableTrimMargin),
     };
+    if (parsed.jobNumber !== undefined && parsed.jobNumber !== null) settings.jobNumber = String(parsed.jobNumber);
+    // Campos de costos: solo se copian si fueron guardados
+    for (const field of COST_FIELDS) {
+      const value = num(parsed[field], NaN);
+      if (!Number.isNaN(value)) settings[field] = value;
+    }
+    return settings;
   } catch {
     return DEFAULT_SETTINGS;
   }
@@ -61,6 +77,13 @@ export const loadStoredPieces = (): Piece[] => {
       quantity: Math.max(1, Number(p.quantity) || 1),
       canRotate: p.canRotate !== false,
       color: p.color,
+      // Datos de grupo/gabinete: se conservan para no perder los gabinetes al recargar
+      ...(p.groupId ? { groupId: String(p.groupId) } : {}),
+      ...(p.groupName ? { groupName: String(p.groupName) } : {}),
+      ...(p.cabinetWidth ? { cabinetWidth: Number(p.cabinetWidth) } : {}),
+      ...(p.cabinetHeight ? { cabinetHeight: Number(p.cabinetHeight) } : {}),
+      ...(isCabinetSeriesId(p.cabinetSeriesId) ? { cabinetSeriesId: p.cabinetSeriesId } : {}),
+      ...(typeof p.cabinetDrawers === 'boolean' ? { cabinetDrawers: p.cabinetDrawers } : {}),
     }));
   } catch {
     return DEFAULT_PIECES;
@@ -96,57 +119,17 @@ export const saveStoredDarkMode = (isDark: boolean): void => {
   }
 };
 
-const generateBaseCabinet = (name: string, width: number, depth: number = 560, height: number = 750): Template => {
-  const pieces: Omit<Piece, 'id'>[] = [
-    { name: 'Side Panel', width: height, height: depth, quantity: 2, canRotate: true },
-    { name: 'Bottom Panel', width: width - 36, height: depth, quantity: 1, canRotate: true },
-    { name: 'Top Rail', width: width - 36, height: 100, quantity: 2, canRotate: true },
-  ];
-
-  if (width <= 600) {
-    pieces.push({ name: 'Door', width: height - 3, height: width - 3, quantity: 1, canRotate: true });
-  } else {
-    pieces.push({ name: 'Door', width: height - 3, height: (width - 6) / 2, quantity: 2, canRotate: true });
-  }
-
-  return {
-    id: `sys-base-${width}`,
-    name,
-    cabinetWidth: width,
-    cabinetHeight: height,
-    pieces
-  };
-};
-
-export const DEFAULT_TEMPLATES: Template[] = [
-  generateBaseCabinet('Slim Base 150', 150),
-  generateBaseCabinet('Single Base 300', 300),
-  generateBaseCabinet('Single Base 400', 400),
-  generateBaseCabinet('Single Base 450', 450),
-  generateBaseCabinet('Single Base 500', 500),
-  generateBaseCabinet('Standard Base 600', 600),
-  generateBaseCabinet('Double Base 800', 800),
-  generateBaseCabinet('Double Base 900', 900),
-  generateBaseCabinet('Double Base 1000', 1000),
-  generateBaseCabinet('Maxi Base 1200', 1200),
-];
-
+// Plantillas guardadas por el usuario. Los presets de gabinetes viven en cabinetSeries.ts;
+// los antiguos presets "sys-" se descartan si quedaron en datos viejos.
 export const loadStoredTemplates = (): Template[] => {
   try {
     const raw = localStorage.getItem('cutwizard_templates');
-    if (!raw) return DEFAULT_TEMPLATES;
+    if (!raw) return [];
     const parsed = JSON.parse(raw);
-    
-    // Combine defaults with user templates (user templates take precedence if same ID, though they shouldn't conflict)
-    const userTemplates = Array.isArray(parsed) ? parsed : [];
-    
-    // If the user's stored templates already contain the system ones, we don't want duplicates.
-    // In our case, earlier versions might not have defaults.
-    // Let's just return defaults + custom.
-    const customTemplates = userTemplates.filter((t: Template) => !t.id.startsWith('sys-'));
-    return [...DEFAULT_TEMPLATES, ...customTemplates];
+    if (!Array.isArray(parsed)) return [];
+    return parsed.filter((t: Template) => t && typeof t.id === 'string' && !t.id.startsWith('sys-'));
   } catch {
-    return DEFAULT_TEMPLATES;
+    return [];
   }
 };
 

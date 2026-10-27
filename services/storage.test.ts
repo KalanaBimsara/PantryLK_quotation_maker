@@ -1,0 +1,67 @@
+import { describe, it, expect, beforeEach } from 'vitest';
+import {
+  DEFAULT_SETTINGS,
+  loadStoredPieces,
+  saveStoredPieces,
+  loadStoredSettings,
+  saveStoredSettings,
+  loadStoredTemplates,
+} from './storage';
+
+beforeEach(() => {
+  const store = new Map<string, string>();
+  globalThis.localStorage = {
+    getItem: (k: string) => (store.has(k) ? store.get(k)! : null),
+    setItem: (k: string, v: string) => void store.set(k, String(v)),
+    removeItem: (k: string) => void store.delete(k),
+    clear: () => store.clear(),
+    key: (i: number) => [...store.keys()][i] ?? null,
+    get length() {
+      return store.size;
+    },
+  } as Storage;
+});
+
+describe('pieces storage', () => {
+  it('keeps group and cabinet fields across save/load', () => {
+    const piece = {
+      id: 'a', name: 'Door', width: 600, height: 750, quantity: 1, canRotate: false,
+      groupId: 'g1', groupName: 'Deep base 600', cabinetWidth: 600, cabinetHeight: 750,
+      cabinetSeriesId: 'deep-560' as const, cabinetDrawers: false,
+    };
+    saveStoredPieces([piece]);
+    expect(loadStoredPieces()[0]).toMatchObject(piece);
+  });
+
+  it('drops an unknown cabinetSeriesId but keeps the group', () => {
+    localStorage.setItem('cutwizard_pieces_v2', JSON.stringify([{ id: 'a', width: 1, height: 1, quantity: 1, groupId: 'g', cabinetSeriesId: 'bogus' }]));
+    const [p] = loadStoredPieces();
+    expect(p.groupId).toBe('g');
+    expect(p.cabinetSeriesId).toBeUndefined();
+  });
+});
+
+describe('settings storage', () => {
+  it('keeps cost settings across save/load', () => {
+    const s = { ...DEFAULT_SETTINGS, jobNumber: 'J-12', boardPrice: 9500, edgeBandPricePerM: 60, machineRentPerSqFt: 500, laborPerSqFt: 850, frontAreaSqFt: 12.5 };
+    saveStoredSettings(s);
+    expect(loadStoredSettings()).toMatchObject(s);
+  });
+
+  it('leaves frontAreaSqFt undefined when it was never set', () => {
+    saveStoredSettings(DEFAULT_SETTINGS);
+    expect(loadStoredSettings().frontAreaSqFt).toBeUndefined();
+  });
+
+  it('falls back to default kerf and trim when missing', () => {
+    localStorage.setItem('cutwizard_settings_v2', JSON.stringify({ boardWidth: 2440, boardHeight: 1220 }));
+    expect(loadStoredSettings()).toMatchObject({ kerf: DEFAULT_SETTINGS.kerf, trimMargin: DEFAULT_SETTINGS.trimMargin });
+  });
+});
+
+describe('templates storage', () => {
+  it('returns only user templates', () => {
+    localStorage.setItem('cutwizard_templates', JSON.stringify([{ id: 'sys-base-600', name: 'x', pieces: [] }, { id: 'u1', name: 'Mine', pieces: [] }]));
+    expect(loadStoredTemplates().map((t) => t.id)).toEqual(['u1']);
+  });
+});

@@ -1,3 +1,5 @@
+import type { CabinetSeriesId } from './services/cabinetSeries';
+
 export interface Piece {
   id: string;
   name?: string;
@@ -11,6 +13,8 @@ export interface Piece {
   groupName?: string;
   cabinetWidth?: number;
   cabinetHeight?: number;
+  cabinetSeriesId?: CabinetSeriesId;
+  cabinetDrawers?: boolean;
 }
 
 export interface Rect {
