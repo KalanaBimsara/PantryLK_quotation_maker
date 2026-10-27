@@ -2,9 +2,10 @@
 // The planner writes a CutJobInput; an estimate or the workshop writes a CutJobResult.
 // Parsers whitelist known fields, never coerce types, and name the bad field in the error.
 
-import { drawersAvailable, isCabinetSeriesId, isValidCabinetWidth } from './cabinet.js';
-import type { CabinetSeriesId, HardwareItem, HardwareKey } from './cabinet.js';
-import type { CutSettings } from './types.js';
+import { buildCabinet, drawersAvailable, isCabinetSeriesId, isValidCabinetWidth } from './cabinet.js';
+import type { CabinetBuild, CabinetSeriesId, HardwareItem, HardwareKey } from './cabinet.js';
+import { optimizeCuts } from './optimizer.js';
+import type { CutSettings, OptimizationResult, Piece } from './types.js';
 
 export const CUT_JOB_SCHEMA_VERSION = 1;
 export const MAX_LINE_QUANTITY = 50;
@@ -51,6 +52,7 @@ export interface CutJobResult {
 
 // Record so the compiler flags a hardware key added to cabinet.ts but missing here.
 const HARDWARE_KEYS: Record<HardwareKey, true> = { legs: true, hinges: true, handles: true, drawerRails: true };
+const HARDWARE_ORDER = Object.keys(HARDWARE_KEYS) as HardwareKey[];
 
 const CUT_PLAN_FIELDS: readonly (keyof CutPlan)[] = [
   'optimizerBoards',
@@ -175,5 +177,72 @@ export function parseCutJobResult(value: unknown): CutJobResult {
     hardware: parseHardware(o.hardware, 'hardware'),
     cutPlan: parseCutPlan(o.cutPlan, 'cutPlan'),
     settings: parseSettings(o.settings, 'settings'),
+  };
+}
+
+// Hardware for a set of cabinets: one entry per key in a fixed order, zero quantities left out.
+export function sumHardware(builds: { build: CabinetBuild; quantity: number }[]): HardwareItem[] {
+  const totals = new Map<HardwareKey, number>();
+  for (const { build, quantity } of builds)
+    for (const item of build.hardware) totals.set(item.key, (totals.get(item.key) ?? 0) + item.quantity * quantity);
+  return HARDWARE_ORDER.filter((key) => (totals.get(key) ?? 0) > 0).map((key) => ({ key, quantity: totals.get(key)! }));
+}
+
+export function cutPlanFrom(result: OptimizationResult, extraBoards: number, customPieceCount: number): CutPlan {
+  return {
+    optimizerBoards: result.totalBoards,
+    extraBoards,
+    totalBoards: result.totalBoards + extraBoards,
+    efficiency: result.totalEfficiency,
+    wastePct: result.totalWaste,
+    linearCutsM: result.totalLinearCuts,
+    partsCount: result.totalPartsCount,
+    unplacedCount: result.unplacedPieces.length,
+    customPieceCount,
+  };
+}
+
+// Automatic estimate for a planner design: every cabinet line × quantity, optimized with the job's settings.
+// Part names are the part keys; apps that show the pieces translate them.
+export function estimateJob(input: CutJobInput, now: () => Date = () => new Date()): CutJobResult {
+  const builds = input.cabinets.map((line) => ({
+    line,
+    build: buildCabinet(line.seriesId, line.width, { drawers: line.drawers }),
+    quantity: line.quantity,
+  }));
+
+  const pieces: Piece[] = [];
+  for (const { line, build } of builds) {
+    for (let i = 0; i < line.quantity; i++) {
+      build.parts.forEach((part, partIndex) => {
+        pieces.push({
+          id: `${line.lineId}-${i}-${partIndex}`,
+          name: part.key,
+          width: part.width,
+          height: part.height,
+          quantity: part.quantity,
+          canRotate: part.canRotate,
+          groupId: `${line.lineId}-${i}`,
+          cabinetWidth: build.width,
+          cabinetHeight: build.height,
+          cabinetSeriesId: build.seriesId,
+          cabinetDrawers: build.drawers,
+          cabinetLineId: line.lineId,
+        });
+      });
+    }
+  }
+
+  const extraBoards = builds.reduce((sum, { build, quantity }) => sum + build.extraBoards * quantity, 0);
+
+  return {
+    schemaVersion: CUT_JOB_SCHEMA_VERSION,
+    source: 'auto',
+    basedOnInputVersion: input.inputVersion,
+    computedAt: now().toISOString(),
+    cabinets: input.cabinets.map((line) => ({ ...line })),
+    hardware: sumHardware(builds),
+    cutPlan: cutPlanFrom(optimizeCuts(pieces, input.settings), extraBoards, 0),
+    settings: { ...input.settings },
   };
 }
