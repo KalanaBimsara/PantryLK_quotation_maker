@@ -161,6 +161,12 @@ describe('estimateJob', () => {
     expect(estimateJob(job([deep600]), clock)).toEqual(estimateJob(job([deep600]), clock));
   });
 
+  it('rejects invalid input instead of storing a result no tool can read', () => {
+    expect(() => estimateJob(job([deep600, { ...deep600, width: 900 }]), clock)).toThrow(/cabinets\[1\]\.lineId/);
+    expect(() => estimateJob(job([{ ...deep600, quantity: 51 }]), clock)).toThrow(/cabinets\[0\]\.quantity/);
+    expect(() => estimateJob(job([deep600], { ...DEFAULT_CUT_SETTINGS, kerf: NaN }), clock)).toThrow(/settings\.kerf/);
+  });
+
   it('produces a result its own parser accepts', () => {
     const r = estimateJob(job([deep600]), clock);
     expect(parseCutJobResult(r)).toEqual(r);

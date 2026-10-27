@@ -45,4 +45,4 @@ export declare function sumHardware(builds: {
     quantity: number;
 }[]): HardwareItem[];
 export declare function cutPlanFrom(result: OptimizationResult, extraBoards: number, customPieceCount: number): CutPlan;
-export declare function estimateJob(input: CutJobInput, now?: () => Date): CutJobResult;
+export declare function estimateJob(raw: CutJobInput, now?: () => Date): CutJobResult;

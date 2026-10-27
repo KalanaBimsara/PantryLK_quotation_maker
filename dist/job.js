@@ -134,8 +134,10 @@ export function cutPlanFrom(result, extraBoards, customPieceCount) {
     };
 }
 // Automatic estimate for a planner design: every cabinet line × quantity, optimized with the job's settings.
+// The input is parsed first, so an invalid job fails here instead of storing a result no tool can read.
 // Part names are the part keys; apps that show the pieces translate them.
-export function estimateJob(input, now = () => new Date()) {
+export function estimateJob(raw, now = () => new Date()) {
+    const input = parseCutJobInput(raw);
     const builds = input.cabinets.map((line) => ({
         line,
         build: buildCabinet(line.seriesId, line.width, { drawers: line.drawers }),
