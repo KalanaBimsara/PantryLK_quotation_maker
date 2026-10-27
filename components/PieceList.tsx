@@ -23,6 +23,7 @@ import { loadStoredTemplates, saveStoredTemplates } from '../services/storage';
 import { useLanguage } from '../contexts/LanguageContext';
 import { templatePiecesFrom, piecesFromTemplate } from '../services/templatePieces';
 import { groupPieces } from '../services/cutList';
+import { fmtMm } from '../services/format';
 
 interface PieceListProps {
   pieces: Piece[];
@@ -234,7 +235,7 @@ export const PieceList: React.FC<PieceListProps> = ({
             aria-label={`${t('width')} (mm) – ${label}`}
             type="number"
             min="1"
-            value={p.width || ''}
+            value={p.width ? fmtMm(p.width) : ''}
             onChange={(e) => updateField(p.id, 'width', Math.max(0, Number(e.target.value)))}
             className={`w-full text-xs font-bold text-center px-1 py-1 ${inputBase}`}
             placeholder="W"
@@ -245,7 +246,7 @@ export const PieceList: React.FC<PieceListProps> = ({
             aria-label={`${t('height')} (mm) – ${label}`}
             type="number"
             min="1"
-            value={p.height || ''}
+            value={p.height ? fmtMm(p.height) : ''}
             onChange={(e) => updateField(p.id, 'height', Math.max(0, Number(e.target.value)))}
             className={`w-full text-xs font-bold text-center px-1 py-1 ${inputBase}`}
             placeholder="H"

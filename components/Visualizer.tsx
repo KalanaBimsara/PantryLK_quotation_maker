@@ -2,6 +2,7 @@ import React, { useState, useRef } from 'react';
 import { ZoomIn, ZoomOut, RotateCcw, Maximize2, RotateCw, Lock } from 'lucide-react';
 import { Board, PlacedPiece } from '../types';
 import { useLanguage } from '../contexts/LanguageContext';
+import { fmtMm } from '../services/format';
 
 interface VisualizerProps {
   board: Board;
@@ -89,9 +90,9 @@ export const Visualizer: React.FC<VisualizerProps> = ({
         {showW && (
           <g>
             <rect
-              x={x + w / 2 - (String(Math.round(w)).length * baseFontSize * 0.32)}
+              x={x + w / 2 - (fmtMm(w).length * baseFontSize * 0.32)}
               y={y + baseFontSize * 0.3}
-              width={String(Math.round(w)).length * baseFontSize * 0.64}
+              width={fmtMm(w).length * baseFontSize * 0.64}
               height={baseFontSize * 1.1}
               rx={4}
               fill={bgBadge}
@@ -104,7 +105,7 @@ export const Visualizer: React.FC<VisualizerProps> = ({
               fontWeight="600"
               fill={textColor}
             >
-              {Math.round(w)}
+              {fmtMm(w)}
             </text>
           </g>
         )}
@@ -112,9 +113,9 @@ export const Visualizer: React.FC<VisualizerProps> = ({
           <g>
             <rect
               x={x + baseFontSize * 0.2}
-              y={y + h / 2 - (String(Math.round(h)).length * baseFontSize * 0.32)}
+              y={y + h / 2 - (fmtMm(h).length * baseFontSize * 0.32)}
               width={baseFontSize * 1.1}
-              height={String(Math.round(h)).length * baseFontSize * 0.64}
+              height={fmtMm(h).length * baseFontSize * 0.64}
               rx={4}
               fill={bgBadge}
             />
@@ -127,7 +128,7 @@ export const Visualizer: React.FC<VisualizerProps> = ({
               fill={textColor}
               transform={`rotate(-90, ${x + baseFontSize * 0.75}, ${y + h / 2})`}
             >
-              {Math.round(h)}
+              {fmtMm(h)}
             </text>
           </g>
         )}
@@ -250,7 +251,7 @@ export const Visualizer: React.FC<VisualizerProps> = ({
             <div>
               <div className="font-bold text-blue-300">{activePiece.name || activePiece.label}</div>
               <div className="text-gray-300 text-[11px]">
-                {activePiece.w} × {activePiece.h} mm | Pos: ({Math.round(activePiece.x)}, {Math.round(activePiece.y)})
+                {fmtMm(activePiece.w)} × {fmtMm(activePiece.h)} mm | Pos: ({Math.round(activePiece.x)}, {Math.round(activePiece.y)})
               </div>
             </div>
             {activePiece.isRotated && (
@@ -362,7 +363,7 @@ export const Visualizer: React.FC<VisualizerProps> = ({
                   className="cursor-pointer transition-opacity"
                 >
                   <title>
-                    {`${p.name || p.label} · ${p.w} × ${p.h} mm${p.groupId && groupNames[p.groupId] ? ` · ${groupNames[p.groupId]}` : ''}`}
+                    {`${p.name || p.label} · ${fmtMm(p.w)} × ${fmtMm(p.h)} mm${p.groupId && groupNames[p.groupId] ? ` · ${groupNames[p.groupId]}` : ''}`}
                   </title>
                   <rect
                     x={p.x}
@@ -381,9 +382,10 @@ export const Visualizer: React.FC<VisualizerProps> = ({
                   {renderDimensions(p.x, p.y, p.w, p.h, true)}
 
                   {/* Nombre de la pieza en el centro, si cabe */}
-                  {p.name && p.w >= NAME_MIN_W && p.h >= NAME_MIN_H && (() => {
+                  {/* Debe quedar libre de las cotas: la de ancho ocupa ~1,4 fuentes arriba y la de alto ~1,4 a la izquierda */}
+                  {p.name && p.w >= Math.max(NAME_MIN_W, baseFontSize * 6) && p.h >= Math.max(NAME_MIN_H, baseFontSize * 3.8) && (() => {
                     const fontSize = baseFontSize * 0.8;
-                    const maxChars = Math.max(4, Math.floor((p.w - baseFontSize * 2) / (fontSize * 0.6)));
+                    const maxChars = Math.max(4, Math.floor((p.w - baseFontSize * 3.2) / (fontSize * 0.6)));
                     const text = p.name.length > maxChars ? `${p.name.slice(0, maxChars - 1)}…` : p.name;
                     return (
                       <text
@@ -444,7 +446,7 @@ export const Visualizer: React.FC<VisualizerProps> = ({
                 {item.name}
               </div>
               <div className="text-gray-600 font-mono whitespace-nowrap">
-                {item.w} × {item.h} mm
+                {fmtMm(item.w)} × {fmtMm(item.h)} mm
               </div>
               <div className="font-bold text-gray-900 bg-gray-100 px-1.5 rounded">
                 x{item.count}

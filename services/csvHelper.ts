@@ -1,4 +1,5 @@
 import { Piece, OptimizationResult } from '../types';
+import { fmtMm } from './format';
 
 /**
  * Detecta el delimitador más probable en un texto CSV (, o ; o tab)
@@ -79,8 +80,9 @@ export const parsePiecesCSV = (content: string): Piece[] => {
       parsedPieces.push({
         id: `csv-${Date.now()}-${i}`,
         name,
-        width: Math.round(w),
-        height: Math.round(h),
+        // Se conserva hasta 0,1 mm (puertas de medio mm, tercios de frentes de cajón)
+        width: Math.round(w * 10) / 10,
+        height: Math.round(h * 10) / 10,
         quantity: Math.max(1, isNaN(qty) ? 1 : qty),
         canRotate,
       });
@@ -99,7 +101,7 @@ export const buildOptimizationCSV = (result: OptimizationResult): string => {
   result.boards.forEach((board) => {
     board.placedPieces.forEach((p) => {
       const name = (p.name || 'Unnamed').replace(/,/g, ' ');
-      csv += `${board.id},${p.originalId},"${name}",${p.w},${p.h},${Math.round(p.x)},${Math.round(p.y)},${p.isRotated ? 'YES' : 'NO'},${p.color}\n`;
+      csv += `${board.id},${p.originalId},"${name}",${fmtMm(p.w)},${fmtMm(p.h)},${Math.round(p.x)},${Math.round(p.y)},${p.isRotated ? 'YES' : 'NO'},${p.color}\n`;
     });
   });
 
@@ -118,7 +120,7 @@ export const buildPiecesListCSV = (pieces: Piece[]): string => {
   let csv = 'Name,Width (mm),Height (mm),Quantity,Can rotate\n';
   pieces.forEach((p) => {
     const name = (p.name || 'Part').replace(/,/g, ' ');
-    csv += `"${name}",${p.width},${p.height},${p.quantity},${p.canRotate ? 'YES' : 'NO'}\n`;
+    csv += `"${name}",${fmtMm(p.width)},${fmtMm(p.height)},${p.quantity},${p.canRotate ? 'YES' : 'NO'}\n`;
   });
   return csv;
 };

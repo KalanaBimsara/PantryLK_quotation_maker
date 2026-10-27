@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { TrendingUp, AlertTriangle, Layers, Ruler, Sparkles, CheckCircle2, HelpCircle, ChevronDown, ChevronUp } from 'lucide-react';
 import { OptimizationResult, Settings } from '../types';
 import { useLanguage } from '../contexts/LanguageContext';
+import { fmtMm } from '../services/format';
 
 interface StatsSummaryProps {
   result: OptimizationResult | null;
@@ -35,7 +36,7 @@ export const StatsSummary: React.FC<StatsSummaryProps> = ({ result, settings, da
       <ul className="mt-1.5 ml-6 list-disc space-y-0.5">
         {unplaced.map((p, i) => (
           <li key={`${p.id}-${i}`}>
-            {p.name} · {p.width} × {p.height} mm
+            {p.name} · {fmtMm(p.width)} × {fmtMm(p.height)} mm
           </li>
         ))}
       </ul>

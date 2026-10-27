@@ -27,6 +27,10 @@ describe('CSV import', () => {
     expect(parsePiecesCSV('width,height,qty\n600,400,2').map((p) => p.name)).toEqual(['Part 1']);
   });
 
+  it('keeps fractional sizes (half-mm doors, thirds) on import', () => {
+    expect(parsePiecesCSV('width,height,qty\n450.5,750,2\n820,283.3,3').map((p) => [p.width, p.height])).toEqual([[450.5, 750], [820, 283.3]]);
+  });
+
   it('still imports Spanish headers', () => {
     expect(parsePiecesCSV('ancho;alto;cantidad;nombre\n600;400;2;Puerta')[0]).toMatchObject({ width: 600, height: 400, quantity: 2, name: 'Puerta' });
   });

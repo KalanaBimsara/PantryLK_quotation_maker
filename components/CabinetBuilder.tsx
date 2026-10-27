@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { Box, Plus } from 'lucide-react';
 import { Piece } from '../types';
 import {
@@ -16,6 +16,7 @@ import {
 import { createCabinetGroups, clampCabinetQuantity, MAX_CABINET_QUANTITY } from '../services/cabinetPieces';
 import { useLanguage } from '../contexts/LanguageContext';
 import { TranslationKey } from '../contexts/translations';
+import { fmtMm } from '../services/format';
 
 const PART_NAME_KEYS: Record<CabinetPartKey, TranslationKey> = {
   bottom: 'partBottom',
@@ -41,9 +42,6 @@ const FIELD_LABEL_KEYS: Record<keyof CabinetSize, TranslationKey> = {
 };
 
 const FOCUS = 'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500';
-
-// Tercios exactos (p. ej. frentes de cajón) se muestran con un decimal
-const fmt = (n: number) => (Number.isInteger(n) ? String(n) : n.toFixed(1));
 
 type CustomInput = Record<keyof CabinetSize, string>;
 
@@ -75,11 +73,9 @@ export const CabinetBuilder: React.FC<CabinetBuilderProps> = ({ darkMode, onAdd 
   const problemFor = (field: keyof CabinetSize) => problems.find((p) => p.field === field);
 
   const canHaveDrawers = problems.length === 0 && drawersAvailable(seriesId, size);
-
-  // Si la medida actual no admite cajones, se desmarca la opción
-  useEffect(() => {
-    if (!canHaveDrawers) setDrawers(false);
-  }, [canHaveDrawers]);
+  // `drawers` guarda la intención del usuario y no se borra: mientras se escribe una medida
+  // (p. ej. "9" camino de "900") puede no admitir cajones un instante. Lo que se usa es el
+  // valor efectivo (drawers && canHaveDrawers), así nunca se agregan cajones donde no caben.
 
   const drawersReason = !series.supportsDrawers
     ? t('drawersNotForSeries')
@@ -267,7 +263,7 @@ export const CabinetBuilder: React.FC<CabinetBuilderProps> = ({ darkMode, onAdd 
             <li key={p.key} className="flex justify-between gap-2">
               <span className="font-sans">{t(PART_NAME_KEYS[p.key])}</span>
               <span className="text-gray-500 dark:text-gray-400">
-                {fmt(p.width)} × {fmt(p.height)} · ×{p.quantity}
+                {fmtMm(p.width)} × {fmtMm(p.height)} · ×{p.quantity}
               </span>
             </li>
           ))}
