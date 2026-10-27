@@ -12,7 +12,15 @@ interface VisualizerProps {
   jobNumber?: string;
   boardIndex?: number;
   totalBoards?: number;
+  // groupId → nombre del gabinete, para el tooltip de cada pieza
+  groupNames?: Record<string, string>;
+  // Tableros 8x4 extra para cajones; se avisa en la hoja impresa del tablero 1
+  extraBoards?: number;
 }
+
+// Nombre visible dentro de la pieza solo si hay sitio (en unidades del tablero, mm)
+const NAME_MIN_W = 250;
+const NAME_MIN_H = 120;
 
 export const Visualizer: React.FC<VisualizerProps> = ({
   board,
@@ -23,6 +31,8 @@ export const Visualizer: React.FC<VisualizerProps> = ({
   jobNumber,
   boardIndex,
   totalBoards,
+  groupNames = {},
+  extraBoards = 0,
 }) => {
   const { width, height, placedPieces, freeRects, trimMargin = 0 } = board;
   const { t } = useLanguage();
@@ -159,6 +169,9 @@ export const Visualizer: React.FC<VisualizerProps> = ({
         </div>
         <div className="text-right text-[9px] font-mono text-gray-700">
           <div>{t('bladeKerf')}: {kerf} mm</div>
+          {boardIndex === 1 && extraBoards > 0 && (
+            <div className="font-bold text-black">+ {extraBoards} {t('extraBoardsForDrawers')}</div>
+          )}
         </div>
       </div>
 
@@ -348,6 +361,9 @@ export const Visualizer: React.FC<VisualizerProps> = ({
                   }}
                   className="cursor-pointer transition-opacity"
                 >
+                  <title>
+                    {`${p.name || p.label} · ${p.w} × ${p.h} mm${p.groupId && groupNames[p.groupId] ? ` · ${groupNames[p.groupId]}` : ''}`}
+                  </title>
                   <rect
                     x={p.x}
                     y={p.y}
@@ -363,6 +379,26 @@ export const Visualizer: React.FC<VisualizerProps> = ({
                     }}
                   />
                   {renderDimensions(p.x, p.y, p.w, p.h, true)}
+
+                  {/* Nombre de la pieza en el centro, si cabe */}
+                  {p.name && p.w >= NAME_MIN_W && p.h >= NAME_MIN_H && (() => {
+                    const fontSize = baseFontSize * 0.8;
+                    const maxChars = Math.max(4, Math.floor((p.w - baseFontSize * 2) / (fontSize * 0.6)));
+                    const text = p.name.length > maxChars ? `${p.name.slice(0, maxChars - 1)}…` : p.name;
+                    return (
+                      <text
+                        x={p.x + p.w / 2}
+                        y={p.y + p.h / 2}
+                        fontSize={fontSize}
+                        fill="#0f172a"
+                        textAnchor="middle"
+                        dominantBaseline="middle"
+                        className="pointer-events-none select-none font-semibold"
+                      >
+                        {text}
+                      </text>
+                    );
+                  })()}
 
                   {p.isRotated && p.w > baseFontSize * 2 && p.h > baseFontSize * 2 && (
                     <text

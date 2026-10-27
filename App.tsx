@@ -11,6 +11,7 @@ import {
   saveStoredSettings,
   loadStoredDarkMode,
   saveStoredDarkMode,
+  EXAMPLE_PIECES,
 } from './services/storage';
 
 import { Navbar } from './components/Navbar';
@@ -100,6 +101,15 @@ const App: React.FC = () => {
   // Tableros 8x4 extra para cajones (no forman parte del plan de corte)
   const extraBoards = useMemo(() => countExtraBoards(pieces), [pieces]);
 
+  // groupId → nombre del gabinete, para los tooltips del plan de corte
+  const groupNames = useMemo(() => {
+    const names: Record<string, string> = {};
+    pieces.forEach((p) => {
+      if (p.groupId && p.groupName && !names[p.groupId]) names[p.groupId] = p.groupName;
+    });
+    return names;
+  }, [pieces]);
+
   return (
     <div
       className={`min-h-screen transition-colors duration-200 ${
@@ -156,7 +166,6 @@ const App: React.FC = () => {
                 result={result}
                 settings={settings}
                 darkMode={darkMode}
-                onExportPDF={handleExportPDF}
                 extraBoards={extraBoards}
               />
 
@@ -191,18 +200,29 @@ const App: React.FC = () => {
                         jobNumber={settings.jobNumber}
                         boardIndex={index + 1}
                         totalBoards={result.boards.length}
+                        groupNames={groupNames}
+                        extraBoards={extraBoards}
                       />
                     ))}
                   </div>
                 ) : (
                   <div className="flex flex-col items-center justify-center h-80 text-gray-400 border-2 border-dashed border-gray-300 dark:border-gray-700 rounded-2xl p-6 text-center">
-                    <Axe className="w-12 h-12 mb-3 opacity-40 text-blue-500" />
+                    <Axe className="w-12 h-12 mb-3 opacity-40 text-blue-500" aria-hidden="true" />
                     <h3 className="text-sm font-semibold text-gray-600 dark:text-gray-300 mb-1">
-                      {t('readyToOptimize')}
+                      {t('planEmpty')}
                     </h3>
                     <p className="text-xs text-gray-500 dark:text-gray-400 max-w-sm">
-                      {t('loadPiecesMsg')}
+                      {t('planEmptyHint')}
                     </p>
+                    {pieces.length === 0 && (
+                      <button
+                        type="button"
+                        onClick={() => handlePiecesChange(EXAMPLE_PIECES)}
+                        className="mt-3 text-xs font-semibold text-blue-600 dark:text-blue-400 hover:underline rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500"
+                      >
+                        {t('loadExample')}
+                      </button>
+                    )}
                   </div>
                 )}
               </div>
