@@ -103,6 +103,12 @@ export const translations = {
     partBackSupport: "Back support",
     partDoor: "Door",
     partDrawerFront: "Drawer front",
+    boardPresets: "Board presets",
+    bladeHint: "Saw blade thickness",
+    off: "Off",
+    trimHint: "Edge strip cut off each side",
+    clearAllConfirm: "Clear the whole cut list?",
+    csvNoPieces: "No valid parts found in this file.",
   },
   es: {
     productionReport: "Reporte de Producción",
@@ -206,6 +212,12 @@ export const translations = {
     partBackSupport: "Refuerzo trasero",
     partDoor: "Puerta",
     partDrawerFront: "Frente de cajón",
+    boardPresets: "Tableros comerciales",
+    bladeHint: "Espesor de la sierra",
+    off: "Desactivado",
+    trimHint: "Margen perimetral a descartar",
+    clearAllConfirm: "¿Vaciar toda la lista de piezas?",
+    csvNoPieces: "No se encontraron piezas válidas en el archivo.",
   },
   si: {
     productionReport: "නිෂ්පාදන වාර්තාව",
@@ -309,6 +321,12 @@ export const translations = {
     partBackSupport: "පිටුපස ආධාරකය",
     partDoor: "දොර",
     partDrawerFront: "ලාච්චු මුහුණත",
+    boardPresets: "සම්මත තහඩු",
+    bladeHint: "කියත් තලයේ ඝණකම",
+    off: "අක්‍රිය",
+    trimHint: "එක් එක් පැත්තෙන් කපා ඉවත් කරන දාරය",
+    clearAllConfirm: "සම්පූර්ණ කැපුම් ලැයිස්තුව මකන්නද?",
+    csvNoPieces: "මෙම ගොනුවේ වලංගු කොටස් හමු නොවීය.",
   }
 };
 

@@ -19,6 +19,11 @@ export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     }
   }, []);
 
+  // El idioma de la página sigue al elegido (lectores de pantalla, corrección ortográfica)
+  useEffect(() => {
+    document.documentElement.lang = language;
+  }, [language]);
+
   const setLanguage = (lang: Language) => {
     setLanguageState(lang);
     localStorage.setItem('cutwizard_language', lang);

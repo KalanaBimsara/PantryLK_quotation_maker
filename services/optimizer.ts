@@ -44,27 +44,27 @@ const STRATEGY_DEFINITIONS: {
 }[] = [
   {
     id: 'area-desc',
-    label: 'Mayor Área Primero',
+    label: 'Largest area first',
     sorter: (a, b) => (b.w * b.h) - (a.w * a.h),
   },
   {
     id: 'max-dimension-desc',
-    label: 'Lado Mayor Primero',
+    label: 'Longest side first',
     sorter: (a, b) => Math.max(b.w, b.h) - Math.max(a.w, a.h) || (b.w * b.h) - (a.w * a.h),
   },
   {
     id: 'height-desc',
-    label: 'Mayor Largo/Alto Primero',
+    label: 'Tallest first',
     sorter: (a, b) => b.h - a.h || b.w - a.w,
   },
   {
     id: 'width-desc',
-    label: 'Mayor Ancho Primero',
+    label: 'Widest first',
     sorter: (a, b) => b.w - a.w || b.h - a.h,
   },
   {
     id: 'perimeter-desc',
-    label: 'Mayor Perímetro Primero',
+    label: 'Largest perimeter first',
     sorter: (a, b) => (b.w + b.h) - (a.w + a.h),
   },
 ];
@@ -347,7 +347,7 @@ export const optimizeCuts = (
         h: p.height,
         id: `${p.id}-${i}`,
         originalId: p.id,
-        name: p.name || `Pieza #${idx + 1}`,
+        name: p.name || `Part ${idx + 1}`,
         color: p.color || generatePieceColor(idx),
         label: `${p.width} × ${p.height}`,
         canRotate: p.canRotate !== false, // Por defecto rota libremente a menos que se restrinja
@@ -366,7 +366,7 @@ export const optimizeCuts = (
       totalWaste: 0,
       unplacedPieces: [],
       strategyUsed: 'none',
-      strategyLabel: 'Sin piezas válidas',
+      strategyLabel: 'No valid pieces',
       totalLinearCuts: 0,
       totalPartsCount: 0,
     };

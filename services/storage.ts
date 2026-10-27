@@ -73,7 +73,7 @@ export const loadStoredPieces = (): Piece[] => {
     if (!Array.isArray(parsed)) return [];
     return parsed.map((p, idx) => ({
       id: p.id || String(idx + 1),
-      name: p.name || `Pieza ${idx + 1}`,
+      name: p.name || `Part ${idx + 1}`,
       width: Number(p.width) || 0,
       height: Number(p.height) || 0,
       quantity: Math.max(1, Number(p.quantity) || 1),

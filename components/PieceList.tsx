@@ -81,7 +81,7 @@ export const PieceList: React.FC<PieceListProps> = ({
   };
 
   const clearAll = () => {
-    if (window.confirm('¿Deseas vaciar la lista de piezas? / Are you sure you want to clear the list?')) {
+    if (window.confirm(t('clearAllConfirm'))) {
       onChange([]);
     }
   };
@@ -102,7 +102,7 @@ export const PieceList: React.FC<PieceListProps> = ({
         if (parsed.length > 0) {
           onChange(parsed);
         } else {
-          alert('No se pudieron detectar piezas válidas / Valid pieces could not be detected');
+          alert(t('csvNoPieces'));
         }
       }
     };

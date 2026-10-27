@@ -22,7 +22,11 @@ export const parsePiecesCSV = (content: string): Piece[] => {
   if (lines.length === 0) return [];
 
   const delimiter = detectDelimiter(content);
-  const header = lines[0].toLowerCase().split(delimiter).map((h) => h.trim().replace(/^["']|["']$/g, ''));
+  // Se ignoran comillas y sufijos de unidad como "(mm)" para que las cabeceras exportadas se puedan reimportar
+  const header = lines[0]
+    .toLowerCase()
+    .split(delimiter)
+    .map((h) => h.trim().replace(/^["']|["']$/g, '').replace(/\s*\(.*?\)\s*$/, '').trim());
 
   // Índices de columnas
   let widthIdx = -1;
@@ -40,7 +44,7 @@ export const parsePiecesCSV = (content: string): Piece[] => {
       qtyIdx = idx;
     } else if (/^(nombre|name|pieza|label|etiqueta|desc|descripcion)$/i.test(col)) {
       nameIdx = idx;
-    } else if (/^(rotar|rotacion|canrotate|girar|veta)$/i.test(col)) {
+    } else if (/^(rotar|rotacion|rotacion libre|canrotate|can rotate|rotate|girar|veta)$/i.test(col)) {
       rotateIdx = idx;
     }
   });
@@ -61,7 +65,7 @@ export const parsePiecesCSV = (content: string): Piece[] => {
     const w = parseFloat(rawCols[widthIdx]?.replace(',', '.') || '0');
     const h = parseFloat(rawCols[heightIdx]?.replace(',', '.') || '0');
     const qty = qtyIdx !== -1 && rawCols[qtyIdx] ? parseInt(rawCols[qtyIdx], 10) : 1;
-    const name = nameIdx !== -1 && rawCols[nameIdx] ? rawCols[nameIdx] : `Pieza ${parsedPieces.length + 1}`;
+    const name = nameIdx !== -1 && rawCols[nameIdx] ? rawCols[nameIdx] : `Part ${parsedPieces.length + 1}`;
 
     let canRotate = true;
     if (rotateIdx !== -1 && rawCols[rotateIdx]) {
@@ -89,34 +93,39 @@ export const parsePiecesCSV = (content: string): Piece[] => {
 /**
  * Exporta el resultado de optimización a CSV con coordenadas y detalles de taller
  */
-export const exportOptimizationCSV = (result: OptimizationResult): void => {
-  if (!result || result.boards.length === 0) return;
-
-  let csv = 'Tablero,Pieza,Descripcion,Ancho (mm),Alto (mm),Coord X (mm),Coord Y (mm),Rotada 90?,Color\n';
+export const buildOptimizationCSV = (result: OptimizationResult): string => {
+  let csv = 'Board,Part,Description,Width (mm),Height (mm),X (mm),Y (mm),Rotated 90°,Color\n';
 
   result.boards.forEach((board) => {
     board.placedPieces.forEach((p) => {
-      const name = (p.name || 'Sin nombre').replace(/,/g, ' ');
-      csv += `${board.id},${p.originalId},"${name}",${p.w},${p.h},${Math.round(p.x)},${Math.round(p.y)},${p.isRotated ? 'SI' : 'NO'},${p.color}\n`;
+      const name = (p.name || 'Unnamed').replace(/,/g, ' ');
+      csv += `${board.id},${p.originalId},"${name}",${p.w},${p.h},${Math.round(p.x)},${Math.round(p.y)},${p.isRotated ? 'YES' : 'NO'},${p.color}\n`;
     });
   });
 
-  downloadCSV(csv, `cutwizard_optimizacion_${new Date().toISOString().slice(0, 10)}.csv`);
+  return csv;
+};
+
+export const exportOptimizationCSV = (result: OptimizationResult): void => {
+  if (!result || result.boards.length === 0) return;
+  downloadCSV(buildOptimizationCSV(result), `cutwizard_plan_${new Date().toISOString().slice(0, 10)}.csv`);
 };
 
 /**
  * Exporta la lista de piezas cargadas
  */
+export const buildPiecesListCSV = (pieces: Piece[]): string => {
+  let csv = 'Name,Width (mm),Height (mm),Quantity,Can rotate\n';
+  pieces.forEach((p) => {
+    const name = (p.name || 'Part').replace(/,/g, ' ');
+    csv += `"${name}",${p.width},${p.height},${p.quantity},${p.canRotate ? 'YES' : 'NO'}\n`;
+  });
+  return csv;
+};
+
 export const exportPiecesListCSV = (pieces: Piece[]): void => {
   if (pieces.length === 0) return;
-
-  let csv = 'Nombre,Ancho (mm),Alto (mm),Cantidad,Rotacion Libre\n';
-  pieces.forEach((p) => {
-    const name = (p.name || 'Pieza').replace(/,/g, ' ');
-    csv += `"${name}",${p.width},${p.height},${p.quantity},${p.canRotate ? 'SI' : 'NO'}\n`;
-  });
-
-  downloadCSV(csv, `cutwizard_piezas_${new Date().toISOString().slice(0, 10)}.csv`);
+  downloadCSV(buildPiecesListCSV(pieces), `cutwizard_parts_${new Date().toISOString().slice(0, 10)}.csv`);
 };
 
 const downloadCSV = (content: string, filename: string) => {

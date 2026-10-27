@@ -11,7 +11,7 @@ interface SettingsPanelProps {
 }
 
 export const BOARD_PRESETS: BoardPreset[] = [
-  { id: 'melamina-std-1', name: 'Melamine', width: 2438.4, height: 1219.2, description: '2750 × 1830 mm' },
+  { id: 'melamina-std-1', name: 'Melamine', width: 2438.4, height: 1219.2, description: '2438.4 × 1219.2 mm (8×4 ft)' },
   { id: 'hmr-18mm', name: 'HDHMR 18mm', width: 2438.4, height: 1219.2, description: '2438.4 × 1219.2 mm' }
 ];
 
@@ -51,7 +51,7 @@ export const SettingsPanel: React.FC<SettingsPanelProps> = ({ settings, onChange
       <div className="mb-4">
         <span className="text-xs font-medium text-gray-500 dark:text-gray-400 mb-1.5 flex items-center gap-1.5">
           <Layers className="w-3.5 h-3.5" />
-          Presets Comerciales:
+          {t('boardPresets')}:
         </span>
         <div className="grid grid-cols-2 gap-1.5 sm:grid-cols-3">
           {BOARD_PRESETS.map((preset) => {
@@ -144,7 +144,7 @@ export const SettingsPanel: React.FC<SettingsPanelProps> = ({ settings, onChange
               className={`w-full px-3 py-2 rounded-lg border text-sm font-semibold outline-none focus:ring-2 focus:ring-blue-500 transition-all ${darkMode ? 'bg-gray-700/60 border-gray-600 text-white' : 'bg-gray-50 border-gray-300 text-gray-900'
                 }`}
             />
-            <span className="text-[10px] text-gray-400 mt-0.5 block">Espesor de la sierra</span>
+            <span className="text-[10px] text-gray-400 mt-0.5 block">{t('bladeHint')}</span>
           </div>
 
           <div>
@@ -181,7 +181,7 @@ export const SettingsPanel: React.FC<SettingsPanelProps> = ({ settings, onChange
                 }`}
             />
             <span className="text-[10px] text-gray-400 mt-0.5 block">
-              {settings.enableTrimMargin ? 'Margen perimetral a descartar' : t('disable')}
+              {settings.enableTrimMargin ? t('trimHint') : t('off')}
             </span>
           </div>
         </div>
