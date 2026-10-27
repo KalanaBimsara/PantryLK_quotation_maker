@@ -27,7 +27,7 @@ describe('pieces storage', () => {
     const piece = {
       id: 'a', name: 'Door', width: 600, height: 750, quantity: 1, canRotate: false,
       groupId: 'g1', groupName: 'Deep base 600', cabinetWidth: 600, cabinetHeight: 750,
-      cabinetSeriesId: 'deep-560' as const, cabinetDrawers: false,
+      cabinetDepth: 560, cabinetSeriesId: 'deep-560' as const, cabinetDrawers: false,
     };
     saveStoredPieces([piece]);
     expect(loadStoredPieces()[0]).toMatchObject(piece);

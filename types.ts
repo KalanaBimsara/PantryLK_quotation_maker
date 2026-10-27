@@ -13,6 +13,7 @@ export interface Piece {
   groupName?: string;
   cabinetWidth?: number;
   cabinetHeight?: number;
+  cabinetDepth?: number;
   cabinetSeriesId?: CabinetSeriesId;
   cabinetDrawers?: boolean;
 }

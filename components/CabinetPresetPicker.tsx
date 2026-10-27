@@ -6,6 +6,7 @@ import {
   STANDARD_WIDTHS,
   buildCabinet,
   drawersAvailable,
+  standardSize,
   CabinetPartKey,
   CabinetSeriesId,
 } from '../services/cabinetSeries';
@@ -44,7 +45,8 @@ export const CabinetPresetPicker: React.FC<CabinetPresetPickerProps> = ({ darkMo
   const [quantityInput, setQuantityInput] = useState<string>('1');
   const quantity = clampCabinetQuantity(Number(quantityInput));
 
-  const canHaveDrawers = drawersAvailable(seriesId, width);
+  const size = standardSize(seriesId, width);
+  const canHaveDrawers = drawersAvailable(seriesId, size);
   const series = CABINET_SERIES.find((s) => s.id === seriesId);
 
   // Si la combinación actual no admite cajones, se desmarca la opción
@@ -53,7 +55,7 @@ export const CabinetPresetPicker: React.FC<CabinetPresetPickerProps> = ({ darkMo
   }, [canHaveDrawers]);
 
   const build = useMemo(
-    () => buildCabinet(seriesId, width, { drawers: drawers && canHaveDrawers }),
+    () => buildCabinet(seriesId, standardSize(seriesId, width), { drawers: drawers && canHaveDrawers }),
     [seriesId, width, drawers, canHaveDrawers]
   );
 
@@ -63,7 +65,7 @@ export const CabinetPresetPicker: React.FC<CabinetPresetPickerProps> = ({ darkMo
     onAdd(
       createCabinetGroups({
         seriesId,
-        width,
+        size,
         drawers: build.drawers,
         quantity,
         groupName,

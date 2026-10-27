@@ -5,7 +5,7 @@ import { Piece } from '../types';
 type Params = Parameters<typeof createCabinetGroups>[0];
 const make = (o: Partial<Params> = {}) =>
   createCabinetGroups({
-    seriesId: 'deep-560', width: 900, drawers: true, quantity: 2,
+    seriesId: 'deep-560', size: { width: 900, height: 750, depth: 560 }, drawers: true, quantity: 2,
     groupName: 'Deep base 900 + drawers', partName: (k) => k, ...o,
   });
 
@@ -48,4 +48,21 @@ describe('countExtraBoards', () => {
     const invalid: Piece = { ...legacy, id: 'y', groupId: 'bad', cabinetSeriesId: 'shallow-300', cabinetDrawers: true };
     expect(countExtraBoards([legacy, invalid])).toBe(0);
   });
+
+  it('stores the cabinet depth on every piece', () => {
+    const pieces = make({ size: { width: 820, height: 850, depth: 580 } });
+    expect(pieces.every((p) => p.cabinetWidth === 820 && p.cabinetHeight === 850 && p.cabinetDepth === 580)).toBe(true);
+  });
+
+  it('counts drawer boards for cabinets saved before depth was stored', () => {
+    const [p] = make({ quantity: 1 });
+    const { cabinetDepth, ...old } = p;
+    expect(countExtraBoards([old])).toBe(1);
+  });
+
+  it('counts no drawer board when the saved size no longer allows drawers', () => {
+    const [p] = make({ quantity: 1 });
+    expect(countExtraBoards([{ ...p, cabinetHeight: 400 }])).toBe(0);
+  });
 });
+

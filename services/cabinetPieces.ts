@@ -1,5 +1,13 @@
 import { Piece } from '../types';
-import { buildCabinet, isCabinetSeriesId, CabinetPartKey, CabinetSeriesId } from './cabinetSeries';
+import {
+  buildCabinet,
+  isCabinetSeriesId,
+  CABINET_SERIES,
+  STANDARD_HEIGHT,
+  CabinetPartKey,
+  CabinetSeriesId,
+  CabinetSize,
+} from './cabinetSeries';
 
 // Puente entre cabinetSeries (independiente de la app) y la lista de piezas de CutWizard.
 
@@ -17,13 +25,13 @@ export function clampCabinetQuantity(value: number): number {
 
 export function createCabinetGroups(params: {
   seriesId: CabinetSeriesId;
-  width: number;
+  size: CabinetSize;
   drawers: boolean;
   quantity: number;
   groupName: string;
   partName: (key: CabinetPartKey) => string;
 }): Piece[] {
-  const build = buildCabinet(params.seriesId, params.width, { drawers: params.drawers });
+  const build = buildCabinet(params.seriesId, params.size, { drawers: params.drawers });
   const pieces: Piece[] = [];
 
   // Un grupo por gabinete, para que el área frontal se cuente una vez por gabinete
@@ -41,6 +49,7 @@ export function createCabinetGroups(params: {
         groupName: params.groupName,
         cabinetWidth: build.width,
         cabinetHeight: build.height,
+        cabinetDepth: build.depth,
         cabinetSeriesId: build.seriesId,
         cabinetDrawers: build.drawers,
       });
@@ -58,7 +67,13 @@ export function countExtraBoards(pieces: Piece[]): number {
     seen.add(p.groupId);
     if (!isCabinetSeriesId(p.cabinetSeriesId) || !p.cabinetWidth) continue;
     try {
-      total += buildCabinet(p.cabinetSeriesId, p.cabinetWidth, { drawers: !!p.cabinetDrawers }).extraBoards;
+      // Gabinetes guardados antes de existir cabinetDepth usan los valores por defecto de la serie
+      const size: CabinetSize = {
+        width: p.cabinetWidth,
+        height: p.cabinetHeight ?? STANDARD_HEIGHT,
+        depth: p.cabinetDepth ?? CABINET_SERIES.find((s) => s.id === p.cabinetSeriesId)!.depth,
+      };
+      total += buildCabinet(p.cabinetSeriesId, size, { drawers: !!p.cabinetDrawers }).extraBoards;
     } catch {
       // Combinación no válida (p. ej. cajones donde no se ofrecen): sin tablero extra
     }

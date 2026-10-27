@@ -82,6 +82,7 @@ export const loadStoredPieces = (): Piece[] => {
       ...(p.groupName ? { groupName: String(p.groupName) } : {}),
       ...(p.cabinetWidth ? { cabinetWidth: Number(p.cabinetWidth) } : {}),
       ...(p.cabinetHeight ? { cabinetHeight: Number(p.cabinetHeight) } : {}),
+      ...(Number(p.cabinetDepth) > 0 ? { cabinetDepth: Number(p.cabinetDepth) } : {}),
       ...(isCabinetSeriesId(p.cabinetSeriesId) ? { cabinetSeriesId: p.cabinetSeriesId } : {}),
       ...(typeof p.cabinetDrawers === 'boolean' ? { cabinetDrawers: p.cabinetDrawers } : {}),
     }));

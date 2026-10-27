@@ -5,7 +5,7 @@ import { Template } from '../types';
 
 const drawerCabinets = () =>
   createCabinetGroups({
-    seriesId: 'deep-560', width: 900, drawers: true, quantity: 2,
+    seriesId: 'deep-560', size: { width: 900, height: 750, depth: 560 }, drawers: true, quantity: 2,
     groupName: 'Deep base 900 + drawers', partName: (k) => k,
   });
 
