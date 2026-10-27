@@ -153,6 +153,34 @@ export default function PantryQuotationApp() {
   // Admin Catalog Search
   const [adminSearch, setAdminSearch] = useState('');
 
+  const QUOTE_CACHE_KEY = 'pantrylk_active_quote_draft';
+  const isInitialLoadedRef = useRef(false);
+
+  // Sync refs to avoid stale closures in browser event listeners (beforeunload & popstate)
+  const currentQuoteRef = useRef(currentQuote);
+  currentQuoteRef.current = currentQuote;
+
+  const activeTabRef = useRef(activeTab);
+  activeTabRef.current = activeTab;
+
+  const isQuoteModalOpenRef = useRef(isQuoteModalOpen);
+  isQuoteModalOpenRef.current = isQuoteModalOpen;
+
+  const isMobileDrawerOpenRef = useRef(isMobileDrawerOpen);
+  isMobileDrawerOpenRef.current = isMobileDrawerOpen;
+
+  const showMobileFiltersRef = useRef(showMobileFilters);
+  showMobileFiltersRef.current = showMobileFilters;
+
+  const selectedProductForZoomRef = useRef(selectedProductForZoom);
+  selectedProductForZoomRef.current = selectedProductForZoom;
+
+  const isProductModalOpenRef = useRef(isProductModalOpen);
+  isProductModalOpenRef.current = isProductModalOpen;
+
+  const isSqlModalOpenRef = useRef(isSqlModalOpen);
+  isSqlModalOpenRef.current = isSqlModalOpen;
+
   // Currency helper
   const formatLKR = (val) => {
     const num = parseFloat(val) || 0;
@@ -230,15 +258,47 @@ export default function PantryQuotationApp() {
     return result + ' Only';
   };
 
-  // Initial Load
+  // Initial Load & Quotation Cache Restoration
   useEffect(() => {
+    let hasRestored = false;
+
     if (typeof window !== 'undefined') {
       try {
         localStorage.removeItem('pantrylk_cart'); // Clear any legacy local data
         if (sessionStorage.getItem('pantrylk_admin_auth') === 'true') {
           setIsAdminUnlocked(true);
         }
-      } catch (e) {}
+
+        // Check if an active quotation draft was saved in cache
+        const cachedDraft = localStorage.getItem(QUOTE_CACHE_KEY);
+        if (cachedDraft) {
+          const parsed = JSON.parse(cachedDraft);
+          if (parsed && typeof parsed === 'object') {
+            const hasItems = Array.isArray(parsed.items) && parsed.items.length > 0;
+            const hasSqft = Number(parsed.sqft) > 0;
+            const hasCustomer = Boolean(parsed.customerName && parsed.customerName.trim());
+
+            if (hasItems || hasSqft || hasCustomer) {
+              setCurrentQuote({
+                id: parsed.id || `quote_${Date.now()}`,
+                jobNo: parsed.jobNo || `PLK-${new Date().getFullYear()}-${Math.floor(100 + Math.random() * 900)}`,
+                date: parsed.date || new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }),
+                customerName: parsed.customerName || '',
+                customerPhone: parsed.customerPhone || '',
+                customerAddress: parsed.customerAddress || '',
+                sqft: parseFloat(parsed.sqft) || 0,
+                items: Array.isArray(parsed.items) ? parsed.items : []
+              });
+              hasRestored = true;
+              setTimeout(() => {
+                showToast(`Restored active quotation (${parsed.jobNo || 'Draft'}) with ${parsed.items?.length || 0} items from cache!`);
+              }, 600);
+            }
+          }
+        }
+      } catch (e) {
+        console.warn('Error restoring cached quotation:', e);
+      }
     }
 
     loadSettings();
@@ -246,22 +306,156 @@ export default function PantryQuotationApp() {
     loadQuotations();
     checkSupabaseStatus();
 
-    const d = new Date();
-    const yr = d.getFullYear();
-    const rand = Math.floor(100 + Math.random() * 900);
-    const newJobNo = `PLK-${yr}-${rand}`;
-    const newDate = d.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
+    if (!hasRestored) {
+      const d = new Date();
+      const yr = d.getFullYear();
+      const rand = Math.floor(100 + Math.random() * 900);
+      const newJobNo = `PLK-${yr}-${rand}`;
+      const newDate = d.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
 
-    setCurrentQuote({
-      id: `quote_${Date.now()}`,
-      jobNo: newJobNo,
-      date: newDate,
-      customerName: '',
-      customerPhone: '',
-      customerAddress: '',
-      sqft: 0,
-      items: []
-    });
+      setCurrentQuote({
+        id: `quote_${Date.now()}`,
+        jobNo: newJobNo,
+        date: newDate,
+        customerName: '',
+        customerPhone: '',
+        customerAddress: '',
+        sqft: 0,
+        items: []
+      });
+    }
+
+    // Mark initial load as completed so future state changes auto-save to localStorage
+    isInitialLoadedRef.current = true;
+  }, []);
+
+  // Auto-save active quotation to cache (localStorage) whenever it changes
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    if (!isInitialLoadedRef.current) return; // Guard against overwriting cache during initial hydration
+
+    try {
+      const hasContent = currentQuote && (
+        (Array.isArray(currentQuote.items) && currentQuote.items.length > 0) ||
+        (Number(currentQuote.sqft) > 0) ||
+        Boolean(currentQuote.customerName && currentQuote.customerName.trim()) ||
+        Boolean(currentQuote.customerPhone && currentQuote.customerPhone.trim()) ||
+        Boolean(currentQuote.customerAddress && currentQuote.customerAddress.trim())
+      );
+
+      if (hasContent) {
+        localStorage.setItem(QUOTE_CACHE_KEY, JSON.stringify(currentQuote));
+      } else {
+        localStorage.removeItem(QUOTE_CACHE_KEY);
+      }
+    } catch (e) {
+      console.warn('Failed to save quotation draft to localStorage cache:', e);
+    }
+  }, [currentQuote]);
+
+  // Leave Confirmation & Mobile Return Interceptor
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+
+    // 1. Native beforeunload prompt for tab close, page refresh, external link
+    const handleBeforeUnload = (e) => {
+      const q = currentQuoteRef.current;
+      const hasActiveItems = q && (
+        (Array.isArray(q.items) && q.items.length > 0) ||
+        (Number(q.sqft) > 0) ||
+        Boolean(q.customerName && q.customerName.trim())
+      );
+
+      if (hasActiveItems) {
+        e.preventDefault();
+        e.returnValue = ''; // Standard trigger for modern browsers' native confirmation alert
+        return '';
+      }
+    };
+
+    // 2. Mobile Return / History Back button interceptor
+    try {
+      window.history.replaceState({ pantryApp: true, level: 1 }, '');
+      window.history.pushState({ pantryApp: true, level: 2 }, '');
+    } catch (e) {}
+
+    const handlePopState = () => {
+      // Step A: If any modal or drawer is open, close it first and stay on the page
+      if (selectedProductForZoomRef.current) {
+        setSelectedProductForZoom(null);
+        setIsMagnified(false);
+        setIsHoverZooming(false);
+        try { window.history.pushState({ pantryApp: true, level: 2 }, ''); } catch (err) {}
+        return;
+      }
+      if (isQuoteModalOpenRef.current) {
+        setIsQuoteModalOpen(false);
+        try { window.history.pushState({ pantryApp: true, level: 2 }, ''); } catch (err) {}
+        return;
+      }
+      if (isMobileDrawerOpenRef.current) {
+        setIsMobileDrawerOpen(false);
+        try { window.history.pushState({ pantryApp: true, level: 2 }, ''); } catch (err) {}
+        return;
+      }
+      if (showMobileFiltersRef.current) {
+        setShowMobileFilters(false);
+        try { window.history.pushState({ pantryApp: true, level: 2 }, ''); } catch (err) {}
+        return;
+      }
+      if (isProductModalOpenRef.current) {
+        setIsProductModalOpen(false);
+        try { window.history.pushState({ pantryApp: true, level: 2 }, ''); } catch (err) {}
+        return;
+      }
+      if (isSqlModalOpenRef.current) {
+        setIsSqlModalOpen(false);
+        try { window.history.pushState({ pantryApp: true, level: 2 }, ''); } catch (err) {}
+        return;
+      }
+
+      // Step B: If on secondary tab (e.g. Past Quotations or Settings), return to Quotation Maker tab
+      if (activeTabRef.current !== 'maker') {
+        setActiveTab('maker');
+        try { window.history.pushState({ pantryApp: true, level: 2 }, ''); } catch (err) {}
+        return;
+      }
+
+      // Step C: If user is on maker tab and has active quotation items, confirm before leaving
+      const q = currentQuoteRef.current;
+      const hasActiveItems = q && (
+        (Array.isArray(q.items) && q.items.length > 0) ||
+        (Number(q.sqft) > 0) ||
+        Boolean(q.customerName && q.customerName.trim())
+      );
+
+      if (hasActiveItems) {
+        const count = q.items?.length || 0;
+        const countDesc = count === 1 ? '1 component' : `${count} components`;
+        const confirmed = window.confirm(
+          `⚠️ Leave Quotation Maker?\n\nYou have an active quotation with ${countDesc} in progress.\n\nYour quotation has been automatically saved in your browser cache, but are you sure you want to leave this page?`
+        );
+
+        if (!confirmed) {
+          // User chose to stay: re-push state to keep history trap active
+          try { window.history.pushState({ pantryApp: true, level: 2 }, ''); } catch (err) {}
+          return;
+        }
+
+        // User confirmed exit: remove listeners and allow back navigation
+        window.removeEventListener('popstate', handlePopState);
+        window.removeEventListener('beforeunload', handleBeforeUnload);
+        window.history.back();
+      }
+    };
+
+    window.addEventListener('beforeunload', handleBeforeUnload);
+    window.addEventListener('popstate', handlePopState);
+
+    return () => {
+      window.removeEventListener('beforeunload', handleBeforeUnload);
+      window.removeEventListener('popstate', handlePopState);
+    };
   }, []);
 
   const checkSupabaseStatus = async () => {
@@ -425,8 +619,23 @@ export default function PantryQuotationApp() {
     } catch (e) {}
   };
 
-  // Local saving cut off - data is fetched directly from database
-  const saveCartLocally = () => {};
+  // Synchronize cart changes to local draft cache
+  const saveCartLocally = (items, sqft) => {
+    if (typeof window === 'undefined') return;
+    try {
+      const current = currentQuoteRef.current || {};
+      const updated = {
+        ...current,
+        items: items || [],
+        sqft: sqft !== undefined ? sqft : (current.sqft || 0)
+      };
+      if ((updated.items && updated.items.length > 0) || updated.sqft > 0 || updated.customerName) {
+        localStorage.setItem(QUOTE_CACHE_KEY, JSON.stringify(updated));
+      } else {
+        localStorage.removeItem(QUOTE_CACHE_KEY);
+      }
+    } catch (e) {}
+  };
 
   // Admin Unlock & Lock Handlers (Verified securely via server API)
   const handleAdminUnlock = async (e) => {
@@ -606,13 +815,33 @@ export default function PantryQuotationApp() {
   };
 
   const clearQuote = () => {
-    if (currentQuote.items.length === 0 && !currentQuote.sqft) return;
-    if (!confirm("Are you sure you want to clear this quotation?")) return;
-    setCurrentQuote(prev => {
-      saveCartLocally([], 0);
-      return { ...prev, items: [], sqft: 0 };
+    const hasItems = currentQuote.items && currentQuote.items.length > 0;
+    const hasSqft = Number(currentQuote.sqft) > 0;
+    const hasCust = Boolean(currentQuote.customerName && currentQuote.customerName.trim());
+    if (!hasItems && !hasSqft && !hasCust) return;
+
+    if (!confirm("Are you sure you want to clear this quotation? All active items and the cached draft will be reset.")) return;
+
+    const d = new Date();
+    const yr = d.getFullYear();
+    const rand = Math.floor(100 + Math.random() * 900);
+    const newJobNo = `PLK-${yr}-${rand}`;
+    const newDate = d.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
+
+    setCurrentQuote({
+      id: `quote_${Date.now()}`,
+      jobNo: newJobNo,
+      date: newDate,
+      customerName: '',
+      customerPhone: '',
+      customerAddress: '',
+      sqft: 0,
+      items: []
     });
-    showToast("Quotation cleared.");
+    try {
+      localStorage.removeItem(QUOTE_CACHE_KEY);
+    } catch (e) {}
+    showToast("Quotation cleared and cache reset.");
   };
 
   // WhatsApp Share
@@ -822,7 +1051,14 @@ _Hotline: ${appSettings.companyPhone}_`;
             <Receipt className="w-4 h-4 sm:w-5 sm:h-5" />
           </div>
           <div>
-            <h2 className="font-bold text-sm sm:text-base tracking-tight">Active Quotation</h2>
+            <div className="flex items-center gap-1.5">
+              <h2 className="font-bold text-sm sm:text-base tracking-tight">Active Quotation</h2>
+              {currentQuote.items.length > 0 && (
+                <span className="text-[10px] text-emerald-300 bg-emerald-500/20 px-1.5 py-0.5 rounded font-medium flex items-center gap-0.5 border border-emerald-500/30" title="Quotation is continuously auto-saved to your browser cache">
+                  <Check className="w-2.5 h-2.5" /> Cached
+                </span>
+              )}
+            </div>
             <p className="text-[11px] sm:text-[12px] text-slate-300">Live Itemized Calculator</p>
           </div>
         </div>
@@ -1581,7 +1817,7 @@ _Hotline: ${appSettings.companyPhone}_`;
                           <div className="flex items-center justify-center space-x-1.5">
                             <button
                               onClick={() => {
-                                setCurrentQuote({
+                                const loadedQuote = {
                                   id: q.id,
                                   jobNo: q.jobNo,
                                   date: q.date,
@@ -1590,9 +1826,13 @@ _Hotline: ${appSettings.companyPhone}_`;
                                   customerAddress: q.customerAddress,
                                   sqft: q.sqft || 0,
                                   items: q.items || []
-                                });
+                                };
+                                setCurrentQuote(loadedQuote);
+                                try {
+                                  localStorage.setItem(QUOTE_CACHE_KEY, JSON.stringify(loadedQuote));
+                                } catch (e) {}
                                 setActiveTab('maker');
-                                showToast(`Loaded ${q.jobNo} into editor!`);
+                                showToast(`Loaded ${q.jobNo} into editor and saved to cache!`);
                               }}
                               title="Reload into Editor"
                               className="p-1 rounded-lg bg-[#EEF2F7] text-[#1F3A5A] hover:bg-[#DCE4EE]"
@@ -2052,7 +2292,12 @@ _Hotline: ${appSettings.companyPhone}_`;
               )}
             </div>
             <div className="min-w-0">
-              <div className="text-[11px] text-[#C9D3E0] uppercase tracking-wider font-semibold">Grand total</div>
+              <div className="text-[11px] text-[#C9D3E0] uppercase tracking-wider font-semibold flex items-center gap-1.5">
+                <span>Grand total</span>
+                {totalCartCount > 0 && (
+                  <span className="text-[9px] normal-case text-emerald-300 font-medium tracking-normal">· cached</span>
+                )}
+              </div>
               <div className="text-lg font-extrabold tabular-nums text-white truncate leading-tight">{formatLKR(calculations.grandTotal)}</div>
             </div>
           </div>
