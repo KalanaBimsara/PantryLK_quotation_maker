@@ -15,12 +15,13 @@ export const DEFAULT_SETTINGS: Settings = {
   enableTrimMargin: false, // Desactivado por defecto
 };
 
-export const DEFAULT_PIECES: Piece[] = [
-  { id: '1', name: 'Lateral Izquierdo', width: 600, height: 750, quantity: 2, canRotate: false },
-  { id: '2', name: 'Puerta Principal', width: 450, height: 750, quantity: 2, canRotate: false },
-  { id: '3', name: 'Tapa Superior', width: 900, height: 600, quantity: 1, canRotate: true },
-  { id: '4', name: 'Estantes Interiores', width: 864, height: 550, quantity: 3, canRotate: true },
-  { id: '5', name: 'Frente Cajón', width: 860, height: 180, quantity: 2, canRotate: false },
+// Piezas de ejemplo: solo se cargan con "Cargar ejemplo", nunca al iniciar
+export const EXAMPLE_PIECES: Piece[] = [
+  { id: '1', name: 'Left side', width: 600, height: 750, quantity: 2, canRotate: false },
+  { id: '2', name: 'Main door', width: 450, height: 750, quantity: 2, canRotate: false },
+  { id: '3', name: 'Top cover', width: 900, height: 600, quantity: 1, canRotate: true },
+  { id: '4', name: 'Inner shelves', width: 864, height: 550, quantity: 3, canRotate: true },
+  { id: '5', name: 'Drawer front', width: 860, height: 180, quantity: 2, canRotate: false },
 ];
 
 // Número válido o el valor por defecto (evita NaN cuando el campo falta)
@@ -66,9 +67,10 @@ export const saveStoredSettings = (settings: Settings): void => {
 export const loadStoredPieces = (): Piece[] => {
   try {
     const raw = localStorage.getItem(STORAGE_KEYS.PIECES);
-    if (!raw) return DEFAULT_PIECES;
+    // Sin trabajo guardado (o lista vaciada) se empieza vacío
+    if (!raw) return [];
     const parsed = JSON.parse(raw);
-    if (!Array.isArray(parsed) || parsed.length === 0) return DEFAULT_PIECES;
+    if (!Array.isArray(parsed)) return [];
     return parsed.map((p, idx) => ({
       id: p.id || String(idx + 1),
       name: p.name || `Pieza ${idx + 1}`,
@@ -87,7 +89,7 @@ export const loadStoredPieces = (): Piece[] => {
       ...(typeof p.cabinetDrawers === 'boolean' ? { cabinetDrawers: p.cabinetDrawers } : {}),
     }));
   } catch {
-    return DEFAULT_PIECES;
+    return [];
   }
 };
 

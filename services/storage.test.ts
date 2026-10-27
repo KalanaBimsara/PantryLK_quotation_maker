@@ -41,6 +41,22 @@ describe('pieces storage', () => {
   });
 });
 
+describe('start-up', () => {
+  it('starts empty when nothing is saved', () => {
+    expect(loadStoredPieces()).toEqual([]);
+  });
+
+  it('stays empty after the list was cleared', () => {
+    saveStoredPieces([]);
+    expect(loadStoredPieces()).toEqual([]);
+  });
+
+  it('starts empty when the saved data is unreadable', () => {
+    localStorage.setItem('cutwizard_pieces_v2', '{not json');
+    expect(loadStoredPieces()).toEqual([]);
+  });
+});
+
 describe('settings storage', () => {
   it('keeps cost settings across save/load', () => {
     const s = { ...DEFAULT_SETTINGS, jobNumber: 'J-12', boardPrice: 9500, edgeBandPricePerM: 60, machineRentPerSqFt: 500, laborPerSqFt: 850, frontAreaSqFt: 12.5 };

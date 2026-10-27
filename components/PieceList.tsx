@@ -2,7 +2,7 @@ import React, { useRef, useState, useEffect } from 'react';
 import { Plus, Trash2, Copy, Upload, Download, RotateCw, Lock, Sparkles, AlertCircle, Save, FolderOpen, X, ChevronDown, ChevronRight, Box } from 'lucide-react';
 import { Piece, Template } from '../types';
 import { parsePiecesCSV, exportPiecesListCSV } from '../services/csvHelper';
-import { DEFAULT_PIECES, loadStoredTemplates, saveStoredTemplates } from '../services/storage';
+import { EXAMPLE_PIECES, loadStoredTemplates, saveStoredTemplates } from '../services/storage';
 import { useLanguage } from '../contexts/LanguageContext';
 import { CabinetPresetPicker } from './CabinetPresetPicker';
 import { templatePiecesFrom, piecesFromTemplate } from '../services/templatePieces';
@@ -87,7 +87,7 @@ export const PieceList: React.FC<PieceListProps> = ({
   };
 
   const loadExample = () => {
-    onChange(DEFAULT_PIECES);
+    onChange(EXAMPLE_PIECES);
   };
 
   const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -160,11 +160,11 @@ export const PieceList: React.FC<PieceListProps> = ({
 
   const translateDefaultName = (name: string) => {
     const map: Record<string, string> = {
-      'Lateral Izquierdo': t('leftSide'),
-      'Puerta Principal': t('mainDoor'),
-      'Tapa Superior': t('topCover'),
-      'Estantes Interiores': t('innerShelves'),
-      'Frente Cajón': t('drawerFront'),
+      'Left side': t('leftSide'),
+      'Main door': t('mainDoor'),
+      'Top cover': t('topCover'),
+      'Inner shelves': t('innerShelves'),
+      'Drawer front': t('drawerFront'),
     };
     return map[name] || name;
   };
