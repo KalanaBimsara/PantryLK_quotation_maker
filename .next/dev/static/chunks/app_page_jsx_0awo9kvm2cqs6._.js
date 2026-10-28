@@ -56,6 +56,9 @@ var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$re
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$eye$2d$off$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__EyeOff$3e$__ = __turbopack_context__.i("[project]/node_modules/lucide-react/dist/esm/icons/eye-off.mjs [app-client] (ecmascript) <export default as EyeOff>");
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$key$2d$round$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__KeyRound$3e$__ = __turbopack_context__.i("[project]/node_modules/lucide-react/dist/esm/icons/key-round.mjs [app-client] (ecmascript) <export default as KeyRound>");
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$store$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__Store$3e$__ = __turbopack_context__.i("[project]/node_modules/lucide-react/dist/esm/icons/store.mjs [app-client] (ecmascript) <export default as Store>");
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$zoom$2d$in$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__ZoomIn$3e$__ = __turbopack_context__.i("[project]/node_modules/lucide-react/dist/esm/icons/zoom-in.mjs [app-client] (ecmascript) <export default as ZoomIn>");
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$zoom$2d$out$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__ZoomOut$3e$__ = __turbopack_context__.i("[project]/node_modules/lucide-react/dist/esm/icons/zoom-out.mjs [app-client] (ecmascript) <export default as ZoomOut>");
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$scissors$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__Scissors$3e$__ = __turbopack_context__.i("[project]/node_modules/lucide-react/dist/esm/icons/scissors.mjs [app-client] (ecmascript) <export default as Scissors>");
 ;
 var _s = __turbopack_context__.k.signature();
 'use client';
@@ -65,6 +68,15 @@ function PantryQuotationApp() {
     _s();
     // Navigation & UI State
     const [activeTab, setActiveTab] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])('maker');
+    // CutWizard stays mounted after the first visit so its work survives tab switches
+    const [hasOpenedCutWizard, setHasOpenedCutWizard] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(false);
+    (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useEffect"])({
+        "PantryQuotationApp.useEffect": ()=>{
+            if (activeTab === 'cutwizard') setHasOpenedCutWizard(true);
+        }
+    }["PantryQuotationApp.useEffect"], [
+        activeTab
+    ]);
     const [toast, setToast] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])({
         show: false,
         message: '',
@@ -78,7 +90,7 @@ function PantryQuotationApp() {
         companyTagline: 'Premium Modern Kitchen & Pantry Solutions',
         companyAddress: 'Colombo, Sri Lanka',
         companyPhone: '+94 77 000 0000',
-        companyEmail: 'sales@pantrylk.com',
+        companyEmail: 'pantrylk2026@gmail.com',
         companyWeb: 'www.pantrylk.com',
         labourRatePerSqFt: 1800.0,
         salesCommissionRate: 5.0,
@@ -159,11 +171,39 @@ function PantryQuotationApp() {
         isQuoteModalOpen,
         sheetFit
     ]);
-    // Stop the page behind from scrolling while a sheet/modal is open on mobile
+    // Product Detail & Zoom Modal State
+    const [selectedProductForZoom, setSelectedProductForZoom] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(null);
+    const [zoomPosition, setZoomPosition] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])({
+        x: 50,
+        y: 50
+    });
+    const [isHoverZooming, setIsHoverZooming] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(false);
+    const [isMagnified, setIsMagnified] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(false);
+    // Close zoom modal on Escape key
+    (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useEffect"])({
+        "PantryQuotationApp.useEffect": ()=>{
+            const handleKeyDown = {
+                "PantryQuotationApp.useEffect.handleKeyDown": (e)=>{
+                    if (e.key === 'Escape' && selectedProductForZoom) {
+                        setSelectedProductForZoom(null);
+                        setIsMagnified(false);
+                        setIsHoverZooming(false);
+                    }
+                }
+            }["PantryQuotationApp.useEffect.handleKeyDown"];
+            window.addEventListener('keydown', handleKeyDown);
+            return ({
+                "PantryQuotationApp.useEffect": ()=>window.removeEventListener('keydown', handleKeyDown)
+            })["PantryQuotationApp.useEffect"];
+        }
+    }["PantryQuotationApp.useEffect"], [
+        selectedProductForZoom
+    ]);
+    // Stop the page behind from scrolling while a sheet/modal is open
     (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useEffect"])({
         "PantryQuotationApp.useEffect": ()=>{
             if (typeof document === 'undefined') return;
-            const locked = isQuoteModalOpen || isMobileDrawerOpen;
+            const locked = isQuoteModalOpen || isMobileDrawerOpen || Boolean(selectedProductForZoom);
             document.body.style.overflow = locked ? 'hidden' : '';
             return ({
                 "PantryQuotationApp.useEffect": ()=>{
@@ -173,7 +213,8 @@ function PantryQuotationApp() {
         }
     }["PantryQuotationApp.useEffect"], [
         isQuoteModalOpen,
-        isMobileDrawerOpen
+        isMobileDrawerOpen,
+        selectedProductForZoom
     ]);
     const [isProductModalOpen, setIsProductModalOpen] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(false);
     const [editingProduct, setEditingProduct] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(null);
@@ -208,6 +249,25 @@ function PantryQuotationApp() {
     const [isAdminAuthenticating, setIsAdminAuthenticating] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(false);
     // Admin Catalog Search
     const [adminSearch, setAdminSearch] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])('');
+    const QUOTE_CACHE_KEY = 'pantrylk_active_quote_draft';
+    const isInitialLoadedRef = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useRef"])(false);
+    // Sync refs to avoid stale closures in browser event listeners (beforeunload & popstate)
+    const currentQuoteRef = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useRef"])(currentQuote);
+    currentQuoteRef.current = currentQuote;
+    const activeTabRef = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useRef"])(activeTab);
+    activeTabRef.current = activeTab;
+    const isQuoteModalOpenRef = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useRef"])(isQuoteModalOpen);
+    isQuoteModalOpenRef.current = isQuoteModalOpen;
+    const isMobileDrawerOpenRef = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useRef"])(isMobileDrawerOpen);
+    isMobileDrawerOpenRef.current = isMobileDrawerOpen;
+    const showMobileFiltersRef = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useRef"])(showMobileFilters);
+    showMobileFiltersRef.current = showMobileFilters;
+    const selectedProductForZoomRef = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useRef"])(selectedProductForZoom);
+    selectedProductForZoomRef.current = selectedProductForZoom;
+    const isProductModalOpenRef = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useRef"])(isProductModalOpen);
+    isProductModalOpenRef.current = isProductModalOpen;
+    const isSqlModalOpenRef = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useRef"])(isSqlModalOpen);
+    isSqlModalOpenRef.current = isSqlModalOpen;
     // Currency helper
     const formatLKR = (val)=>{
         const num = parseFloat(val) || 0;
@@ -220,6 +280,17 @@ function PantryQuotationApp() {
     const resolveProductImage = (img)=>{
         if (!img) return '/images/placeholder.svg';
         return img.startsWith('/') ? img : '/' + img;
+    };
+    // Original website URL resolver for each product
+    const getProductSourceUrl = (p)=>{
+        if (!p) return '#';
+        if (p.sourceUrl) return p.sourceUrl;
+        const cleanName = (p.name || '').replace(/^(Polimise|MM Noorbhoy)\s*-\s*/i, '').trim();
+        const query = p.articleNo || cleanName;
+        const pShop = getProductShop(p);
+        if (pShop === 'Polimise') return `https://polimise.com/search?q=${encodeURIComponent(query)}`;
+        if (pShop === 'MM Noorbhoy') return `https://noorbhoy.com/search?q=${encodeURIComponent(query)}`;
+        return `https://www.google.com/search?q=${encodeURIComponent('PDS ' + (p.articleNo ? p.articleNo + ' ' : '') + cleanName)}`;
     };
     // Toast trigger
     const showToast = (message, isSuccess = true)=>{
@@ -305,40 +376,237 @@ function PantryQuotationApp() {
         }
         return result + ' Only';
     };
-    // Initial Load
+    // Initial Load & Quotation Cache Restoration
     (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useEffect"])({
         "PantryQuotationApp.useEffect": ()=>{
+            let hasRestored = false;
             if ("TURBOPACK compile-time truthy", 1) {
                 try {
                     localStorage.removeItem('pantrylk_cart'); // Clear any legacy local data
                     if (sessionStorage.getItem('pantrylk_admin_auth') === 'true') {
                         setIsAdminUnlocked(true);
                     }
-                } catch (e) {}
+                    // Check if an active quotation draft was saved in cache
+                    const cachedDraft = localStorage.getItem(QUOTE_CACHE_KEY);
+                    if (cachedDraft) {
+                        const parsed = JSON.parse(cachedDraft);
+                        if (parsed && typeof parsed === 'object') {
+                            const hasItems = Array.isArray(parsed.items) && parsed.items.length > 0;
+                            const hasSqft = Number(parsed.sqft) > 0;
+                            const hasCustomer = Boolean(parsed.customerName && parsed.customerName.trim());
+                            if (hasItems || hasSqft || hasCustomer) {
+                                setCurrentQuote({
+                                    id: parsed.id || `quote_${Date.now()}`,
+                                    jobNo: parsed.jobNo || `PLK-${new Date().getFullYear()}-${Math.floor(100 + Math.random() * 900)}`,
+                                    date: parsed.date || new Date().toLocaleDateString('en-GB', {
+                                        day: '2-digit',
+                                        month: 'short',
+                                        year: 'numeric'
+                                    }),
+                                    customerName: parsed.customerName || '',
+                                    customerPhone: parsed.customerPhone || '',
+                                    customerAddress: parsed.customerAddress || '',
+                                    sqft: parseFloat(parsed.sqft) || 0,
+                                    items: Array.isArray(parsed.items) ? parsed.items : []
+                                });
+                                hasRestored = true;
+                                setTimeout({
+                                    "PantryQuotationApp.useEffect": ()=>{
+                                        showToast(`Restored active quotation (${parsed.jobNo || 'Draft'}) with ${parsed.items?.length || 0} items from cache!`);
+                                    }
+                                }["PantryQuotationApp.useEffect"], 600);
+                            }
+                        }
+                    }
+                } catch (e) {
+                    console.warn('Error restoring cached quotation:', e);
+                }
             }
             loadSettings();
             loadProducts();
             loadQuotations();
             checkSupabaseStatus();
-            const d = new Date();
-            const yr = d.getFullYear();
-            const rand = Math.floor(100 + Math.random() * 900);
-            const newJobNo = `PLK-${yr}-${rand}`;
-            const newDate = d.toLocaleDateString('en-GB', {
-                day: '2-digit',
-                month: 'short',
-                year: 'numeric'
-            });
-            setCurrentQuote({
-                id: `quote_${Date.now()}`,
-                jobNo: newJobNo,
-                date: newDate,
-                customerName: '',
-                customerPhone: '',
-                customerAddress: '',
-                sqft: 0,
-                items: []
-            });
+            if (!hasRestored) {
+                const d = new Date();
+                const yr = d.getFullYear();
+                const rand = Math.floor(100 + Math.random() * 900);
+                const newJobNo = `PLK-${yr}-${rand}`;
+                const newDate = d.toLocaleDateString('en-GB', {
+                    day: '2-digit',
+                    month: 'short',
+                    year: 'numeric'
+                });
+                setCurrentQuote({
+                    id: `quote_${Date.now()}`,
+                    jobNo: newJobNo,
+                    date: newDate,
+                    customerName: '',
+                    customerPhone: '',
+                    customerAddress: '',
+                    sqft: 0,
+                    items: []
+                });
+            }
+            // Mark initial load as completed so future state changes auto-save to localStorage
+            isInitialLoadedRef.current = true;
+        }
+    }["PantryQuotationApp.useEffect"], []);
+    // Auto-save active quotation to cache (localStorage) whenever it changes
+    (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useEffect"])({
+        "PantryQuotationApp.useEffect": ()=>{
+            if ("TURBOPACK compile-time falsy", 0) //TURBOPACK unreachable
+            ;
+            if (!isInitialLoadedRef.current) return; // Guard against overwriting cache during initial hydration
+            try {
+                const hasContent = currentQuote && (Array.isArray(currentQuote.items) && currentQuote.items.length > 0 || Number(currentQuote.sqft) > 0 || Boolean(currentQuote.customerName && currentQuote.customerName.trim()) || Boolean(currentQuote.customerPhone && currentQuote.customerPhone.trim()) || Boolean(currentQuote.customerAddress && currentQuote.customerAddress.trim()));
+                if (hasContent) {
+                    localStorage.setItem(QUOTE_CACHE_KEY, JSON.stringify(currentQuote));
+                } else {
+                    localStorage.removeItem(QUOTE_CACHE_KEY);
+                }
+            } catch (e) {
+                console.warn('Failed to save quotation draft to localStorage cache:', e);
+            }
+        }
+    }["PantryQuotationApp.useEffect"], [
+        currentQuote
+    ]);
+    // Leave Confirmation & Mobile Return Interceptor
+    (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useEffect"])({
+        "PantryQuotationApp.useEffect": ()=>{
+            if ("TURBOPACK compile-time falsy", 0) //TURBOPACK unreachable
+            ;
+            // 1. Native beforeunload prompt for tab close, page refresh, external link
+            const handleBeforeUnload = {
+                "PantryQuotationApp.useEffect.handleBeforeUnload": (e)=>{
+                    const q = currentQuoteRef.current;
+                    const hasActiveItems = q && (Array.isArray(q.items) && q.items.length > 0 || Number(q.sqft) > 0 || Boolean(q.customerName && q.customerName.trim()));
+                    if (hasActiveItems) {
+                        e.preventDefault();
+                        e.returnValue = ''; // Standard trigger for modern browsers' native confirmation alert
+                        return '';
+                    }
+                }
+            }["PantryQuotationApp.useEffect.handleBeforeUnload"];
+            // 2. Mobile Return / History Back button interceptor
+            try {
+                window.history.replaceState({
+                    pantryApp: true,
+                    level: 1
+                }, '');
+                window.history.pushState({
+                    pantryApp: true,
+                    level: 2
+                }, '');
+            } catch (e) {}
+            const handlePopState = {
+                "PantryQuotationApp.useEffect.handlePopState": ()=>{
+                    // Step A: If any modal or drawer is open, close it first and stay on the page
+                    if (selectedProductForZoomRef.current) {
+                        setSelectedProductForZoom(null);
+                        setIsMagnified(false);
+                        setIsHoverZooming(false);
+                        try {
+                            window.history.pushState({
+                                pantryApp: true,
+                                level: 2
+                            }, '');
+                        } catch (err) {}
+                        return;
+                    }
+                    if (isQuoteModalOpenRef.current) {
+                        setIsQuoteModalOpen(false);
+                        try {
+                            window.history.pushState({
+                                pantryApp: true,
+                                level: 2
+                            }, '');
+                        } catch (err) {}
+                        return;
+                    }
+                    if (isMobileDrawerOpenRef.current) {
+                        setIsMobileDrawerOpen(false);
+                        try {
+                            window.history.pushState({
+                                pantryApp: true,
+                                level: 2
+                            }, '');
+                        } catch (err) {}
+                        return;
+                    }
+                    if (showMobileFiltersRef.current) {
+                        setShowMobileFilters(false);
+                        try {
+                            window.history.pushState({
+                                pantryApp: true,
+                                level: 2
+                            }, '');
+                        } catch (err) {}
+                        return;
+                    }
+                    if (isProductModalOpenRef.current) {
+                        setIsProductModalOpen(false);
+                        try {
+                            window.history.pushState({
+                                pantryApp: true,
+                                level: 2
+                            }, '');
+                        } catch (err) {}
+                        return;
+                    }
+                    if (isSqlModalOpenRef.current) {
+                        setIsSqlModalOpen(false);
+                        try {
+                            window.history.pushState({
+                                pantryApp: true,
+                                level: 2
+                            }, '');
+                        } catch (err) {}
+                        return;
+                    }
+                    // Step B: If on secondary tab (e.g. Past Quotations or Settings), return to Quotation Maker tab
+                    if (activeTabRef.current !== 'maker') {
+                        setActiveTab('maker');
+                        try {
+                            window.history.pushState({
+                                pantryApp: true,
+                                level: 2
+                            }, '');
+                        } catch (err) {}
+                        return;
+                    }
+                    // Step C: If user is on maker tab and has active quotation items, confirm before leaving
+                    const q = currentQuoteRef.current;
+                    const hasActiveItems = q && (Array.isArray(q.items) && q.items.length > 0 || Number(q.sqft) > 0 || Boolean(q.customerName && q.customerName.trim()));
+                    if (hasActiveItems) {
+                        const count = q.items?.length || 0;
+                        const countDesc = count === 1 ? '1 component' : `${count} components`;
+                        const confirmed = window.confirm(`⚠️ Leave Quotation Maker?\n\nYou have an active quotation with ${countDesc} in progress.\n\nYour quotation has been automatically saved in your browser cache, but are you sure you want to leave this page?`);
+                        if (!confirmed) {
+                            // User chose to stay: re-push state to keep history trap active
+                            try {
+                                window.history.pushState({
+                                    pantryApp: true,
+                                    level: 2
+                                }, '');
+                            } catch (err) {}
+                            return;
+                        }
+                        // User confirmed exit: remove listeners and allow back navigation
+                        window.removeEventListener('popstate', handlePopState);
+                        window.removeEventListener('beforeunload', handleBeforeUnload);
+                        window.history.back();
+                    }
+                }
+            }["PantryQuotationApp.useEffect.handlePopState"];
+            window.addEventListener('beforeunload', handleBeforeUnload);
+            window.addEventListener('popstate', handlePopState);
+            return ({
+                "PantryQuotationApp.useEffect": ()=>{
+                    window.removeEventListener('beforeunload', handleBeforeUnload);
+                    window.removeEventListener('popstate', handlePopState);
+                }
+            })["PantryQuotationApp.useEffect"];
         }
     }["PantryQuotationApp.useEffect"], []);
     const checkSupabaseStatus = async ()=>{
@@ -540,8 +808,24 @@ function PantryQuotationApp() {
             if (res.ok) setPastQuotations(await res.json());
         } catch (e) {}
     };
-    // Local saving cut off - data is fetched directly from database
-    const saveCartLocally = ()=>{};
+    // Synchronize cart changes to local draft cache
+    const saveCartLocally = (items, sqft)=>{
+        if ("TURBOPACK compile-time falsy", 0) //TURBOPACK unreachable
+        ;
+        try {
+            const current = currentQuoteRef.current || {};
+            const updated = {
+                ...current,
+                items: items || [],
+                sqft: sqft !== undefined ? sqft : current.sqft || 0
+            };
+            if (updated.items && updated.items.length > 0 || updated.sqft > 0 || updated.customerName) {
+                localStorage.setItem(QUOTE_CACHE_KEY, JSON.stringify(updated));
+            } else {
+                localStorage.removeItem(QUOTE_CACHE_KEY);
+            }
+        } catch (e) {}
+    };
     // Admin Unlock & Lock Handlers (Verified securely via server API)
     const handleAdminUnlock = async (e)=>{
         if (e) e.preventDefault();
@@ -600,7 +884,7 @@ function PantryQuotationApp() {
                 children: "Polimise"
             }, void 0, false, {
                 fileName: "[project]/app/page.jsx",
-                lineNumber: 452,
+                lineNumber: 699,
                 columnNumber: 9
             }, this);
         }
@@ -610,7 +894,7 @@ function PantryQuotationApp() {
                 children: "MM Noorbhoy"
             }, void 0, false, {
                 fileName: "[project]/app/page.jsx",
-                lineNumber: 459,
+                lineNumber: 706,
                 columnNumber: 9
             }, this);
         }
@@ -619,7 +903,7 @@ function PantryQuotationApp() {
             children: "PDS LK"
         }, void 0, false, {
             fileName: "[project]/app/page.jsx",
-            lineNumber: 465,
+            lineNumber: 712,
             columnNumber: 7
         }, this);
     };
@@ -777,17 +1061,34 @@ function PantryQuotationApp() {
         showToast("Item removed");
     };
     const clearQuote = ()=>{
-        if (currentQuote.items.length === 0 && !currentQuote.sqft) return;
-        if (!confirm("Are you sure you want to clear this quotation?")) return;
-        setCurrentQuote((prev)=>{
-            saveCartLocally([], 0);
-            return {
-                ...prev,
-                items: [],
-                sqft: 0
-            };
+        const hasItems = currentQuote.items && currentQuote.items.length > 0;
+        const hasSqft = Number(currentQuote.sqft) > 0;
+        const hasCust = Boolean(currentQuote.customerName && currentQuote.customerName.trim());
+        if (!hasItems && !hasSqft && !hasCust) return;
+        if (!confirm("Are you sure you want to clear this quotation? All active items and the cached draft will be reset.")) return;
+        const d = new Date();
+        const yr = d.getFullYear();
+        const rand = Math.floor(100 + Math.random() * 900);
+        const newJobNo = `PLK-${yr}-${rand}`;
+        const newDate = d.toLocaleDateString('en-GB', {
+            day: '2-digit',
+            month: 'short',
+            year: 'numeric'
         });
-        showToast("Quotation cleared.");
+        setCurrentQuote({
+            id: `quote_${Date.now()}`,
+            jobNo: newJobNo,
+            date: newDate,
+            customerName: '',
+            customerPhone: '',
+            customerAddress: '',
+            sqft: 0,
+            items: []
+        });
+        try {
+            localStorage.removeItem(QUOTE_CACHE_KEY);
+        } catch (e) {}
+        showToast("Quotation cleared and cache reset.");
     };
     // WhatsApp Share
     const shareViaWhatsApp = ()=>{
@@ -927,12 +1228,48 @@ _Hotline: ${appSettings.companyPhone}_`;
     // Category Icon helper
     const getCategoryIcon = (cat, isAct = false)=>{
         const iconClass = `w-4 h-4 sm:w-5 sm:h-5 shrink-0 ${isAct ? 'text-[#D9C9A6]' : ''}`;
-        if (cat === 'Boards & Panels' || cat.includes('Boards') || cat.includes('AGT') || cat.includes('HeveaBoard') || cat.includes('HMR')) {
+        if (cat === 'Boards' || cat === 'Boards & Panels' || cat.includes('Boards') || cat.includes('AGT') || cat.includes('HeveaBoard') || cat.includes('HMR')) {
             return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$box$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__Box$3e$__["Box"], {
                 className: `${iconClass} ${!isAct ? 'text-[#7A602F]' : ''}`
             }, void 0, false, {
                 fileName: "[project]/app/page.jsx",
-                lineNumber: 729,
+                lineNumber: 996,
+                columnNumber: 14
+            }, this);
+        }
+        if (cat === 'PVC Panels' || cat.includes('PVC')) {
+            return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$layout$2d$grid$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__LayoutGrid$3e$__["LayoutGrid"], {
+                className: `${iconClass} ${!isAct ? 'text-[#7A602F]' : ''}`
+            }, void 0, false, {
+                fileName: "[project]/app/page.jsx",
+                lineNumber: 999,
+                columnNumber: 14
+            }, this);
+        }
+        if (cat === 'Solid Surfaces' || cat === 'Solid Surfaces & Wall Panels' || cat.includes('Solid') || cat.includes('HI-MACS')) {
+            return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$sparkles$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__Sparkles$3e$__["Sparkles"], {
+                className: `${iconClass} ${!isAct ? 'text-[#7A602F]' : ''}`
+            }, void 0, false, {
+                fileName: "[project]/app/page.jsx",
+                lineNumber: 1002,
+                columnNumber: 14
+            }, this);
+        }
+        if (cat === 'Hinges' || cat.includes('Hinges')) {
+            return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$rotate$2d$ccw$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__RotateCcw$3e$__["RotateCcw"], {
+                className: `${iconClass} ${!isAct ? 'text-[#7A602F]' : ''}`
+            }, void 0, false, {
+                fileName: "[project]/app/page.jsx",
+                lineNumber: 1005,
+                columnNumber: 14
+            }, this);
+        }
+        if (cat === 'Drawer Systems' || cat.includes('Drawer Systems') || cat.includes('Drawer')) {
+            return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$layers$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__Layers$3e$__["Layers"], {
+                className: `${iconClass} ${!isAct ? 'text-[#7A602F]' : ''}`
+            }, void 0, false, {
+                fileName: "[project]/app/page.jsx",
+                lineNumber: 1008,
                 columnNumber: 14
             }, this);
         }
@@ -941,16 +1278,7 @@ _Hotline: ${appSettings.companyPhone}_`;
                 className: `${iconClass} ${!isAct ? 'text-[#7A602F]' : ''}`
             }, void 0, false, {
                 fileName: "[project]/app/page.jsx",
-                lineNumber: 732,
-                columnNumber: 14
-            }, this);
-        }
-        if (cat === 'Solid Surfaces & Wall Panels' || cat.includes('Solid') || cat.includes('Wall Panels') || cat.includes('HI-MACS')) {
-            return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$sparkles$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__Sparkles$3e$__["Sparkles"], {
-                className: `${iconClass} ${!isAct ? 'text-[#7A602F]' : ''}`
-            }, void 0, false, {
-                fileName: "[project]/app/page.jsx",
-                lineNumber: 735,
+                lineNumber: 1011,
                 columnNumber: 14
             }, this);
         }
@@ -959,7 +1287,7 @@ _Hotline: ${appSettings.companyPhone}_`;
                 className: `${iconClass} ${!isAct ? 'text-[#7A602F]' : ''}`
             }, void 0, false, {
                 fileName: "[project]/app/page.jsx",
-                lineNumber: 738,
+                lineNumber: 1014,
                 columnNumber: 14
             }, this);
         }
@@ -968,7 +1296,7 @@ _Hotline: ${appSettings.companyPhone}_`;
                 className: `${iconClass} ${!isAct ? 'text-[#7A602F]' : ''}`
             }, void 0, false, {
                 fileName: "[project]/app/page.jsx",
-                lineNumber: 741,
+                lineNumber: 1017,
                 columnNumber: 14
             }, this);
         }
@@ -977,7 +1305,7 @@ _Hotline: ${appSettings.companyPhone}_`;
                 className: `${iconClass} ${!isAct ? 'text-[#7A602F]' : ''}`
             }, void 0, false, {
                 fileName: "[project]/app/page.jsx",
-                lineNumber: 744,
+                lineNumber: 1020,
                 columnNumber: 14
             }, this);
         }
@@ -986,16 +1314,16 @@ _Hotline: ${appSettings.companyPhone}_`;
                 className: `${iconClass} ${!isAct ? 'text-[#7A602F]' : ''}`
             }, void 0, false, {
                 fileName: "[project]/app/page.jsx",
-                lineNumber: 747,
+                lineNumber: 1023,
                 columnNumber: 14
             }, this);
         }
-        if (cat === 'Hardware, Hinges & Drawer Systems' || cat.includes('Hardware') || cat.includes('Hinges') || cat.includes('Drawer Systems')) {
+        if (cat === 'Hardware, Hinges & Drawer Systems' || cat.includes('Hardware')) {
             return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$wrench$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__Wrench$3e$__["Wrench"], {
                 className: `${iconClass} ${!isAct ? 'text-[#7A602F]' : ''}`
             }, void 0, false, {
                 fileName: "[project]/app/page.jsx",
-                lineNumber: 750,
+                lineNumber: 1026,
                 columnNumber: 14
             }, this);
         }
@@ -1004,7 +1332,7 @@ _Hotline: ${appSettings.companyPhone}_`;
                 className: `${iconClass} ${!isAct ? 'text-[#7A602F]' : ''}`
             }, void 0, false, {
                 fileName: "[project]/app/page.jsx",
-                lineNumber: 753,
+                lineNumber: 1029,
                 columnNumber: 14
             }, this);
         }
@@ -1013,7 +1341,7 @@ _Hotline: ${appSettings.companyPhone}_`;
                 className: `${iconClass} ${!isAct ? 'text-[#7A602F]' : ''}`
             }, void 0, false, {
                 fileName: "[project]/app/page.jsx",
-                lineNumber: 756,
+                lineNumber: 1032,
                 columnNumber: 14
             }, this);
         }
@@ -1022,7 +1350,7 @@ _Hotline: ${appSettings.companyPhone}_`;
                 className: `${iconClass} ${!isAct ? 'text-[#7A602F]' : ''}`
             }, void 0, false, {
                 fileName: "[project]/app/page.jsx",
-                lineNumber: 759,
+                lineNumber: 1035,
                 columnNumber: 14
             }, this);
         }
@@ -1030,7 +1358,7 @@ _Hotline: ${appSettings.companyPhone}_`;
             className: iconClass
         }, void 0, false, {
             fileName: "[project]/app/page.jsx",
-            lineNumber: 761,
+            lineNumber: 1037,
             columnNumber: 12
         }, this);
     };
@@ -1061,22 +1389,49 @@ _Hotline: ${appSettings.companyPhone}_`;
                                         className: "w-4 h-4 sm:w-5 sm:h-5"
                                     }, void 0, false, {
                                         fileName: "[project]/app/page.jsx",
-                                        lineNumber: 780,
+                                        lineNumber: 1056,
                                         columnNumber: 13
                                     }, this)
                                 }, void 0, false, {
                                     fileName: "[project]/app/page.jsx",
-                                    lineNumber: 779,
+                                    lineNumber: 1055,
                                     columnNumber: 11
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                     children: [
-                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("h2", {
-                                            className: "font-bold text-sm sm:text-base tracking-tight",
-                                            children: "Active Quotation"
-                                        }, void 0, false, {
+                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                            className: "flex items-center gap-1.5",
+                                            children: [
+                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("h2", {
+                                                    className: "font-bold text-sm sm:text-base tracking-tight",
+                                                    children: "Active Quotation"
+                                                }, void 0, false, {
+                                                    fileName: "[project]/app/page.jsx",
+                                                    lineNumber: 1060,
+                                                    columnNumber: 15
+                                                }, this),
+                                                currentQuote.items.length > 0 && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                    className: "text-[10px] text-emerald-300 bg-emerald-500/20 px-1.5 py-0.5 rounded font-medium flex items-center gap-0.5 border border-emerald-500/30",
+                                                    title: "Quotation is continuously auto-saved to your browser cache",
+                                                    children: [
+                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$check$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__Check$3e$__["Check"], {
+                                                            className: "w-2.5 h-2.5"
+                                                        }, void 0, false, {
+                                                            fileName: "[project]/app/page.jsx",
+                                                            lineNumber: 1063,
+                                                            columnNumber: 19
+                                                        }, this),
+                                                        " Cached"
+                                                    ]
+                                                }, void 0, true, {
+                                                    fileName: "[project]/app/page.jsx",
+                                                    lineNumber: 1062,
+                                                    columnNumber: 17
+                                                }, this)
+                                            ]
+                                        }, void 0, true, {
                                             fileName: "[project]/app/page.jsx",
-                                            lineNumber: 783,
+                                            lineNumber: 1059,
                                             columnNumber: 13
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -1084,19 +1439,19 @@ _Hotline: ${appSettings.companyPhone}_`;
                                             children: "Live Itemized Calculator"
                                         }, void 0, false, {
                                             fileName: "[project]/app/page.jsx",
-                                            lineNumber: 784,
+                                            lineNumber: 1067,
                                             columnNumber: 13
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/app/page.jsx",
-                                    lineNumber: 782,
+                                    lineNumber: 1058,
                                     columnNumber: 11
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/app/page.jsx",
-                            lineNumber: 778,
+                            lineNumber: 1054,
                             columnNumber: 9
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1110,7 +1465,7 @@ _Hotline: ${appSettings.companyPhone}_`;
                                             className: "w-3.5 h-3.5"
                                         }, void 0, false, {
                                             fileName: "[project]/app/page.jsx",
-                                            lineNumber: 789,
+                                            lineNumber: 1072,
                                             columnNumber: 13
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -1118,13 +1473,13 @@ _Hotline: ${appSettings.companyPhone}_`;
                                             children: "Clear"
                                         }, void 0, false, {
                                             fileName: "[project]/app/page.jsx",
-                                            lineNumber: 790,
+                                            lineNumber: 1073,
                                             columnNumber: 13
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/app/page.jsx",
-                                    lineNumber: 788,
+                                    lineNumber: 1071,
                                     columnNumber: 11
                                 }, this),
                                 isMobile && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -1134,24 +1489,24 @@ _Hotline: ${appSettings.companyPhone}_`;
                                         className: "w-5 h-5"
                                     }, void 0, false, {
                                         fileName: "[project]/app/page.jsx",
-                                        lineNumber: 794,
+                                        lineNumber: 1077,
                                         columnNumber: 15
                                     }, this)
                                 }, void 0, false, {
                                     fileName: "[project]/app/page.jsx",
-                                    lineNumber: 793,
+                                    lineNumber: 1076,
                                     columnNumber: 13
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/app/page.jsx",
-                            lineNumber: 787,
+                            lineNumber: 1070,
                             columnNumber: 9
                         }, this)
                     ]
                 }, void 0, true, {
                     fileName: "[project]/app/page.jsx",
-                    lineNumber: 777,
+                    lineNumber: 1053,
                     columnNumber: 7
                 }, this),
                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1163,7 +1518,7 @@ _Hotline: ${appSettings.companyPhone}_`;
                                 className: "w-10 h-10 sm:w-12 sm:h-12 text-slate-300"
                             }, void 0, false, {
                                 fileName: "[project]/app/page.jsx",
-                                lineNumber: 804,
+                                lineNumber: 1087,
                                 columnNumber: 13
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -1171,7 +1526,7 @@ _Hotline: ${appSettings.companyPhone}_`;
                                 children: "No components selected yet"
                             }, void 0, false, {
                                 fileName: "[project]/app/page.jsx",
-                                lineNumber: 805,
+                                lineNumber: 1088,
                                 columnNumber: 13
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -1179,13 +1534,13 @@ _Hotline: ${appSettings.companyPhone}_`;
                                 children: "Select items from the catalog to see rate multiplication live."
                             }, void 0, false, {
                                 fileName: "[project]/app/page.jsx",
-                                lineNumber: 806,
+                                lineNumber: 1089,
                                 columnNumber: 13
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/app/page.jsx",
-                        lineNumber: 803,
+                        lineNumber: 1086,
                         columnNumber: 11
                     }, this) : currentQuote.items.map((item)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                             className: "pt-2 flex items-center justify-between space-x-2",
@@ -1203,12 +1558,12 @@ _Hotline: ${appSettings.companyPhone}_`;
                                         }
                                     }, void 0, false, {
                                         fileName: "[project]/app/page.jsx",
-                                        lineNumber: 812,
+                                        lineNumber: 1095,
                                         columnNumber: 17
                                     }, this)
                                 }, void 0, false, {
                                     fileName: "[project]/app/page.jsx",
-                                    lineNumber: 811,
+                                    lineNumber: 1094,
                                     columnNumber: 15
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1222,7 +1577,7 @@ _Hotline: ${appSettings.companyPhone}_`;
                                                     children: item.articleNo
                                                 }, void 0, false, {
                                                     fileName: "[project]/app/page.jsx",
-                                                    lineNumber: 825,
+                                                    lineNumber: 1108,
                                                     columnNumber: 19
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -1230,13 +1585,13 @@ _Hotline: ${appSettings.companyPhone}_`;
                                                     children: item.name
                                                 }, void 0, false, {
                                                     fileName: "[project]/app/page.jsx",
-                                                    lineNumber: 826,
+                                                    lineNumber: 1109,
                                                     columnNumber: 19
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/app/page.jsx",
-                                            lineNumber: 824,
+                                            lineNumber: 1107,
                                             columnNumber: 17
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1249,7 +1604,7 @@ _Hotline: ${appSettings.companyPhone}_`;
                                                     children: item.quantity
                                                 }, void 0, false, {
                                                     fileName: "[project]/app/page.jsx",
-                                                    lineNumber: 829,
+                                                    lineNumber: 1112,
                                                     columnNumber: 43
                                                 }, this),
                                                 " ",
@@ -1257,13 +1612,13 @@ _Hotline: ${appSettings.companyPhone}_`;
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/app/page.jsx",
-                                            lineNumber: 828,
+                                            lineNumber: 1111,
                                             columnNumber: 17
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/app/page.jsx",
-                                    lineNumber: 823,
+                                    lineNumber: 1106,
                                     columnNumber: 15
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1274,7 +1629,7 @@ _Hotline: ${appSettings.companyPhone}_`;
                                             children: formatLKR(item.quantity * item.mrp)
                                         }, void 0, false, {
                                             fileName: "[project]/app/page.jsx",
-                                            lineNumber: 833,
+                                            lineNumber: 1116,
                                             columnNumber: 17
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1286,7 +1641,7 @@ _Hotline: ${appSettings.companyPhone}_`;
                                                     children: "-"
                                                 }, void 0, false, {
                                                     fileName: "[project]/app/page.jsx",
-                                                    lineNumber: 837,
+                                                    lineNumber: 1120,
                                                     columnNumber: 19
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -1294,7 +1649,7 @@ _Hotline: ${appSettings.companyPhone}_`;
                                                     children: item.quantity
                                                 }, void 0, false, {
                                                     fileName: "[project]/app/page.jsx",
-                                                    lineNumber: 838,
+                                                    lineNumber: 1121,
                                                     columnNumber: 19
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -1303,7 +1658,7 @@ _Hotline: ${appSettings.companyPhone}_`;
                                                     children: "+"
                                                 }, void 0, false, {
                                                     fileName: "[project]/app/page.jsx",
-                                                    lineNumber: 839,
+                                                    lineNumber: 1122,
                                                     columnNumber: 19
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -1313,35 +1668,35 @@ _Hotline: ${appSettings.companyPhone}_`;
                                                         className: "w-3.5 h-3.5"
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/page.jsx",
-                                                        lineNumber: 841,
+                                                        lineNumber: 1124,
                                                         columnNumber: 21
                                                     }, this)
                                                 }, void 0, false, {
                                                     fileName: "[project]/app/page.jsx",
-                                                    lineNumber: 840,
+                                                    lineNumber: 1123,
                                                     columnNumber: 19
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/app/page.jsx",
-                                            lineNumber: 836,
+                                            lineNumber: 1119,
                                             columnNumber: 17
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/app/page.jsx",
-                                    lineNumber: 832,
+                                    lineNumber: 1115,
                                     columnNumber: 15
                                 }, this)
                             ]
                         }, item.id, true, {
                             fileName: "[project]/app/page.jsx",
-                            lineNumber: 810,
+                            lineNumber: 1093,
                             columnNumber: 13
                         }, this))
                 }, void 0, false, {
                     fileName: "[project]/app/page.jsx",
-                    lineNumber: 801,
+                    lineNumber: 1084,
                     columnNumber: 7
                 }, this),
                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1354,7 +1709,7 @@ _Hotline: ${appSettings.companyPhone}_`;
                                     children: "Components Subtotal:"
                                 }, void 0, false, {
                                     fileName: "[project]/app/page.jsx",
-                                    lineNumber: 853,
+                                    lineNumber: 1136,
                                     columnNumber: 11
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -1362,13 +1717,13 @@ _Hotline: ${appSettings.companyPhone}_`;
                                     children: formatLKR(calculations.compTotal)
                                 }, void 0, false, {
                                     fileName: "[project]/app/page.jsx",
-                                    lineNumber: 854,
+                                    lineNumber: 1137,
                                     columnNumber: 11
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/app/page.jsx",
-                            lineNumber: 852,
+                            lineNumber: 1135,
                             columnNumber: 9
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1384,7 +1739,7 @@ _Hotline: ${appSettings.companyPhone}_`;
                                                     className: "w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#9C7C43]"
                                                 }, void 0, false, {
                                                     fileName: "[project]/app/page.jsx",
-                                                    lineNumber: 861,
+                                                    lineNumber: 1144,
                                                     columnNumber: 15
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("label", {
@@ -1392,13 +1747,13 @@ _Hotline: ${appSettings.companyPhone}_`;
                                                     children: "Labour & Machinery Charge"
                                                 }, void 0, false, {
                                                     fileName: "[project]/app/page.jsx",
-                                                    lineNumber: 862,
+                                                    lineNumber: 1145,
                                                     columnNumber: 15
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/app/page.jsx",
-                                            lineNumber: 860,
+                                            lineNumber: 1143,
                                             columnNumber: 13
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -1410,13 +1765,13 @@ _Hotline: ${appSettings.companyPhone}_`;
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/app/page.jsx",
-                                            lineNumber: 864,
+                                            lineNumber: 1147,
                                             columnNumber: 13
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/app/page.jsx",
-                                    lineNumber: 859,
+                                    lineNumber: 1142,
                                     columnNumber: 11
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1439,7 +1794,7 @@ _Hotline: ${appSettings.companyPhone}_`;
                                                     className: "w-full pl-2.5 pr-12 py-2.5 lg:py-1.5 bg-[#FAF8F3] border border-[#E4E0D6] rounded-lg text-base lg:text-xs font-semibold focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#B8975A] tabular-nums"
                                                 }, void 0, false, {
                                                     fileName: "[project]/app/page.jsx",
-                                                    lineNumber: 871,
+                                                    lineNumber: 1154,
                                                     columnNumber: 15
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -1447,13 +1802,13 @@ _Hotline: ${appSettings.companyPhone}_`;
                                                     children: "sq.ft"
                                                 }, void 0, false, {
                                                     fileName: "[project]/app/page.jsx",
-                                                    lineNumber: 881,
+                                                    lineNumber: 1164,
                                                     columnNumber: 15
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/app/page.jsx",
-                                            lineNumber: 870,
+                                            lineNumber: 1153,
                                             columnNumber: 13
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -1461,19 +1816,19 @@ _Hotline: ${appSettings.companyPhone}_`;
                                             children: formatLKR(calculations.labourTotal)
                                         }, void 0, false, {
                                             fileName: "[project]/app/page.jsx",
-                                            lineNumber: 883,
+                                            lineNumber: 1166,
                                             columnNumber: 13
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/app/page.jsx",
-                                    lineNumber: 869,
+                                    lineNumber: 1152,
                                     columnNumber: 11
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/app/page.jsx",
-                            lineNumber: 858,
+                            lineNumber: 1141,
                             columnNumber: 9
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1483,7 +1838,7 @@ _Hotline: ${appSettings.companyPhone}_`;
                                     children: "Subtotal (Items + Labour):"
                                 }, void 0, false, {
                                     fileName: "[project]/app/page.jsx",
-                                    lineNumber: 890,
+                                    lineNumber: 1173,
                                     columnNumber: 11
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -1491,13 +1846,13 @@ _Hotline: ${appSettings.companyPhone}_`;
                                     children: formatLKR(calculations.preCommTotal)
                                 }, void 0, false, {
                                     fileName: "[project]/app/page.jsx",
-                                    lineNumber: 891,
+                                    lineNumber: 1174,
                                     columnNumber: 11
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/app/page.jsx",
-                            lineNumber: 889,
+                            lineNumber: 1172,
                             columnNumber: 9
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1510,7 +1865,7 @@ _Hotline: ${appSettings.companyPhone}_`;
                                             className: "w-3 h-3 text-[#1F3A5A]"
                                         }, void 0, false, {
                                             fileName: "[project]/app/page.jsx",
-                                            lineNumber: 896,
+                                            lineNumber: 1179,
                                             columnNumber: 13
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -1522,13 +1877,13 @@ _Hotline: ${appSettings.companyPhone}_`;
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/app/page.jsx",
-                                            lineNumber: 897,
+                                            lineNumber: 1180,
                                             columnNumber: 13
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/app/page.jsx",
-                                    lineNumber: 895,
+                                    lineNumber: 1178,
                                     columnNumber: 11
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -1536,13 +1891,13 @@ _Hotline: ${appSettings.companyPhone}_`;
                                     children: formatLKR(calculations.commTotal)
                                 }, void 0, false, {
                                     fileName: "[project]/app/page.jsx",
-                                    lineNumber: 899,
+                                    lineNumber: 1182,
                                     columnNumber: 11
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/app/page.jsx",
-                            lineNumber: 894,
+                            lineNumber: 1177,
                             columnNumber: 9
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1555,7 +1910,7 @@ _Hotline: ${appSettings.companyPhone}_`;
                                             children: "QUOTATION GRAND TOTAL"
                                         }, void 0, false, {
                                             fileName: "[project]/app/page.jsx",
-                                            lineNumber: 905,
+                                            lineNumber: 1188,
                                             columnNumber: 13
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -1563,13 +1918,13 @@ _Hotline: ${appSettings.companyPhone}_`;
                                             children: "LKR"
                                         }, void 0, false, {
                                             fileName: "[project]/app/page.jsx",
-                                            lineNumber: 906,
+                                            lineNumber: 1189,
                                             columnNumber: 13
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/app/page.jsx",
-                                    lineNumber: 904,
+                                    lineNumber: 1187,
                                     columnNumber: 11
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1580,7 +1935,7 @@ _Hotline: ${appSettings.companyPhone}_`;
                                             children: "Net Payable:"
                                         }, void 0, false, {
                                             fileName: "[project]/app/page.jsx",
-                                            lineNumber: 909,
+                                            lineNumber: 1192,
                                             columnNumber: 13
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -1588,19 +1943,19 @@ _Hotline: ${appSettings.companyPhone}_`;
                                             children: formatLKR(calculations.grandTotal)
                                         }, void 0, false, {
                                             fileName: "[project]/app/page.jsx",
-                                            lineNumber: 910,
+                                            lineNumber: 1193,
                                             columnNumber: 13
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/app/page.jsx",
-                                    lineNumber: 908,
+                                    lineNumber: 1191,
                                     columnNumber: 11
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/app/page.jsx",
-                            lineNumber: 903,
+                            lineNumber: 1186,
                             columnNumber: 9
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -1614,7 +1969,7 @@ _Hotline: ${appSettings.companyPhone}_`;
                                     className: "w-5 h-5 text-[#14263D] stroke-[2.5]"
                                 }, void 0, false, {
                                     fileName: "[project]/app/page.jsx",
-                                    lineNumber: 923,
+                                    lineNumber: 1206,
                                     columnNumber: 11
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -1622,29 +1977,29 @@ _Hotline: ${appSettings.companyPhone}_`;
                                     children: "Generate Official Quotation"
                                 }, void 0, false, {
                                     fileName: "[project]/app/page.jsx",
-                                    lineNumber: 924,
+                                    lineNumber: 1207,
                                     columnNumber: 11
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/app/page.jsx",
-                            lineNumber: 916,
+                            lineNumber: 1199,
                             columnNumber: 9
                         }, this)
                     ]
                 }, void 0, true, {
                     fileName: "[project]/app/page.jsx",
-                    lineNumber: 851,
+                    lineNumber: 1134,
                     columnNumber: 7
                 }, this)
             ]
         }, void 0, true, {
             fileName: "[project]/app/page.jsx",
-            lineNumber: 775,
+            lineNumber: 1051,
             columnNumber: 5
         }, this);
     return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-        className: "app-root min-h-screen flex flex-col bg-[#F6F4EF] pb-28 lg:pb-0",
+        className: `app-root min-h-screen flex flex-col bg-[#F6F4EF] lg:pb-0 ${activeTab === 'cutwizard' ? 'pb-0' : 'pb-28'}`,
         children: [
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("nav", {
                 className: "sticky top-0 z-40 bg-[#14263D] text-white shadow-lg border-b-[3px] border-[#B8975A] no-print",
@@ -1663,7 +2018,7 @@ _Hotline: ${appSettings.companyPhone}_`;
                                         className: "h-10 sm:h-11 w-auto object-contain rounded-lg bg-white px-2.5 py-1.5 shadow-sm shrink-0"
                                     }, void 0, false, {
                                         fileName: "[project]/app/page.jsx",
-                                        lineNumber: 940,
+                                        lineNumber: 1223,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1672,18 +2027,18 @@ _Hotline: ${appSettings.companyPhone}_`;
                                             children: "Quotation Maker"
                                         }, void 0, false, {
                                             fileName: "[project]/app/page.jsx",
-                                            lineNumber: 946,
+                                            lineNumber: 1229,
                                             columnNumber: 17
                                         }, this)
                                     }, void 0, false, {
                                         fileName: "[project]/app/page.jsx",
-                                        lineNumber: 945,
+                                        lineNumber: 1228,
                                         columnNumber: 15
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/app/page.jsx",
-                                lineNumber: 939,
+                                lineNumber: 1222,
                                 columnNumber: 13
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1697,7 +2052,7 @@ _Hotline: ${appSettings.companyPhone}_`;
                                                 className: "w-3.5 h-3.5 sm:w-4 sm:h-4"
                                             }, void 0, false, {
                                                 fileName: "[project]/app/page.jsx",
-                                                lineNumber: 958,
+                                                lineNumber: 1241,
                                                 columnNumber: 17
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -1705,7 +2060,7 @@ _Hotline: ${appSettings.companyPhone}_`;
                                                 children: "Quotation"
                                             }, void 0, false, {
                                                 fileName: "[project]/app/page.jsx",
-                                                lineNumber: 959,
+                                                lineNumber: 1242,
                                                 columnNumber: 17
                                             }, this),
                                             totalCartCount > 0 && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -1713,13 +2068,13 @@ _Hotline: ${appSettings.companyPhone}_`;
                                                 children: totalCartCount
                                             }, void 0, false, {
                                                 fileName: "[project]/app/page.jsx",
-                                                lineNumber: 961,
+                                                lineNumber: 1244,
                                                 columnNumber: 19
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/app/page.jsx",
-                                        lineNumber: 952,
+                                        lineNumber: 1235,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -1730,7 +2085,7 @@ _Hotline: ${appSettings.companyPhone}_`;
                                                 className: "w-3.5 h-3.5 sm:w-4 sm:h-4"
                                             }, void 0, false, {
                                                 fileName: "[project]/app/page.jsx",
-                                                lineNumber: 973,
+                                                lineNumber: 1256,
                                                 columnNumber: 17
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -1738,13 +2093,38 @@ _Hotline: ${appSettings.companyPhone}_`;
                                                 children: "Past Quotations"
                                             }, void 0, false, {
                                                 fileName: "[project]/app/page.jsx",
-                                                lineNumber: 974,
+                                                lineNumber: 1257,
                                                 columnNumber: 17
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/app/page.jsx",
-                                        lineNumber: 967,
+                                        lineNumber: 1250,
+                                        columnNumber: 15
+                                    }, this),
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                                        onClick: ()=>setActiveTab('cutwizard'),
+                                        className: `flex items-center space-x-1.5 px-3 sm:px-4 min-h-[44px] rounded-lg text-xs sm:text-sm font-medium transition ${activeTab === 'cutwizard' ? 'bg-[#1F3A5A] text-white shadow-sm' : 'text-slate-300 hover:text-white hover:bg-[#1F3A5A]'}`,
+                                        children: [
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$scissors$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__Scissors$3e$__["Scissors"], {
+                                                className: "w-3.5 h-3.5 sm:w-4 sm:h-4"
+                                            }, void 0, false, {
+                                                fileName: "[project]/app/page.jsx",
+                                                lineNumber: 1266,
+                                                columnNumber: 17
+                                            }, this),
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                className: "hidden md:inline",
+                                                children: "CutWizard"
+                                            }, void 0, false, {
+                                                fileName: "[project]/app/page.jsx",
+                                                lineNumber: 1267,
+                                                columnNumber: 17
+                                            }, this)
+                                        ]
+                                    }, void 0, true, {
+                                        fileName: "[project]/app/page.jsx",
+                                        lineNumber: 1260,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -1755,13 +2135,13 @@ _Hotline: ${appSettings.companyPhone}_`;
                                                 className: "w-3.5 h-3.5 sm:w-4 sm:h-4"
                                             }, void 0, false, {
                                                 fileName: "[project]/app/page.jsx",
-                                                lineNumber: 984,
+                                                lineNumber: 1277,
                                                 columnNumber: 19
                                             }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$lock$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__Lock$3e$__["Lock"], {
                                                 className: "w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#D9C9A6]"
                                             }, void 0, false, {
                                                 fileName: "[project]/app/page.jsx",
-                                                lineNumber: 986,
+                                                lineNumber: 1279,
                                                 columnNumber: 19
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -1769,7 +2149,7 @@ _Hotline: ${appSettings.companyPhone}_`;
                                                 children: "Admin"
                                             }, void 0, false, {
                                                 fileName: "[project]/app/page.jsx",
-                                                lineNumber: 988,
+                                                lineNumber: 1281,
                                                 columnNumber: 17
                                             }, this),
                                             !isAdminUnlocked && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -1777,35 +2157,35 @@ _Hotline: ${appSettings.companyPhone}_`;
                                                 title: "Protected"
                                             }, void 0, false, {
                                                 fileName: "[project]/app/page.jsx",
-                                                lineNumber: 990,
+                                                lineNumber: 1283,
                                                 columnNumber: 19
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/app/page.jsx",
-                                        lineNumber: 977,
+                                        lineNumber: 1270,
                                         columnNumber: 15
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/app/page.jsx",
-                                lineNumber: 951,
+                                lineNumber: 1234,
                                 columnNumber: 13
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/app/page.jsx",
-                        lineNumber: 936,
+                        lineNumber: 1219,
                         columnNumber: 11
                     }, this)
                 }, void 0, false, {
                     fileName: "[project]/app/page.jsx",
-                    lineNumber: 935,
+                    lineNumber: 1218,
                     columnNumber: 9
                 }, this)
             }, void 0, false, {
                 fileName: "[project]/app/page.jsx",
-                lineNumber: 934,
+                lineNumber: 1217,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1815,13 +2195,13 @@ _Hotline: ${appSettings.companyPhone}_`;
                         className: "w-4 h-4 sm:w-5 sm:h-5 text-[#E6D6B0] shrink-0"
                     }, void 0, false, {
                         fileName: "[project]/app/page.jsx",
-                        lineNumber: 1005,
+                        lineNumber: 1298,
                         columnNumber: 11
                     }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$triangle$2d$alert$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__AlertTriangle$3e$__["AlertTriangle"], {
                         className: "w-4 h-4 sm:w-5 sm:h-5 text-rose-400 shrink-0"
                     }, void 0, false, {
                         fileName: "[project]/app/page.jsx",
-                        lineNumber: 1007,
+                        lineNumber: 1300,
                         columnNumber: 11
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1829,17 +2209,17 @@ _Hotline: ${appSettings.companyPhone}_`;
                         children: toast.message
                     }, void 0, false, {
                         fileName: "[project]/app/page.jsx",
-                        lineNumber: 1009,
+                        lineNumber: 1302,
                         columnNumber: 9
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/app/page.jsx",
-                lineNumber: 999,
+                lineNumber: 1292,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("main", {
-                className: "flex-1 max-w-7xl w-full mx-auto p-3 sm:p-5 lg:p-8 no-print",
+                className: `flex-1 max-w-7xl w-full mx-auto p-3 sm:p-5 lg:p-8 no-print ${activeTab === 'cutwizard' ? 'hidden' : ''}`,
                 children: [
                     activeTab === 'maker' && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                         className: "grid grid-cols-1 lg:grid-cols-12 gap-5 items-start",
@@ -1860,7 +2240,7 @@ _Hotline: ${appSettings.companyPhone}_`;
                                                                 className: "w-4 h-4 sm:w-5 sm:h-5 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/app/page.jsx",
-                                                                lineNumber: 1027,
+                                                                lineNumber: 1320,
                                                                 columnNumber: 21
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
@@ -1875,7 +2255,7 @@ _Hotline: ${appSettings.companyPhone}_`;
                                                                 className: "w-full pl-10 pr-10 py-3 sm:py-2 bg-[#FAF8F3] border border-[#E4E0D6] rounded-xl text-base sm:text-sm focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#B8975A] transition"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/app/page.jsx",
-                                                                lineNumber: 1028,
+                                                                lineNumber: 1321,
                                                                 columnNumber: 21
                                                             }, this),
                                                             searchQuery && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -1885,18 +2265,18 @@ _Hotline: ${appSettings.companyPhone}_`;
                                                                     className: "w-4 h-4"
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/app/page.jsx",
-                                                                    lineNumber: 1038,
+                                                                    lineNumber: 1331,
                                                                     columnNumber: 25
                                                                 }, this)
                                                             }, void 0, false, {
                                                                 fileName: "[project]/app/page.jsx",
-                                                                lineNumber: 1037,
+                                                                lineNumber: 1330,
                                                                 columnNumber: 23
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/app/page.jsx",
-                                                        lineNumber: 1026,
+                                                        lineNumber: 1319,
                                                         columnNumber: 19
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1912,27 +2292,27 @@ _Hotline: ${appSettings.companyPhone}_`;
                                                                         className: "w-4 h-4"
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/app/page.jsx",
-                                                                        lineNumber: 1053,
+                                                                        lineNumber: 1346,
                                                                         columnNumber: 23
                                                                     }, this),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
                                                                         children: "Filters"
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/app/page.jsx",
-                                                                        lineNumber: 1054,
+                                                                        lineNumber: 1347,
                                                                         columnNumber: 23
                                                                     }, this),
                                                                     (selectedShops.length < 3 || maxPrice < 600000) && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
                                                                         className: "w-2 h-2 rounded-full bg-[#B8975A]"
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/app/page.jsx",
-                                                                        lineNumber: 1056,
+                                                                        lineNumber: 1349,
                                                                         columnNumber: 25
                                                                     }, this)
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/app/page.jsx",
-                                                                lineNumber: 1045,
+                                                                lineNumber: 1338,
                                                                 columnNumber: 21
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -1940,7 +2320,7 @@ _Hotline: ${appSettings.companyPhone}_`;
                                                                 children: "Sort:"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/app/page.jsx",
-                                                                lineNumber: 1059,
+                                                                lineNumber: 1352,
                                                                 columnNumber: 21
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("select", {
@@ -1953,7 +2333,7 @@ _Hotline: ${appSettings.companyPhone}_`;
                                                                         children: "Default Order"
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/app/page.jsx",
-                                                                        lineNumber: 1065,
+                                                                        lineNumber: 1358,
                                                                         columnNumber: 23
                                                                     }, this),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("option", {
@@ -1961,7 +2341,7 @@ _Hotline: ${appSettings.companyPhone}_`;
                                                                         children: "Price: Low to High"
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/app/page.jsx",
-                                                                        lineNumber: 1066,
+                                                                        lineNumber: 1359,
                                                                         columnNumber: 23
                                                                     }, this),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("option", {
@@ -1969,7 +2349,7 @@ _Hotline: ${appSettings.companyPhone}_`;
                                                                         children: "Price: High to Low"
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/app/page.jsx",
-                                                                        lineNumber: 1067,
+                                                                        lineNumber: 1360,
                                                                         columnNumber: 23
                                                                     }, this),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("option", {
@@ -1977,7 +2357,7 @@ _Hotline: ${appSettings.companyPhone}_`;
                                                                         children: "Name (A-Z)"
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/app/page.jsx",
-                                                                        lineNumber: 1068,
+                                                                        lineNumber: 1361,
                                                                         columnNumber: 23
                                                                     }, this),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("option", {
@@ -1985,25 +2365,25 @@ _Hotline: ${appSettings.companyPhone}_`;
                                                                         children: "Article No"
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/app/page.jsx",
-                                                                        lineNumber: 1069,
+                                                                        lineNumber: 1362,
                                                                         columnNumber: 23
                                                                     }, this)
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/app/page.jsx",
-                                                                lineNumber: 1060,
+                                                                lineNumber: 1353,
                                                                 columnNumber: 21
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/app/page.jsx",
-                                                        lineNumber: 1044,
+                                                        lineNumber: 1337,
                                                         columnNumber: 19
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/app/page.jsx",
-                                                lineNumber: 1024,
+                                                lineNumber: 1317,
                                                 columnNumber: 17
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2022,7 +2402,7 @@ _Hotline: ${appSettings.companyPhone}_`;
                                                                                 className: "w-4 h-4 text-[#1F3A5A]"
                                                                             }, void 0, false, {
                                                                                 fileName: "[project]/app/page.jsx",
-                                                                                lineNumber: 1081,
+                                                                                lineNumber: 1374,
                                                                                 columnNumber: 25
                                                                             }, this),
                                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -2030,7 +2410,7 @@ _Hotline: ${appSettings.companyPhone}_`;
                                                                                 children: "Filter by Shop / Supplier"
                                                                             }, void 0, false, {
                                                                                 fileName: "[project]/app/page.jsx",
-                                                                                lineNumber: 1082,
+                                                                                lineNumber: 1375,
                                                                                 columnNumber: 25
                                                                             }, this),
                                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -2038,13 +2418,13 @@ _Hotline: ${appSettings.companyPhone}_`;
                                                                                 children: selectedShops.length === 3 ? 'All Suppliers Mode' : `${selectedShops.length} of 3 Selected`
                                                                             }, void 0, false, {
                                                                                 fileName: "[project]/app/page.jsx",
-                                                                                lineNumber: 1083,
+                                                                                lineNumber: 1376,
                                                                                 columnNumber: 25
                                                                             }, this)
                                                                         ]
                                                                     }, void 0, true, {
                                                                         fileName: "[project]/app/page.jsx",
-                                                                        lineNumber: 1080,
+                                                                        lineNumber: 1373,
                                                                         columnNumber: 23
                                                                     }, this),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -2062,13 +2442,13 @@ _Hotline: ${appSettings.companyPhone}_`;
                                                                         children: selectedShops.length === 3 ? 'Clear All' : 'Select All (All Suppliers)'
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/app/page.jsx",
-                                                                        lineNumber: 1087,
+                                                                        lineNumber: 1380,
                                                                         columnNumber: 23
                                                                     }, this)
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/app/page.jsx",
-                                                                lineNumber: 1079,
+                                                                lineNumber: 1372,
                                                                 columnNumber: 21
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2107,12 +2487,12 @@ _Hotline: ${appSettings.companyPhone}_`;
                                                                                             className: "w-3.5 h-3.5 stroke-[3]"
                                                                                         }, void 0, false, {
                                                                                             fileName: "[project]/app/page.jsx",
-                                                                                            lineNumber: 1122,
+                                                                                            lineNumber: 1415,
                                                                                             columnNumber: 33
                                                                                         }, this)
                                                                                     }, void 0, false, {
                                                                                         fileName: "[project]/app/page.jsx",
-                                                                                        lineNumber: 1119,
+                                                                                        lineNumber: 1412,
                                                                                         columnNumber: 31
                                                                                     }, this),
                                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2123,7 +2503,7 @@ _Hotline: ${appSettings.companyPhone}_`;
                                                                                                 children: shop.label
                                                                                             }, void 0, false, {
                                                                                                 fileName: "[project]/app/page.jsx",
-                                                                                                lineNumber: 1125,
+                                                                                                lineNumber: 1418,
                                                                                                 columnNumber: 33
                                                                                             }, this),
                                                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2131,19 +2511,19 @@ _Hotline: ${appSettings.companyPhone}_`;
                                                                                                 children: shop.sub
                                                                                             }, void 0, false, {
                                                                                                 fileName: "[project]/app/page.jsx",
-                                                                                                lineNumber: 1126,
+                                                                                                lineNumber: 1419,
                                                                                                 columnNumber: 33
                                                                                             }, this)
                                                                                         ]
                                                                                     }, void 0, true, {
                                                                                         fileName: "[project]/app/page.jsx",
-                                                                                        lineNumber: 1124,
+                                                                                        lineNumber: 1417,
                                                                                         columnNumber: 31
                                                                                     }, this)
                                                                                 ]
                                                                             }, void 0, true, {
                                                                                 fileName: "[project]/app/page.jsx",
-                                                                                lineNumber: 1118,
+                                                                                lineNumber: 1411,
                                                                                 columnNumber: 29
                                                                             }, this),
                                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -2151,25 +2531,25 @@ _Hotline: ${appSettings.companyPhone}_`;
                                                                                 children: shop.count
                                                                             }, void 0, false, {
                                                                                 fileName: "[project]/app/page.jsx",
-                                                                                lineNumber: 1131,
+                                                                                lineNumber: 1424,
                                                                                 columnNumber: 29
                                                                             }, this)
                                                                         ]
                                                                     }, shop.key, true, {
                                                                         fileName: "[project]/app/page.jsx",
-                                                                        lineNumber: 1109,
+                                                                        lineNumber: 1402,
                                                                         columnNumber: 27
                                                                     }, this);
                                                                 })
                                                             }, void 0, false, {
                                                                 fileName: "[project]/app/page.jsx",
-                                                                lineNumber: 1101,
+                                                                lineNumber: 1394,
                                                                 columnNumber: 21
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/app/page.jsx",
-                                                        lineNumber: 1078,
+                                                        lineNumber: 1371,
                                                         columnNumber: 19
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2185,7 +2565,7 @@ _Hotline: ${appSettings.companyPhone}_`;
                                                                                 className: "w-3.5 h-3.5 text-[#1F3A5A]"
                                                                             }, void 0, false, {
                                                                                 fileName: "[project]/app/page.jsx",
-                                                                                lineNumber: 1146,
+                                                                                lineNumber: 1439,
                                                                                 columnNumber: 25
                                                                             }, this),
                                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -2193,13 +2573,13 @@ _Hotline: ${appSettings.companyPhone}_`;
                                                                                 children: "Price Filter (Max MRP)"
                                                                             }, void 0, false, {
                                                                                 fileName: "[project]/app/page.jsx",
-                                                                                lineNumber: 1147,
+                                                                                lineNumber: 1440,
                                                                                 columnNumber: 25
                                                                             }, this)
                                                                         ]
                                                                     }, void 0, true, {
                                                                         fileName: "[project]/app/page.jsx",
-                                                                        lineNumber: 1145,
+                                                                        lineNumber: 1438,
                                                                         columnNumber: 23
                                                                     }, this),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2210,7 +2590,7 @@ _Hotline: ${appSettings.companyPhone}_`;
                                                                                 children: maxPrice >= 600000 ? 'All Prices (No Limit)' : `Up to ${formatLKR(maxPrice)}`
                                                                             }, void 0, false, {
                                                                                 fileName: "[project]/app/page.jsx",
-                                                                                lineNumber: 1150,
+                                                                                lineNumber: 1443,
                                                                                 columnNumber: 25
                                                                             }, this),
                                                                             maxPrice < 600000 && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -2223,19 +2603,19 @@ _Hotline: ${appSettings.companyPhone}_`;
                                                                                 children: "Reset"
                                                                             }, void 0, false, {
                                                                                 fileName: "[project]/app/page.jsx",
-                                                                                lineNumber: 1154,
+                                                                                lineNumber: 1447,
                                                                                 columnNumber: 27
                                                                             }, this)
                                                                         ]
                                                                     }, void 0, true, {
                                                                         fileName: "[project]/app/page.jsx",
-                                                                        lineNumber: 1149,
+                                                                        lineNumber: 1442,
                                                                         columnNumber: 23
                                                                     }, this)
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/app/page.jsx",
-                                                                lineNumber: 1144,
+                                                                lineNumber: 1437,
                                                                 columnNumber: 21
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2246,7 +2626,7 @@ _Hotline: ${appSettings.companyPhone}_`;
                                                                         children: "Rs. 0"
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/app/page.jsx",
-                                                                        lineNumber: 1167,
+                                                                        lineNumber: 1460,
                                                                         columnNumber: 23
                                                                     }, this),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
@@ -2262,7 +2642,7 @@ _Hotline: ${appSettings.companyPhone}_`;
                                                                         className: "w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-[#1F3A5A] focus:outline-none"
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/app/page.jsx",
-                                                                        lineNumber: 1168,
+                                                                        lineNumber: 1461,
                                                                         columnNumber: 23
                                                                     }, this),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -2270,13 +2650,13 @@ _Hotline: ${appSettings.companyPhone}_`;
                                                                         children: "Rs. 600K+"
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/app/page.jsx",
-                                                                        lineNumber: 1180,
+                                                                        lineNumber: 1473,
                                                                         columnNumber: 23
                                                                     }, this)
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/app/page.jsx",
-                                                                lineNumber: 1166,
+                                                                lineNumber: 1459,
                                                                 columnNumber: 21
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2287,7 +2667,7 @@ _Hotline: ${appSettings.companyPhone}_`;
                                                                         children: "Quick Presets:"
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/app/page.jsx",
-                                                                        lineNumber: 1185,
+                                                                        lineNumber: 1478,
                                                                         columnNumber: 23
                                                                     }, this),
                                                                     [
@@ -2321,25 +2701,25 @@ _Hotline: ${appSettings.companyPhone}_`;
                                                                             children: chip.label
                                                                         }, chip.val, false, {
                                                                             fileName: "[project]/app/page.jsx",
-                                                                            lineNumber: 1193,
+                                                                            lineNumber: 1486,
                                                                             columnNumber: 25
                                                                         }, this))
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/app/page.jsx",
-                                                                lineNumber: 1184,
+                                                                lineNumber: 1477,
                                                                 columnNumber: 21
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/app/page.jsx",
-                                                        lineNumber: 1143,
+                                                        lineNumber: 1436,
                                                         columnNumber: 19
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/app/page.jsx",
-                                                lineNumber: 1075,
+                                                lineNumber: 1368,
                                                 columnNumber: 17
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2356,7 +2736,7 @@ _Hotline: ${appSettings.companyPhone}_`;
                                                                         children: "Select Category"
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/app/page.jsx",
-                                                                        lineNumber: 1215,
+                                                                        lineNumber: 1508,
                                                                         columnNumber: 23
                                                                     }, this),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -2367,7 +2747,7 @@ _Hotline: ${appSettings.companyPhone}_`;
                                                                         ]
                                                                     }, void 0, true, {
                                                                         fileName: "[project]/app/page.jsx",
-                                                                        lineNumber: 1216,
+                                                                        lineNumber: 1509,
                                                                         columnNumber: 23
                                                                     }, this),
                                                                     isDbLoading && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -2377,7 +2757,7 @@ _Hotline: ${appSettings.companyPhone}_`;
                                                                                 className: "w-3 h-3 animate-spin"
                                                                             }, void 0, false, {
                                                                                 fileName: "[project]/app/page.jsx",
-                                                                                lineNumber: 1221,
+                                                                                lineNumber: 1514,
                                                                                 columnNumber: 27
                                                                             }, this),
                                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -2385,19 +2765,19 @@ _Hotline: ${appSettings.companyPhone}_`;
                                                                                 children: "Searching Database..."
                                                                             }, void 0, false, {
                                                                                 fileName: "[project]/app/page.jsx",
-                                                                                lineNumber: 1222,
+                                                                                lineNumber: 1515,
                                                                                 columnNumber: 27
                                                                             }, this)
                                                                         ]
                                                                     }, void 0, true, {
                                                                         fileName: "[project]/app/page.jsx",
-                                                                        lineNumber: 1220,
+                                                                        lineNumber: 1513,
                                                                         columnNumber: 25
                                                                     }, this)
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/app/page.jsx",
-                                                                lineNumber: 1214,
+                                                                lineNumber: 1507,
                                                                 columnNumber: 21
                                                             }, this),
                                                             activeCategory !== 'All' && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -2410,18 +2790,18 @@ _Hotline: ${appSettings.companyPhone}_`;
                                                                     children: "View All Categories"
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/app/page.jsx",
-                                                                    lineNumber: 1231,
+                                                                    lineNumber: 1524,
                                                                     columnNumber: 25
                                                                 }, this)
                                                             }, void 0, false, {
                                                                 fileName: "[project]/app/page.jsx",
-                                                                lineNumber: 1227,
+                                                                lineNumber: 1520,
                                                                 columnNumber: 23
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/app/page.jsx",
-                                                        lineNumber: 1213,
+                                                        lineNumber: 1506,
                                                         columnNumber: 19
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2443,12 +2823,12 @@ _Hotline: ${appSettings.companyPhone}_`;
                                                                                     className: "w-4 h-4 sm:w-5 sm:h-5"
                                                                                 }, void 0, false, {
                                                                                     fileName: "[project]/app/page.jsx",
-                                                                                    lineNumber: 1249,
+                                                                                    lineNumber: 1542,
                                                                                     columnNumber: 27
                                                                                 }, this)
                                                                             }, void 0, false, {
                                                                                 fileName: "[project]/app/page.jsx",
-                                                                                lineNumber: 1248,
+                                                                                lineNumber: 1541,
                                                                                 columnNumber: 25
                                                                             }, this),
                                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -2456,13 +2836,13 @@ _Hotline: ${appSettings.companyPhone}_`;
                                                                                 children: "All Categories"
                                                                             }, void 0, false, {
                                                                                 fileName: "[project]/app/page.jsx",
-                                                                                lineNumber: 1251,
+                                                                                lineNumber: 1544,
                                                                                 columnNumber: 25
                                                                             }, this)
                                                                         ]
                                                                     }, void 0, true, {
                                                                         fileName: "[project]/app/page.jsx",
-                                                                        lineNumber: 1247,
+                                                                        lineNumber: 1540,
                                                                         columnNumber: 23
                                                                     }, this),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -2470,13 +2850,13 @@ _Hotline: ${appSettings.companyPhone}_`;
                                                                         children: selectedShops.length === 3 ? allProducts.length : selectedShops.reduce((sum, s)=>sum + (shopCounts[s] || 0), 0)
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/app/page.jsx",
-                                                                        lineNumber: 1253,
+                                                                        lineNumber: 1546,
                                                                         columnNumber: 23
                                                                     }, this)
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/app/page.jsx",
-                                                                lineNumber: 1239,
+                                                                lineNumber: 1532,
                                                                 columnNumber: 21
                                                             }, this),
                                                             Object.keys(categoriesMap).sort().map((cat)=>{
@@ -2497,7 +2877,7 @@ _Hotline: ${appSettings.companyPhone}_`;
                                                                                     children: getCategoryIcon(cat, isAct)
                                                                                 }, void 0, false, {
                                                                                     fileName: "[project]/app/page.jsx",
-                                                                                    lineNumber: 1275,
+                                                                                    lineNumber: 1568,
                                                                                     columnNumber: 29
                                                                                 }, this),
                                                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -2506,13 +2886,13 @@ _Hotline: ${appSettings.companyPhone}_`;
                                                                                     children: cat
                                                                                 }, void 0, false, {
                                                                                     fileName: "[project]/app/page.jsx",
-                                                                                    lineNumber: 1278,
+                                                                                    lineNumber: 1571,
                                                                                     columnNumber: 29
                                                                                 }, this)
                                                                             ]
                                                                         }, void 0, true, {
                                                                             fileName: "[project]/app/page.jsx",
-                                                                            lineNumber: 1274,
+                                                                            lineNumber: 1567,
                                                                             columnNumber: 27
                                                                         }, this),
                                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -2520,32 +2900,32 @@ _Hotline: ${appSettings.companyPhone}_`;
                                                                             children: count
                                                                         }, void 0, false, {
                                                                             fileName: "[project]/app/page.jsx",
-                                                                            lineNumber: 1280,
+                                                                            lineNumber: 1573,
                                                                             columnNumber: 27
                                                                         }, this)
                                                                     ]
                                                                 }, cat, true, {
                                                                     fileName: "[project]/app/page.jsx",
-                                                                    lineNumber: 1265,
+                                                                    lineNumber: 1558,
                                                                     columnNumber: 25
                                                                 }, this);
                                                             })
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/app/page.jsx",
-                                                        lineNumber: 1237,
+                                                        lineNumber: 1530,
                                                         columnNumber: 19
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/app/page.jsx",
-                                                lineNumber: 1212,
+                                                lineNumber: 1505,
                                                 columnNumber: 17
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/app/page.jsx",
-                                        lineNumber: 1023,
+                                        lineNumber: 1316,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2557,7 +2937,7 @@ _Hotline: ${appSettings.companyPhone}_`;
                                                     className: "w-8 h-8 text-[#1F3A5A] animate-spin mx-auto mb-2.5"
                                                 }, void 0, false, {
                                                     fileName: "[project]/app/page.jsx",
-                                                    lineNumber: 1296,
+                                                    lineNumber: 1589,
                                                     columnNumber: 21
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("h4", {
@@ -2565,7 +2945,7 @@ _Hotline: ${appSettings.companyPhone}_`;
                                                     children: "Searching Supabase Database..."
                                                 }, void 0, false, {
                                                     fileName: "[project]/app/page.jsx",
-                                                    lineNumber: 1297,
+                                                    lineNumber: 1590,
                                                     columnNumber: 21
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -2573,13 +2953,13 @@ _Hotline: ${appSettings.companyPhone}_`;
                                                     children: "Retrieving live catalog items"
                                                 }, void 0, false, {
                                                     fileName: "[project]/app/page.jsx",
-                                                    lineNumber: 1298,
+                                                    lineNumber: 1591,
                                                     columnNumber: 21
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/app/page.jsx",
-                                            lineNumber: 1295,
+                                            lineNumber: 1588,
                                             columnNumber: 19
                                         }, this) : dbProducts.length === 0 ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                             className: "col-span-full py-12 text-center bg-white rounded-2xl border border-[#E4E0D6]",
@@ -2588,7 +2968,7 @@ _Hotline: ${appSettings.companyPhone}_`;
                                                     className: "w-10 h-10 text-slate-300 mx-auto mb-2"
                                                 }, void 0, false, {
                                                     fileName: "[project]/app/page.jsx",
-                                                    lineNumber: 1302,
+                                                    lineNumber: 1595,
                                                     columnNumber: 21
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("h4", {
@@ -2596,7 +2976,7 @@ _Hotline: ${appSettings.companyPhone}_`;
                                                     children: "No matching components found in database"
                                                 }, void 0, false, {
                                                     fileName: "[project]/app/page.jsx",
-                                                    lineNumber: 1303,
+                                                    lineNumber: 1596,
                                                     columnNumber: 21
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -2604,7 +2984,7 @@ _Hotline: ${appSettings.companyPhone}_`;
                                                     children: "Try adjusting your search keyword, price slider, or selecting additional suppliers."
                                                 }, void 0, false, {
                                                     fileName: "[project]/app/page.jsx",
-                                                    lineNumber: 1304,
+                                                    lineNumber: 1597,
                                                     columnNumber: 21
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -2623,13 +3003,13 @@ _Hotline: ${appSettings.companyPhone}_`;
                                                     children: "Reset All Filters & View All"
                                                 }, void 0, false, {
                                                     fileName: "[project]/app/page.jsx",
-                                                    lineNumber: 1307,
+                                                    lineNumber: 1600,
                                                     columnNumber: 21
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/app/page.jsx",
-                                            lineNumber: 1301,
+                                            lineNumber: 1594,
                                             columnNumber: 19
                                         }, this) : dbProducts.map((p)=>{
                                             const inCart = currentQuote.items.find((i)=>i.id === p.id);
@@ -2650,14 +3030,14 @@ _Hotline: ${appSettings.companyPhone}_`;
                                                                                 children: p.articleNo
                                                                             }, void 0, false, {
                                                                                 fileName: "[project]/app/page.jsx",
-                                                                                lineNumber: 1334,
+                                                                                lineNumber: 1627,
                                                                                 columnNumber: 31
                                                                             }, this),
                                                                             getShopBadge(getProductShop(p))
                                                                         ]
                                                                     }, void 0, true, {
                                                                         fileName: "[project]/app/page.jsx",
-                                                                        lineNumber: 1333,
+                                                                        lineNumber: 1626,
                                                                         columnNumber: 29
                                                                     }, this),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -2666,17 +3046,27 @@ _Hotline: ${appSettings.companyPhone}_`;
                                                                         children: p.category
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/app/page.jsx",
-                                                                        lineNumber: 1337,
+                                                                        lineNumber: 1630,
                                                                         columnNumber: 29
                                                                     }, this)
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/app/page.jsx",
-                                                                lineNumber: 1332,
+                                                                lineNumber: 1625,
                                                                 columnNumber: 27
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                                                className: "w-full h-28 sm:h-36 bg-[#FAF8F3] rounded-xl overflow-hidden mb-2.5 border border-[#EFEBE2] flex items-center justify-center relative p-2",
+                                                                onClick: ()=>{
+                                                                    setSelectedProductForZoom(p);
+                                                                    setIsMagnified(false);
+                                                                    setIsHoverZooming(false);
+                                                                    setZoomPosition({
+                                                                        x: 50,
+                                                                        y: 50
+                                                                    });
+                                                                },
+                                                                className: "w-full h-28 sm:h-36 bg-[#FAF8F3] rounded-xl overflow-hidden mb-2.5 border border-[#EFEBE2] flex items-center justify-center relative p-2 cursor-pointer group/img",
+                                                                title: "Click to zoom image and view details",
                                                                 children: [
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("img", {
                                                                         src: resolveProductImage(p.image),
@@ -2686,14 +3076,14 @@ _Hotline: ${appSettings.companyPhone}_`;
                                                                             e.currentTarget.onerror = null;
                                                                             e.currentTarget.src = '/images/placeholder.svg';
                                                                         },
-                                                                        className: "max-h-full max-w-full object-contain transition-transform duration-300 group-hover:scale-105"
+                                                                        className: "max-h-full max-w-full object-contain transition-transform duration-300 group-hover/img:scale-110"
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/app/page.jsx",
-                                                                        lineNumber: 1343,
+                                                                        lineNumber: 1645,
                                                                         columnNumber: 29
                                                                     }, this),
                                                                     qty > 0 && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
-                                                                        className: "absolute top-2 right-2 bg-[#1F3A5A] text-white text-[11px] font-bold px-2 py-0.5 rounded-full shadow-xs",
+                                                                        className: "absolute top-2 right-2 bg-[#1F3A5A] text-white text-[11px] font-bold px-2 py-0.5 rounded-full shadow-xs z-10",
                                                                         children: [
                                                                             "In Quote (",
                                                                             qty,
@@ -2701,37 +3091,119 @@ _Hotline: ${appSettings.companyPhone}_`;
                                                                         ]
                                                                     }, void 0, true, {
                                                                         fileName: "[project]/app/page.jsx",
-                                                                        lineNumber: 1354,
+                                                                        lineNumber: 1656,
                                                                         columnNumber: 31
+                                                                    }, this),
+                                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                                        className: "absolute inset-0 bg-[#14263D]/25 opacity-0 group-hover/img:opacity-100 transition-opacity flex items-center justify-center rounded-xl backdrop-blur-[1px]",
+                                                                        children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                                            className: "bg-white/95 text-[#14263D] text-[11px] font-bold px-2.5 py-1 rounded-full shadow-md flex items-center space-x-1 scale-95 group-hover/img:scale-100 transition-transform",
+                                                                            children: [
+                                                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$zoom$2d$in$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__ZoomIn$3e$__["ZoomIn"], {
+                                                                                    className: "w-3.5 h-3.5 text-[#1F3A5A]"
+                                                                                }, void 0, false, {
+                                                                                    fileName: "[project]/app/page.jsx",
+                                                                                    lineNumber: 1663,
+                                                                                    columnNumber: 33
+                                                                                }, this),
+                                                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                                                    children: "Zoom & Details"
+                                                                                }, void 0, false, {
+                                                                                    fileName: "[project]/app/page.jsx",
+                                                                                    lineNumber: 1664,
+                                                                                    columnNumber: 33
+                                                                                }, this)
+                                                                            ]
+                                                                        }, void 0, true, {
+                                                                            fileName: "[project]/app/page.jsx",
+                                                                            lineNumber: 1662,
+                                                                            columnNumber: 31
+                                                                        }, this)
+                                                                    }, void 0, false, {
+                                                                        fileName: "[project]/app/page.jsx",
+                                                                        lineNumber: 1661,
+                                                                        columnNumber: 29
                                                                     }, this)
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/app/page.jsx",
-                                                                lineNumber: 1342,
+                                                                lineNumber: 1635,
                                                                 columnNumber: 27
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("h4", {
-                                                                className: "font-bold text-[13px] sm:text-xs text-[#14263D] leading-snug line-clamp-2",
+                                                                onClick: ()=>{
+                                                                    setSelectedProductForZoom(p);
+                                                                    setIsMagnified(false);
+                                                                    setIsHoverZooming(false);
+                                                                    setZoomPosition({
+                                                                        x: 50,
+                                                                        y: 50
+                                                                    });
+                                                                },
+                                                                className: "font-bold text-[13px] sm:text-xs text-[#14263D] leading-snug line-clamp-2 cursor-pointer hover:text-[#1F3A5A] hover:underline decoration-[#B8975A] transition",
                                                                 title: p.name,
                                                                 children: p.name
                                                             }, void 0, false, {
                                                                 fileName: "[project]/app/page.jsx",
-                                                                lineNumber: 1360,
+                                                                lineNumber: 1669,
                                                                 columnNumber: 27
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
-                                                                className: "hidden sm:block text-[12px] text-slate-500 mt-0.5 line-clamp-2",
+                                                                onClick: ()=>{
+                                                                    setSelectedProductForZoom(p);
+                                                                    setIsMagnified(false);
+                                                                    setIsHoverZooming(false);
+                                                                    setZoomPosition({
+                                                                        x: 50,
+                                                                        y: 50
+                                                                    });
+                                                                },
+                                                                className: "hidden sm:block text-[12px] text-slate-500 mt-0.5 line-clamp-2 cursor-pointer hover:text-slate-700 transition",
                                                                 title: p.description,
                                                                 children: p.description
                                                             }, void 0, false, {
                                                                 fileName: "[project]/app/page.jsx",
-                                                                lineNumber: 1363,
+                                                                lineNumber: 1681,
+                                                                columnNumber: 27
+                                                            }, this),
+                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                                                                type: "button",
+                                                                onClick: (e)=>{
+                                                                    e.stopPropagation();
+                                                                    setSelectedProductForZoom(p);
+                                                                    setIsMagnified(false);
+                                                                    setIsHoverZooming(false);
+                                                                    setZoomPosition({
+                                                                        x: 50,
+                                                                        y: 50
+                                                                    });
+                                                                },
+                                                                className: "w-full mt-1.5 py-1 px-2 text-[11px] font-semibold text-slate-500 hover:text-[#1F3A5A] bg-slate-50 hover:bg-[#FAF8F3] rounded-lg border border-slate-200/80 flex items-center justify-center space-x-1 transition touch-manipulation",
+                                                                children: [
+                                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$zoom$2d$in$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__ZoomIn$3e$__["ZoomIn"], {
+                                                                        className: "w-3.5 h-3.5 text-[#B8975A]"
+                                                                    }, void 0, false, {
+                                                                        fileName: "[project]/app/page.jsx",
+                                                                        lineNumber: 1705,
+                                                                        columnNumber: 29
+                                                                    }, this),
+                                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                                        children: "Zoom & Details"
+                                                                    }, void 0, false, {
+                                                                        fileName: "[project]/app/page.jsx",
+                                                                        lineNumber: 1706,
+                                                                        columnNumber: 29
+                                                                    }, this)
+                                                                ]
+                                                            }, void 0, true, {
+                                                                fileName: "[project]/app/page.jsx",
+                                                                lineNumber: 1694,
                                                                 columnNumber: 27
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/app/page.jsx",
-                                                        lineNumber: 1331,
+                                                        lineNumber: 1624,
                                                         columnNumber: 25
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2748,7 +3220,7 @@ _Hotline: ${appSettings.companyPhone}_`;
                                                                                 children: formatLKR(p.mrp)
                                                                             }, void 0, false, {
                                                                                 fileName: "[project]/app/page.jsx",
-                                                                                lineNumber: 1371,
+                                                                                lineNumber: 1713,
                                                                                 columnNumber: 31
                                                                             }, this),
                                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -2759,13 +3231,13 @@ _Hotline: ${appSettings.companyPhone}_`;
                                                                                 ]
                                                                             }, void 0, true, {
                                                                                 fileName: "[project]/app/page.jsx",
-                                                                                lineNumber: 1372,
+                                                                                lineNumber: 1714,
                                                                                 columnNumber: 31
                                                                             }, this)
                                                                         ]
                                                                     }, void 0, true, {
                                                                         fileName: "[project]/app/page.jsx",
-                                                                        lineNumber: 1370,
+                                                                        lineNumber: 1712,
                                                                         columnNumber: 29
                                                                     }, this),
                                                                     p.perSqfRate && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -2777,13 +3249,13 @@ _Hotline: ${appSettings.companyPhone}_`;
                                                                         ]
                                                                     }, void 0, true, {
                                                                         fileName: "[project]/app/page.jsx",
-                                                                        lineNumber: 1375,
+                                                                        lineNumber: 1717,
                                                                         columnNumber: 31
                                                                     }, this)
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/app/page.jsx",
-                                                                lineNumber: 1369,
+                                                                lineNumber: 1711,
                                                                 columnNumber: 27
                                                             }, this),
                                                             qty > 0 ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2795,7 +3267,7 @@ _Hotline: ${appSettings.companyPhone}_`;
                                                                         children: "-"
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/app/page.jsx",
-                                                                        lineNumber: 1381,
+                                                                        lineNumber: 1723,
                                                                         columnNumber: 31
                                                                     }, this),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
@@ -2807,7 +3279,7 @@ _Hotline: ${appSettings.companyPhone}_`;
                                                                         className: "w-10 text-center text-base sm:text-xs font-bold tabular-nums bg-transparent border-0 focus:outline-none"
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/app/page.jsx",
-                                                                        lineNumber: 1384,
+                                                                        lineNumber: 1726,
                                                                         columnNumber: 31
                                                                     }, this),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -2816,13 +3288,13 @@ _Hotline: ${appSettings.companyPhone}_`;
                                                                         children: "+"
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/app/page.jsx",
-                                                                        lineNumber: 1392,
+                                                                        lineNumber: 1734,
                                                                         columnNumber: 31
                                                                     }, this)
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/app/page.jsx",
-                                                                lineNumber: 1380,
+                                                                lineNumber: 1722,
                                                                 columnNumber: 29
                                                             }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
                                                                 onClick: ()=>addItemToQuote(p, 1),
@@ -2832,38 +3304,38 @@ _Hotline: ${appSettings.companyPhone}_`;
                                                                         className: "w-3.5 h-3.5"
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/app/page.jsx",
-                                                                        lineNumber: 1401,
+                                                                        lineNumber: 1743,
                                                                         columnNumber: 31
                                                                     }, this),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
                                                                         children: "Add to Quote"
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/app/page.jsx",
-                                                                        lineNumber: 1402,
+                                                                        lineNumber: 1744,
                                                                         columnNumber: 31
                                                                     }, this)
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/app/page.jsx",
-                                                                lineNumber: 1397,
+                                                                lineNumber: 1739,
                                                                 columnNumber: 29
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/app/page.jsx",
-                                                        lineNumber: 1368,
+                                                        lineNumber: 1710,
                                                         columnNumber: 25
                                                     }, this)
                                                 ]
                                             }, p.id, true, {
                                                 fileName: "[project]/app/page.jsx",
-                                                lineNumber: 1325,
+                                                lineNumber: 1618,
                                                 columnNumber: 23
                                             }, this);
                                         })
                                     }, void 0, false, {
                                         fileName: "[project]/app/page.jsx",
-                                        lineNumber: 1293,
+                                        lineNumber: 1586,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2877,7 +3349,7 @@ _Hotline: ${appSettings.companyPhone}_`;
                                                         className: "w-3.5 h-3.5 animate-spin"
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/page.jsx",
-                                                        lineNumber: 1416,
+                                                        lineNumber: 1758,
                                                         columnNumber: 21
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -2890,13 +3362,13 @@ _Hotline: ${appSettings.companyPhone}_`;
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/app/page.jsx",
-                                                        lineNumber: 1417,
+                                                        lineNumber: 1759,
                                                         columnNumber: 21
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/app/page.jsx",
-                                                lineNumber: 1415,
+                                                lineNumber: 1757,
                                                 columnNumber: 19
                                             }, this),
                                             !isLoadingMore && dbProducts.length > 0 && dbProducts.length < totalDbCount && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -2910,7 +3382,7 @@ _Hotline: ${appSettings.companyPhone}_`;
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/app/page.jsx",
-                                                lineNumber: 1421,
+                                                lineNumber: 1763,
                                                 columnNumber: 19
                                             }, this),
                                             !isDbLoading && !isLoadingMore && dbProducts.length >= totalDbCount && totalDbCount > 0 && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2920,7 +3392,7 @@ _Hotline: ${appSettings.companyPhone}_`;
                                                         className: "w-3.5 h-3.5 text-teal-600"
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/page.jsx",
-                                                        lineNumber: 1431,
+                                                        lineNumber: 1773,
                                                         columnNumber: 21
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -2931,25 +3403,25 @@ _Hotline: ${appSettings.companyPhone}_`;
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/app/page.jsx",
-                                                        lineNumber: 1432,
+                                                        lineNumber: 1774,
                                                         columnNumber: 21
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/app/page.jsx",
-                                                lineNumber: 1430,
+                                                lineNumber: 1772,
                                                 columnNumber: 19
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/app/page.jsx",
-                                        lineNumber: 1413,
+                                        lineNumber: 1755,
                                         columnNumber: 15
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/app/page.jsx",
-                                lineNumber: 1020,
+                                lineNumber: 1313,
                                 columnNumber: 13
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2957,13 +3429,13 @@ _Hotline: ${appSettings.companyPhone}_`;
                                 children: renderQuoteCalculatorContent(false)
                             }, void 0, false, {
                                 fileName: "[project]/app/page.jsx",
-                                lineNumber: 1439,
+                                lineNumber: 1781,
                                 columnNumber: 13
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/app/page.jsx",
-                        lineNumber: 1017,
+                        lineNumber: 1310,
                         columnNumber: 11
                     }, this),
                     activeTab === 'history' && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2979,7 +3451,7 @@ _Hotline: ${appSettings.companyPhone}_`;
                                                 children: "Saved Quotations & Job History"
                                             }, void 0, false, {
                                                 fileName: "[project]/app/page.jsx",
-                                                lineNumber: 1451,
+                                                lineNumber: 1793,
                                                 columnNumber: 17
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -2987,13 +3459,13 @@ _Hotline: ${appSettings.companyPhone}_`;
                                                 children: "View, reload, or share previous client quotations."
                                             }, void 0, false, {
                                                 fileName: "[project]/app/page.jsx",
-                                                lineNumber: 1452,
+                                                lineNumber: 1794,
                                                 columnNumber: 17
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/app/page.jsx",
-                                        lineNumber: 1450,
+                                        lineNumber: 1792,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -3004,26 +3476,26 @@ _Hotline: ${appSettings.companyPhone}_`;
                                                 className: "w-3.5 h-3.5"
                                             }, void 0, false, {
                                                 fileName: "[project]/app/page.jsx",
-                                                lineNumber: 1455,
+                                                lineNumber: 1797,
                                                 columnNumber: 17
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
                                                 children: "Refresh"
                                             }, void 0, false, {
                                                 fileName: "[project]/app/page.jsx",
-                                                lineNumber: 1456,
+                                                lineNumber: 1798,
                                                 columnNumber: 17
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/app/page.jsx",
-                                        lineNumber: 1454,
+                                        lineNumber: 1796,
                                         columnNumber: 15
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/app/page.jsx",
-                                lineNumber: 1449,
+                                lineNumber: 1791,
                                 columnNumber: 13
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3040,7 +3512,7 @@ _Hotline: ${appSettings.companyPhone}_`;
                                                         children: "Job No"
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/page.jsx",
-                                                        lineNumber: 1464,
+                                                        lineNumber: 1806,
                                                         columnNumber: 21
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("th", {
@@ -3048,7 +3520,7 @@ _Hotline: ${appSettings.companyPhone}_`;
                                                         children: "Date"
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/page.jsx",
-                                                        lineNumber: 1465,
+                                                        lineNumber: 1807,
                                                         columnNumber: 21
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("th", {
@@ -3056,7 +3528,7 @@ _Hotline: ${appSettings.companyPhone}_`;
                                                         children: "Customer"
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/page.jsx",
-                                                        lineNumber: 1466,
+                                                        lineNumber: 1808,
                                                         columnNumber: 21
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("th", {
@@ -3064,7 +3536,7 @@ _Hotline: ${appSettings.companyPhone}_`;
                                                         children: "Contact"
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/page.jsx",
-                                                        lineNumber: 1467,
+                                                        lineNumber: 1809,
                                                         columnNumber: 21
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("th", {
@@ -3072,7 +3544,7 @@ _Hotline: ${appSettings.companyPhone}_`;
                                                         children: "Items"
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/page.jsx",
-                                                        lineNumber: 1468,
+                                                        lineNumber: 1810,
                                                         columnNumber: 21
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("th", {
@@ -3080,7 +3552,7 @@ _Hotline: ${appSettings.companyPhone}_`;
                                                         children: "Grand Total"
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/page.jsx",
-                                                        lineNumber: 1469,
+                                                        lineNumber: 1811,
                                                         columnNumber: 21
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("th", {
@@ -3088,18 +3560,18 @@ _Hotline: ${appSettings.companyPhone}_`;
                                                         children: "Actions"
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/page.jsx",
-                                                        lineNumber: 1470,
+                                                        lineNumber: 1812,
                                                         columnNumber: 21
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/app/page.jsx",
-                                                lineNumber: 1463,
+                                                lineNumber: 1805,
                                                 columnNumber: 19
                                             }, this)
                                         }, void 0, false, {
                                             fileName: "[project]/app/page.jsx",
-                                            lineNumber: 1462,
+                                            lineNumber: 1804,
                                             columnNumber: 17
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("tbody", {
@@ -3111,12 +3583,12 @@ _Hotline: ${appSettings.companyPhone}_`;
                                                     children: "No saved quotations in history yet."
                                                 }, void 0, false, {
                                                     fileName: "[project]/app/page.jsx",
-                                                    lineNumber: 1476,
+                                                    lineNumber: 1818,
                                                     columnNumber: 23
                                                 }, this)
                                             }, void 0, false, {
                                                 fileName: "[project]/app/page.jsx",
-                                                lineNumber: 1475,
+                                                lineNumber: 1817,
                                                 columnNumber: 21
                                             }, this) : pastQuotations.map((q)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("tr", {
                                                     className: "hover:bg-[#FAF8F3] transition",
@@ -3126,7 +3598,7 @@ _Hotline: ${appSettings.companyPhone}_`;
                                                             children: q.jobNo
                                                         }, void 0, false, {
                                                             fileName: "[project]/app/page.jsx",
-                                                            lineNumber: 1483,
+                                                            lineNumber: 1825,
                                                             columnNumber: 25
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
@@ -3134,7 +3606,7 @@ _Hotline: ${appSettings.companyPhone}_`;
                                                             children: q.date
                                                         }, void 0, false, {
                                                             fileName: "[project]/app/page.jsx",
-                                                            lineNumber: 1484,
+                                                            lineNumber: 1826,
                                                             columnNumber: 25
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
@@ -3142,7 +3614,7 @@ _Hotline: ${appSettings.companyPhone}_`;
                                                             children: q.customerName
                                                         }, void 0, false, {
                                                             fileName: "[project]/app/page.jsx",
-                                                            lineNumber: 1485,
+                                                            lineNumber: 1827,
                                                             columnNumber: 25
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
@@ -3150,7 +3622,7 @@ _Hotline: ${appSettings.companyPhone}_`;
                                                             children: q.customerPhone || '-'
                                                         }, void 0, false, {
                                                             fileName: "[project]/app/page.jsx",
-                                                            lineNumber: 1486,
+                                                            lineNumber: 1828,
                                                             columnNumber: 25
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
@@ -3158,7 +3630,7 @@ _Hotline: ${appSettings.companyPhone}_`;
                                                             children: q.items ? q.items.length : 0
                                                         }, void 0, false, {
                                                             fileName: "[project]/app/page.jsx",
-                                                            lineNumber: 1487,
+                                                            lineNumber: 1829,
                                                             columnNumber: 25
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
@@ -3166,7 +3638,7 @@ _Hotline: ${appSettings.companyPhone}_`;
                                                             children: formatLKR(q.grandTotal)
                                                         }, void 0, false, {
                                                             fileName: "[project]/app/page.jsx",
-                                                            lineNumber: 1488,
+                                                            lineNumber: 1830,
                                                             columnNumber: 25
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
@@ -3176,7 +3648,7 @@ _Hotline: ${appSettings.companyPhone}_`;
                                                                 children: [
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
                                                                         onClick: ()=>{
-                                                                            setCurrentQuote({
+                                                                            const loadedQuote = {
                                                                                 id: q.id,
                                                                                 jobNo: q.jobNo,
                                                                                 date: q.date,
@@ -3185,9 +3657,13 @@ _Hotline: ${appSettings.companyPhone}_`;
                                                                                 customerAddress: q.customerAddress,
                                                                                 sqft: q.sqft || 0,
                                                                                 items: q.items || []
-                                                                            });
+                                                                            };
+                                                                            setCurrentQuote(loadedQuote);
+                                                                            try {
+                                                                                localStorage.setItem(QUOTE_CACHE_KEY, JSON.stringify(loadedQuote));
+                                                                            } catch (e) {}
                                                                             setActiveTab('maker');
-                                                                            showToast(`Loaded ${q.jobNo} into editor!`);
+                                                                            showToast(`Loaded ${q.jobNo} into editor and saved to cache!`);
                                                                         },
                                                                         title: "Reload into Editor",
                                                                         className: "p-1 rounded-lg bg-[#EEF2F7] text-[#1F3A5A] hover:bg-[#DCE4EE]",
@@ -3195,12 +3671,12 @@ _Hotline: ${appSettings.companyPhone}_`;
                                                                             className: "w-3.5 h-3.5"
                                                                         }, void 0, false, {
                                                                             fileName: "[project]/app/page.jsx",
-                                                                            lineNumber: 1509,
+                                                                            lineNumber: 1855,
                                                                             columnNumber: 31
                                                                         }, this)
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/app/page.jsx",
-                                                                        lineNumber: 1491,
+                                                                        lineNumber: 1833,
                                                                         columnNumber: 29
                                                                     }, this),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -3218,51 +3694,51 @@ _Hotline: ${appSettings.companyPhone}_`;
                                                                             className: "w-3.5 h-3.5"
                                                                         }, void 0, false, {
                                                                             fileName: "[project]/app/page.jsx",
-                                                                            lineNumber: 1521,
+                                                                            lineNumber: 1867,
                                                                             columnNumber: 31
                                                                         }, this)
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/app/page.jsx",
-                                                                        lineNumber: 1511,
+                                                                        lineNumber: 1857,
                                                                         columnNumber: 29
                                                                     }, this)
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/app/page.jsx",
-                                                                lineNumber: 1490,
+                                                                lineNumber: 1832,
                                                                 columnNumber: 27
                                                             }, this)
                                                         }, void 0, false, {
                                                             fileName: "[project]/app/page.jsx",
-                                                            lineNumber: 1489,
+                                                            lineNumber: 1831,
                                                             columnNumber: 25
                                                         }, this)
                                                     ]
                                                 }, q.id, true, {
                                                     fileName: "[project]/app/page.jsx",
-                                                    lineNumber: 1482,
+                                                    lineNumber: 1824,
                                                     columnNumber: 23
                                                 }, this))
                                         }, void 0, false, {
                                             fileName: "[project]/app/page.jsx",
-                                            lineNumber: 1473,
+                                            lineNumber: 1815,
                                             columnNumber: 17
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/app/page.jsx",
-                                    lineNumber: 1461,
+                                    lineNumber: 1803,
                                     columnNumber: 15
                                 }, this)
                             }, void 0, false, {
                                 fileName: "[project]/app/page.jsx",
-                                lineNumber: 1460,
+                                lineNumber: 1802,
                                 columnNumber: 13
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/app/page.jsx",
-                        lineNumber: 1448,
+                        lineNumber: 1790,
                         columnNumber: 11
                     }, this),
                     activeTab === 'admin' && !isAdminUnlocked && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3274,12 +3750,12 @@ _Hotline: ${appSettings.companyPhone}_`;
                                     className: "w-8 h-8 text-[#D9C9A6]"
                                 }, void 0, false, {
                                     fileName: "[project]/app/page.jsx",
-                                    lineNumber: 1538,
+                                    lineNumber: 1884,
                                     columnNumber: 15
                                 }, this)
                             }, void 0, false, {
                                 fileName: "[project]/app/page.jsx",
-                                lineNumber: 1537,
+                                lineNumber: 1883,
                                 columnNumber: 13
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3291,20 +3767,20 @@ _Hotline: ${appSettings.companyPhone}_`;
                                                 className: "w-3.5 h-3.5 text-[#9C7C43]"
                                             }, void 0, false, {
                                                 fileName: "[project]/app/page.jsx",
-                                                lineNumber: 1543,
+                                                lineNumber: 1889,
                                                 columnNumber: 17
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
                                                 children: "Restricted Access"
                                             }, void 0, false, {
                                                 fileName: "[project]/app/page.jsx",
-                                                lineNumber: 1544,
+                                                lineNumber: 1890,
                                                 columnNumber: 17
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/app/page.jsx",
-                                        lineNumber: 1542,
+                                        lineNumber: 1888,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("h2", {
@@ -3312,7 +3788,7 @@ _Hotline: ${appSettings.companyPhone}_`;
                                         children: "Admin Authorization"
                                     }, void 0, false, {
                                         fileName: "[project]/app/page.jsx",
-                                        lineNumber: 1546,
+                                        lineNumber: 1892,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -3320,13 +3796,13 @@ _Hotline: ${appSettings.companyPhone}_`;
                                         children: "The administrator panel is protected. Please enter the master password to manage catalog products, formulas, and database configuration."
                                     }, void 0, false, {
                                         fileName: "[project]/app/page.jsx",
-                                        lineNumber: 1547,
+                                        lineNumber: 1893,
                                         columnNumber: 15
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/app/page.jsx",
-                                lineNumber: 1541,
+                                lineNumber: 1887,
                                 columnNumber: 13
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("form", {
@@ -3341,7 +3817,7 @@ _Hotline: ${appSettings.companyPhone}_`;
                                                 children: "Master Password"
                                             }, void 0, false, {
                                                 fileName: "[project]/app/page.jsx",
-                                                lineNumber: 1554,
+                                                lineNumber: 1900,
                                                 columnNumber: 17
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3359,7 +3835,7 @@ _Hotline: ${appSettings.companyPhone}_`;
                                                         className: `w-full px-4 py-3 pr-11 text-sm bg-[#FAF8F3] border rounded-xl focus:bg-white focus:outline-none focus:ring-2 transition ${adminPasswordError ? 'border-rose-400 focus:ring-rose-400/30 text-rose-900' : 'border-slate-300 focus:border-[#B8975A] focus:ring-[#B8975A]/20 text-slate-800'}`
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/page.jsx",
-                                                        lineNumber: 1558,
+                                                        lineNumber: 1904,
                                                         columnNumber: 19
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -3371,24 +3847,24 @@ _Hotline: ${appSettings.companyPhone}_`;
                                                             className: "w-4 h-4"
                                                         }, void 0, false, {
                                                             fileName: "[project]/app/page.jsx",
-                                                            lineNumber: 1579,
+                                                            lineNumber: 1925,
                                                             columnNumber: 42
                                                         }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$eye$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__Eye$3e$__["Eye"], {
                                                             className: "w-4 h-4"
                                                         }, void 0, false, {
                                                             fileName: "[project]/app/page.jsx",
-                                                            lineNumber: 1579,
+                                                            lineNumber: 1925,
                                                             columnNumber: 75
                                                         }, this)
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/page.jsx",
-                                                        lineNumber: 1573,
+                                                        lineNumber: 1919,
                                                         columnNumber: 19
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/app/page.jsx",
-                                                lineNumber: 1557,
+                                                lineNumber: 1903,
                                                 columnNumber: 17
                                             }, this),
                                             adminPasswordError && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -3398,26 +3874,26 @@ _Hotline: ${appSettings.companyPhone}_`;
                                                         className: "w-3.5 h-3.5 shrink-0"
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/page.jsx",
-                                                        lineNumber: 1584,
+                                                        lineNumber: 1930,
                                                         columnNumber: 21
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
                                                         children: adminPasswordError
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/page.jsx",
-                                                        lineNumber: 1585,
+                                                        lineNumber: 1931,
                                                         columnNumber: 21
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/app/page.jsx",
-                                                lineNumber: 1583,
+                                                lineNumber: 1929,
                                                 columnNumber: 19
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/app/page.jsx",
-                                        lineNumber: 1553,
+                                        lineNumber: 1899,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -3429,20 +3905,20 @@ _Hotline: ${appSettings.companyPhone}_`;
                                                 className: "w-4 h-4"
                                             }, void 0, false, {
                                                 fileName: "[project]/app/page.jsx",
-                                                lineNumber: 1595,
+                                                lineNumber: 1941,
                                                 columnNumber: 17
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
                                                 children: isAdminAuthenticating ? 'Authenticating...' : 'Unlock Admin Dashboard'
                                             }, void 0, false, {
                                                 fileName: "[project]/app/page.jsx",
-                                                lineNumber: 1596,
+                                                lineNumber: 1942,
                                                 columnNumber: 17
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/app/page.jsx",
-                                        lineNumber: 1590,
+                                        lineNumber: 1936,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -3452,13 +3928,13 @@ _Hotline: ${appSettings.companyPhone}_`;
                                         children: "Back to Quotation Maker"
                                     }, void 0, false, {
                                         fileName: "[project]/app/page.jsx",
-                                        lineNumber: 1599,
+                                        lineNumber: 1945,
                                         columnNumber: 15
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/app/page.jsx",
-                                lineNumber: 1552,
+                                lineNumber: 1898,
                                 columnNumber: 13
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3468,26 +3944,26 @@ _Hotline: ${appSettings.companyPhone}_`;
                                         className: "w-3.5 h-3.5 text-[#1F3A5A]"
                                     }, void 0, false, {
                                         fileName: "[project]/app/page.jsx",
-                                        lineNumber: 1609,
+                                        lineNumber: 1955,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
                                         children: "Pantry LK Administrative Security"
                                     }, void 0, false, {
                                         fileName: "[project]/app/page.jsx",
-                                        lineNumber: 1610,
+                                        lineNumber: 1956,
                                         columnNumber: 15
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/app/page.jsx",
-                                lineNumber: 1608,
+                                lineNumber: 1954,
                                 columnNumber: 13
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/app/page.jsx",
-                        lineNumber: 1536,
+                        lineNumber: 1882,
                         columnNumber: 11
                     }, this),
                     activeTab === 'admin' && isAdminUnlocked && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3505,7 +3981,7 @@ _Hotline: ${appSettings.companyPhone}_`;
                                                         className: "w-5 h-5 sm:w-6 sm:h-6 text-[#CDB27E]"
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/page.jsx",
-                                                        lineNumber: 1621,
+                                                        lineNumber: 1967,
                                                         columnNumber: 19
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("h2", {
@@ -3513,13 +3989,13 @@ _Hotline: ${appSettings.companyPhone}_`;
                                                         children: "Admin Management Center"
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/page.jsx",
-                                                        lineNumber: 1622,
+                                                        lineNumber: 1968,
                                                         columnNumber: 19
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/app/page.jsx",
-                                                lineNumber: 1620,
+                                                lineNumber: 1966,
                                                 columnNumber: 17
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -3527,13 +4003,13 @@ _Hotline: ${appSettings.companyPhone}_`;
                                                 children: "Configure formula rates, catalog components, and quotation terms."
                                             }, void 0, false, {
                                                 fileName: "[project]/app/page.jsx",
-                                                lineNumber: 1624,
+                                                lineNumber: 1970,
                                                 columnNumber: 17
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/app/page.jsx",
-                                        lineNumber: 1619,
+                                        lineNumber: 1965,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3558,20 +4034,20 @@ _Hotline: ${appSettings.companyPhone}_`;
                                                         className: "w-3.5 h-3.5"
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/page.jsx",
-                                                        lineNumber: 1642,
+                                                        lineNumber: 1988,
                                                         columnNumber: 19
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
                                                         children: "Add Component"
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/page.jsx",
-                                                        lineNumber: 1643,
+                                                        lineNumber: 1989,
                                                         columnNumber: 19
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/app/page.jsx",
-                                                lineNumber: 1627,
+                                                lineNumber: 1973,
                                                 columnNumber: 17
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -3582,20 +4058,20 @@ _Hotline: ${appSettings.companyPhone}_`;
                                                         className: "w-3.5 h-3.5"
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/page.jsx",
-                                                        lineNumber: 1649,
+                                                        lineNumber: 1995,
                                                         columnNumber: 19
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
                                                         children: "Reset PDF Data"
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/page.jsx",
-                                                        lineNumber: 1650,
+                                                        lineNumber: 1996,
                                                         columnNumber: 19
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/app/page.jsx",
-                                                lineNumber: 1645,
+                                                lineNumber: 1991,
                                                 columnNumber: 17
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -3607,32 +4083,32 @@ _Hotline: ${appSettings.companyPhone}_`;
                                                         className: "w-3.5 h-3.5 text-[#CDB27E]"
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/page.jsx",
-                                                        lineNumber: 1657,
+                                                        lineNumber: 2003,
                                                         columnNumber: 19
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
                                                         children: "Lock"
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/page.jsx",
-                                                        lineNumber: 1658,
+                                                        lineNumber: 2004,
                                                         columnNumber: 19
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/app/page.jsx",
-                                                lineNumber: 1652,
+                                                lineNumber: 1998,
                                                 columnNumber: 17
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/app/page.jsx",
-                                        lineNumber: 1626,
+                                        lineNumber: 1972,
                                         columnNumber: 15
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/app/page.jsx",
-                                lineNumber: 1618,
+                                lineNumber: 1964,
                                 columnNumber: 13
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3650,12 +4126,12 @@ _Hotline: ${appSettings.companyPhone}_`;
                                                             className: "w-5 h-5"
                                                         }, void 0, false, {
                                                             fileName: "[project]/app/page.jsx",
-                                                            lineNumber: 1668,
+                                                            lineNumber: 2014,
                                                             columnNumber: 21
                                                         }, this)
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/page.jsx",
-                                                        lineNumber: 1667,
+                                                        lineNumber: 2013,
                                                         columnNumber: 19
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3668,7 +4144,7 @@ _Hotline: ${appSettings.companyPhone}_`;
                                                                         children: "Supabase Cloud Database"
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/app/page.jsx",
-                                                                        lineNumber: 1672,
+                                                                        lineNumber: 2018,
                                                                         columnNumber: 23
                                                                     }, this),
                                                                     supabaseStatus.loading ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -3676,7 +4152,7 @@ _Hotline: ${appSettings.companyPhone}_`;
                                                                         children: "Checking..."
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/app/page.jsx",
-                                                                        lineNumber: 1674,
+                                                                        lineNumber: 2020,
                                                                         columnNumber: 25
                                                                     }, this) : supabaseStatus.tables?.products?.ready ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
                                                                         className: "px-2 py-0.5 rounded-full text-[11px] font-bold bg-[#EEF2F7] text-[#1F3A5A] border border-[#C3CFDD] flex items-center space-x-1",
@@ -3685,20 +4161,20 @@ _Hotline: ${appSettings.companyPhone}_`;
                                                                                 className: "w-1.5 h-1.5 rounded-full bg-[#177A42] animate-ping mr-1"
                                                                             }, void 0, false, {
                                                                                 fileName: "[project]/app/page.jsx",
-                                                                                lineNumber: 1679,
+                                                                                lineNumber: 2025,
                                                                                 columnNumber: 27
                                                                             }, this),
                                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
                                                                                 children: "Cloud Active"
                                                                             }, void 0, false, {
                                                                                 fileName: "[project]/app/page.jsx",
-                                                                                lineNumber: 1680,
+                                                                                lineNumber: 2026,
                                                                                 columnNumber: 27
                                                                             }, this)
                                                                         ]
                                                                     }, void 0, true, {
                                                                         fileName: "[project]/app/page.jsx",
-                                                                        lineNumber: 1678,
+                                                                        lineNumber: 2024,
                                                                         columnNumber: 25
                                                                     }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
                                                                         className: "px-2 py-0.5 rounded-full text-[11px] font-bold bg-[#F7F1E6] text-[#7A602F] border border-[#E8DCC2] flex items-center space-x-1",
@@ -3707,26 +4183,26 @@ _Hotline: ${appSettings.companyPhone}_`;
                                                                                 className: "w-3 h-3 text-[#B8975A]"
                                                                             }, void 0, false, {
                                                                                 fileName: "[project]/app/page.jsx",
-                                                                                lineNumber: 1684,
+                                                                                lineNumber: 2030,
                                                                                 columnNumber: 27
                                                                             }, this),
                                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
                                                                                 children: "Tables Setup Needed"
                                                                             }, void 0, false, {
                                                                                 fileName: "[project]/app/page.jsx",
-                                                                                lineNumber: 1685,
+                                                                                lineNumber: 2031,
                                                                                 columnNumber: 27
                                                                             }, this)
                                                                         ]
                                                                     }, void 0, true, {
                                                                         fileName: "[project]/app/page.jsx",
-                                                                        lineNumber: 1683,
+                                                                        lineNumber: 2029,
                                                                         columnNumber: 25
                                                                     }, this)
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/app/page.jsx",
-                                                                lineNumber: 1671,
+                                                                lineNumber: 2017,
                                                                 columnNumber: 21
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -3734,19 +4210,19 @@ _Hotline: ${appSettings.companyPhone}_`;
                                                                 children: "https://dngdvqkvhtabpfskmhan.supabase.co"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/app/page.jsx",
-                                                                lineNumber: 1689,
+                                                                lineNumber: 2035,
                                                                 columnNumber: 21
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/app/page.jsx",
-                                                        lineNumber: 1670,
+                                                        lineNumber: 2016,
                                                         columnNumber: 19
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/app/page.jsx",
-                                                lineNumber: 1666,
+                                                lineNumber: 2012,
                                                 columnNumber: 17
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3761,20 +4237,20 @@ _Hotline: ${appSettings.companyPhone}_`;
                                                                 className: `w-3.5 h-3.5 ${isSyncingSupabase ? 'animate-bounce' : ''}`
                                                             }, void 0, false, {
                                                                 fileName: "[project]/app/page.jsx",
-                                                                lineNumber: 1701,
+                                                                lineNumber: 2047,
                                                                 columnNumber: 21
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
                                                                 children: isSyncingSupabase ? 'Syncing...' : 'Re-sync Initial Catalog'
                                                             }, void 0, false, {
                                                                 fileName: "[project]/app/page.jsx",
-                                                                lineNumber: 1702,
+                                                                lineNumber: 2048,
                                                                 columnNumber: 21
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/app/page.jsx",
-                                                        lineNumber: 1696,
+                                                        lineNumber: 2042,
                                                         columnNumber: 19
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -3785,12 +4261,12 @@ _Hotline: ${appSettings.companyPhone}_`;
                                                             className: `w-4 h-4 ${supabaseStatus.loading ? 'animate-spin' : ''}`
                                                         }, void 0, false, {
                                                             fileName: "[project]/app/page.jsx",
-                                                            lineNumber: 1709,
+                                                            lineNumber: 2055,
                                                             columnNumber: 21
                                                         }, this)
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/page.jsx",
-                                                        lineNumber: 1704,
+                                                        lineNumber: 2050,
                                                         columnNumber: 19
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -3801,32 +4277,32 @@ _Hotline: ${appSettings.companyPhone}_`;
                                                                 className: "w-3.5 h-3.5"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/app/page.jsx",
-                                                                lineNumber: 1715,
+                                                                lineNumber: 2061,
                                                                 columnNumber: 21
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
                                                                 children: "SQL Schema"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/app/page.jsx",
-                                                                lineNumber: 1716,
+                                                                lineNumber: 2062,
                                                                 columnNumber: 21
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/app/page.jsx",
-                                                        lineNumber: 1711,
+                                                        lineNumber: 2057,
                                                         columnNumber: 19
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/app/page.jsx",
-                                                lineNumber: 1695,
+                                                lineNumber: 2041,
                                                 columnNumber: 17
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/app/page.jsx",
-                                        lineNumber: 1665,
+                                        lineNumber: 2011,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3842,7 +4318,7 @@ _Hotline: ${appSettings.companyPhone}_`;
                                                                 children: "Products Catalog"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/app/page.jsx",
-                                                                lineNumber: 1725,
+                                                                lineNumber: 2071,
                                                                 columnNumber: 21
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3850,26 +4326,26 @@ _Hotline: ${appSettings.companyPhone}_`;
                                                                 children: supabaseStatus.tables?.products?.ready ? `${supabaseStatus.tables.products.count} Items Synced` : 'Table uninitialized'
                                                             }, void 0, false, {
                                                                 fileName: "[project]/app/page.jsx",
-                                                                lineNumber: 1726,
+                                                                lineNumber: 2072,
                                                                 columnNumber: 21
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/app/page.jsx",
-                                                        lineNumber: 1724,
+                                                        lineNumber: 2070,
                                                         columnNumber: 19
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                                         className: `w-2.5 h-2.5 rounded-full ${supabaseStatus.tables?.products?.ready ? 'bg-[#177A42]' : 'bg-[#CDB27E]'}`
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/page.jsx",
-                                                        lineNumber: 1732,
+                                                        lineNumber: 2078,
                                                         columnNumber: 19
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/app/page.jsx",
-                                                lineNumber: 1723,
+                                                lineNumber: 2069,
                                                 columnNumber: 17
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3882,7 +4358,7 @@ _Hotline: ${appSettings.companyPhone}_`;
                                                                 children: "Quotations Archive"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/app/page.jsx",
-                                                                lineNumber: 1737,
+                                                                lineNumber: 2083,
                                                                 columnNumber: 21
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3890,26 +4366,26 @@ _Hotline: ${appSettings.companyPhone}_`;
                                                                 children: supabaseStatus.tables?.quotations?.ready ? `${supabaseStatus.tables.quotations.count} Saved Quotes` : 'Table uninitialized'
                                                             }, void 0, false, {
                                                                 fileName: "[project]/app/page.jsx",
-                                                                lineNumber: 1738,
+                                                                lineNumber: 2084,
                                                                 columnNumber: 21
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/app/page.jsx",
-                                                        lineNumber: 1736,
+                                                        lineNumber: 2082,
                                                         columnNumber: 19
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                                         className: `w-2.5 h-2.5 rounded-full ${supabaseStatus.tables?.quotations?.ready ? 'bg-[#177A42]' : 'bg-[#CDB27E]'}`
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/page.jsx",
-                                                        lineNumber: 1744,
+                                                        lineNumber: 2090,
                                                         columnNumber: 19
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/app/page.jsx",
-                                                lineNumber: 1735,
+                                                lineNumber: 2081,
                                                 columnNumber: 17
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3922,7 +4398,7 @@ _Hotline: ${appSettings.companyPhone}_`;
                                                                 children: "Formula & Settings"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/app/page.jsx",
-                                                                lineNumber: 1749,
+                                                                lineNumber: 2095,
                                                                 columnNumber: 21
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3930,32 +4406,32 @@ _Hotline: ${appSettings.companyPhone}_`;
                                                                 children: supabaseStatus.tables?.settings?.ready ? 'Configured in Cloud' : 'Table uninitialized'
                                                             }, void 0, false, {
                                                                 fileName: "[project]/app/page.jsx",
-                                                                lineNumber: 1750,
+                                                                lineNumber: 2096,
                                                                 columnNumber: 21
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/app/page.jsx",
-                                                        lineNumber: 1748,
+                                                        lineNumber: 2094,
                                                         columnNumber: 19
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                                         className: `w-2.5 h-2.5 rounded-full ${supabaseStatus.tables?.settings?.ready ? 'bg-[#177A42]' : 'bg-[#CDB27E]'}`
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/page.jsx",
-                                                        lineNumber: 1756,
+                                                        lineNumber: 2102,
                                                         columnNumber: 19
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/app/page.jsx",
-                                                lineNumber: 1747,
+                                                lineNumber: 2093,
                                                 columnNumber: 17
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/app/page.jsx",
-                                        lineNumber: 1722,
+                                        lineNumber: 2068,
                                         columnNumber: 15
                                     }, this),
                                     !supabaseStatus.tables?.products?.ready && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3968,20 +4444,20 @@ _Hotline: ${appSettings.companyPhone}_`;
                                                         className: "w-4 h-4 text-[#9C7C43] shrink-0"
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/page.jsx",
-                                                        lineNumber: 1763,
+                                                        lineNumber: 2109,
                                                         columnNumber: 21
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
                                                         children: "Supabase tables are not yet created in your cloud project. Run the SQL schema once in your Supabase SQL Editor."
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/page.jsx",
-                                                        lineNumber: 1764,
+                                                        lineNumber: 2110,
                                                         columnNumber: 21
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/app/page.jsx",
-                                                lineNumber: 1762,
+                                                lineNumber: 2108,
                                                 columnNumber: 19
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -3990,19 +4466,19 @@ _Hotline: ${appSettings.companyPhone}_`;
                                                 children: "Open SQL Setup"
                                             }, void 0, false, {
                                                 fileName: "[project]/app/page.jsx",
-                                                lineNumber: 1766,
+                                                lineNumber: 2112,
                                                 columnNumber: 19
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/app/page.jsx",
-                                        lineNumber: 1761,
+                                        lineNumber: 2107,
                                         columnNumber: 17
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/app/page.jsx",
-                                lineNumber: 1664,
+                                lineNumber: 2010,
                                 columnNumber: 13
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -4018,7 +4494,7 @@ _Hotline: ${appSettings.companyPhone}_`;
                                                         className: "w-4 h-4 text-[#1F3A5A]"
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/page.jsx",
-                                                        lineNumber: 1781,
+                                                        lineNumber: 2127,
                                                         columnNumber: 19
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("h3", {
@@ -4026,13 +4502,13 @@ _Hotline: ${appSettings.companyPhone}_`;
                                                         children: "Charge Formula Settings"
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/page.jsx",
-                                                        lineNumber: 1782,
+                                                        lineNumber: 2128,
                                                         columnNumber: 19
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/app/page.jsx",
-                                                lineNumber: 1780,
+                                                lineNumber: 2126,
                                                 columnNumber: 17
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -4045,7 +4521,7 @@ _Hotline: ${appSettings.companyPhone}_`;
                                                                 children: "Labour & Machinery Charge (LKR / Sq.Ft)"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/app/page.jsx",
-                                                                lineNumber: 1786,
+                                                                lineNumber: 2132,
                                                                 columnNumber: 21
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
@@ -4058,13 +4534,13 @@ _Hotline: ${appSettings.companyPhone}_`;
                                                                 className: "w-full p-2 border border-[#E4E0D6] rounded-xl text-xs sm:text-sm font-semibold tabular-nums"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/app/page.jsx",
-                                                                lineNumber: 1787,
+                                                                lineNumber: 2133,
                                                                 columnNumber: 21
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/app/page.jsx",
-                                                        lineNumber: 1785,
+                                                        lineNumber: 2131,
                                                         columnNumber: 19
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -4074,7 +4550,7 @@ _Hotline: ${appSettings.companyPhone}_`;
                                                                 children: "Sales Commission Rate (%)"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/app/page.jsx",
-                                                                lineNumber: 1795,
+                                                                lineNumber: 2141,
                                                                 columnNumber: 21
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
@@ -4088,13 +4564,13 @@ _Hotline: ${appSettings.companyPhone}_`;
                                                                 className: "w-full p-2 border border-[#E4E0D6] rounded-xl text-xs sm:text-sm font-semibold tabular-nums"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/app/page.jsx",
-                                                                lineNumber: 1796,
+                                                                lineNumber: 2142,
                                                                 columnNumber: 21
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/app/page.jsx",
-                                                        lineNumber: 1794,
+                                                        lineNumber: 2140,
                                                         columnNumber: 19
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -4103,19 +4579,19 @@ _Hotline: ${appSettings.companyPhone}_`;
                                                         children: "Save Formula Rates"
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/page.jsx",
-                                                        lineNumber: 1804,
+                                                        lineNumber: 2150,
                                                         columnNumber: 19
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/app/page.jsx",
-                                                lineNumber: 1784,
+                                                lineNumber: 2130,
                                                 columnNumber: 17
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/app/page.jsx",
-                                        lineNumber: 1779,
+                                        lineNumber: 2125,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -4128,7 +4604,7 @@ _Hotline: ${appSettings.companyPhone}_`;
                                                         className: "w-4 h-4 text-[#1F3A5A]"
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/page.jsx",
-                                                        lineNumber: 1812,
+                                                        lineNumber: 2158,
                                                         columnNumber: 19
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("h3", {
@@ -4136,13 +4612,13 @@ _Hotline: ${appSettings.companyPhone}_`;
                                                         children: "Company Information"
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/page.jsx",
-                                                        lineNumber: 1813,
+                                                        lineNumber: 2159,
                                                         columnNumber: 19
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/app/page.jsx",
-                                                lineNumber: 1811,
+                                                lineNumber: 2157,
                                                 columnNumber: 17
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -4157,7 +4633,7 @@ _Hotline: ${appSettings.companyPhone}_`;
                                                                 className: "w-12 h-10 object-contain rounded bg-white p-1 border border-[#E4E0D6] shadow-xs"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/app/page.jsx",
-                                                                lineNumber: 1817,
+                                                                lineNumber: 2163,
                                                                 columnNumber: 21
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -4167,7 +4643,7 @@ _Hotline: ${appSettings.companyPhone}_`;
                                                                         children: "Official Company Logo"
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/app/page.jsx",
-                                                                        lineNumber: 1823,
+                                                                        lineNumber: 2169,
                                                                         columnNumber: 23
                                                                     }, this),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -4175,19 +4651,19 @@ _Hotline: ${appSettings.companyPhone}_`;
                                                                         children: "public/images/logo.jpg (Active on Quotation Views)"
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/app/page.jsx",
-                                                                        lineNumber: 1824,
+                                                                        lineNumber: 2170,
                                                                         columnNumber: 23
                                                                     }, this)
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/app/page.jsx",
-                                                                lineNumber: 1822,
+                                                                lineNumber: 2168,
                                                                 columnNumber: 21
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/app/page.jsx",
-                                                        lineNumber: 1816,
+                                                        lineNumber: 2162,
                                                         columnNumber: 19
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -4197,7 +4673,7 @@ _Hotline: ${appSettings.companyPhone}_`;
                                                                 children: "Company Name"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/app/page.jsx",
-                                                                lineNumber: 1828,
+                                                                lineNumber: 2174,
                                                                 columnNumber: 21
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
@@ -4210,13 +4686,13 @@ _Hotline: ${appSettings.companyPhone}_`;
                                                                 className: "w-full p-1.5 sm:p-2 border border-[#E4E0D6] rounded-xl"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/app/page.jsx",
-                                                                lineNumber: 1829,
+                                                                lineNumber: 2175,
                                                                 columnNumber: 21
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/app/page.jsx",
-                                                        lineNumber: 1827,
+                                                        lineNumber: 2173,
                                                         columnNumber: 19
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -4229,7 +4705,7 @@ _Hotline: ${appSettings.companyPhone}_`;
                                                                         children: "Phone"
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/app/page.jsx",
-                                                                        lineNumber: 1838,
+                                                                        lineNumber: 2184,
                                                                         columnNumber: 23
                                                                     }, this),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
@@ -4242,13 +4718,13 @@ _Hotline: ${appSettings.companyPhone}_`;
                                                                         className: "w-full p-1.5 sm:p-2 border border-[#E4E0D6] rounded-xl"
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/app/page.jsx",
-                                                                        lineNumber: 1839,
+                                                                        lineNumber: 2185,
                                                                         columnNumber: 23
                                                                     }, this)
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/app/page.jsx",
-                                                                lineNumber: 1837,
+                                                                lineNumber: 2183,
                                                                 columnNumber: 21
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -4258,7 +4734,7 @@ _Hotline: ${appSettings.companyPhone}_`;
                                                                         children: "Email"
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/app/page.jsx",
-                                                                        lineNumber: 1847,
+                                                                        lineNumber: 2193,
                                                                         columnNumber: 23
                                                                     }, this),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
@@ -4271,19 +4747,19 @@ _Hotline: ${appSettings.companyPhone}_`;
                                                                         className: "w-full p-1.5 sm:p-2 border border-[#E4E0D6] rounded-xl"
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/app/page.jsx",
-                                                                        lineNumber: 1848,
+                                                                        lineNumber: 2194,
                                                                         columnNumber: 23
                                                                     }, this)
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/app/page.jsx",
-                                                                lineNumber: 1846,
+                                                                lineNumber: 2192,
                                                                 columnNumber: 21
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/app/page.jsx",
-                                                        lineNumber: 1836,
+                                                        lineNumber: 2182,
                                                         columnNumber: 19
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -4292,25 +4768,25 @@ _Hotline: ${appSettings.companyPhone}_`;
                                                         children: "Save Company Info"
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/page.jsx",
-                                                        lineNumber: 1856,
+                                                        lineNumber: 2202,
                                                         columnNumber: 19
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/app/page.jsx",
-                                                lineNumber: 1815,
+                                                lineNumber: 2161,
                                                 columnNumber: 17
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/app/page.jsx",
-                                        lineNumber: 1810,
+                                        lineNumber: 2156,
                                         columnNumber: 15
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/app/page.jsx",
-                                lineNumber: 1777,
+                                lineNumber: 2123,
                                 columnNumber: 13
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -4328,7 +4804,7 @@ _Hotline: ${appSettings.companyPhone}_`;
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/app/page.jsx",
-                                                lineNumber: 1867,
+                                                lineNumber: 2213,
                                                 columnNumber: 17
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -4338,7 +4814,7 @@ _Hotline: ${appSettings.companyPhone}_`;
                                                         className: "w-3.5 h-3.5 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2"
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/page.jsx",
-                                                        lineNumber: 1869,
+                                                        lineNumber: 2215,
                                                         columnNumber: 19
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
@@ -4349,19 +4825,19 @@ _Hotline: ${appSettings.companyPhone}_`;
                                                         className: "w-full pl-8 pr-3 py-1.5 border border-[#E4E0D6] rounded-xl text-xs"
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/page.jsx",
-                                                        lineNumber: 1870,
+                                                        lineNumber: 2216,
                                                         columnNumber: 19
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/app/page.jsx",
-                                                lineNumber: 1868,
+                                                lineNumber: 2214,
                                                 columnNumber: 17
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/app/page.jsx",
-                                        lineNumber: 1866,
+                                        lineNumber: 2212,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -4378,7 +4854,7 @@ _Hotline: ${appSettings.companyPhone}_`;
                                                                 children: "Photo"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/app/page.jsx",
-                                                                lineNumber: 1884,
+                                                                lineNumber: 2230,
                                                                 columnNumber: 23
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("th", {
@@ -4386,7 +4862,7 @@ _Hotline: ${appSettings.companyPhone}_`;
                                                                 children: "Code"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/app/page.jsx",
-                                                                lineNumber: 1885,
+                                                                lineNumber: 2231,
                                                                 columnNumber: 23
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("th", {
@@ -4394,7 +4870,7 @@ _Hotline: ${appSettings.companyPhone}_`;
                                                                 children: "Supplier"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/app/page.jsx",
-                                                                lineNumber: 1886,
+                                                                lineNumber: 2232,
                                                                 columnNumber: 23
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("th", {
@@ -4402,7 +4878,7 @@ _Hotline: ${appSettings.companyPhone}_`;
                                                                 children: "Category"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/app/page.jsx",
-                                                                lineNumber: 1887,
+                                                                lineNumber: 2233,
                                                                 columnNumber: 23
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("th", {
@@ -4410,7 +4886,7 @@ _Hotline: ${appSettings.companyPhone}_`;
                                                                 children: "Description"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/app/page.jsx",
-                                                                lineNumber: 1888,
+                                                                lineNumber: 2234,
                                                                 columnNumber: 23
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("th", {
@@ -4418,7 +4894,7 @@ _Hotline: ${appSettings.companyPhone}_`;
                                                                 children: "Unit"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/app/page.jsx",
-                                                                lineNumber: 1889,
+                                                                lineNumber: 2235,
                                                                 columnNumber: 23
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("th", {
@@ -4426,7 +4902,7 @@ _Hotline: ${appSettings.companyPhone}_`;
                                                                 children: "MRP (Rs.)"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/app/page.jsx",
-                                                                lineNumber: 1890,
+                                                                lineNumber: 2236,
                                                                 columnNumber: 23
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("th", {
@@ -4434,18 +4910,18 @@ _Hotline: ${appSettings.companyPhone}_`;
                                                                 children: "Actions"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/app/page.jsx",
-                                                                lineNumber: 1891,
+                                                                lineNumber: 2237,
                                                                 columnNumber: 23
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/app/page.jsx",
-                                                        lineNumber: 1883,
+                                                        lineNumber: 2229,
                                                         columnNumber: 21
                                                     }, this)
                                                 }, void 0, false, {
                                                     fileName: "[project]/app/page.jsx",
-                                                    lineNumber: 1882,
+                                                    lineNumber: 2228,
                                                     columnNumber: 19
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("tbody", {
@@ -4466,12 +4942,12 @@ _Hotline: ${appSettings.companyPhone}_`;
                                                                         }
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/app/page.jsx",
-                                                                        lineNumber: 1901,
+                                                                        lineNumber: 2247,
                                                                         columnNumber: 29
                                                                     }, this)
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/app/page.jsx",
-                                                                    lineNumber: 1900,
+                                                                    lineNumber: 2246,
                                                                     columnNumber: 27
                                                                 }, this),
                                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
@@ -4479,7 +4955,7 @@ _Hotline: ${appSettings.companyPhone}_`;
                                                                     children: p.articleNo
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/app/page.jsx",
-                                                                    lineNumber: 1912,
+                                                                    lineNumber: 2258,
                                                                     columnNumber: 27
                                                                 }, this),
                                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
@@ -4487,7 +4963,7 @@ _Hotline: ${appSettings.companyPhone}_`;
                                                                     children: getShopBadge(getProductShop(p))
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/app/page.jsx",
-                                                                    lineNumber: 1913,
+                                                                    lineNumber: 2259,
                                                                     columnNumber: 27
                                                                 }, this),
                                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
@@ -4495,7 +4971,7 @@ _Hotline: ${appSettings.companyPhone}_`;
                                                                     children: p.category
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/app/page.jsx",
-                                                                    lineNumber: 1914,
+                                                                    lineNumber: 2260,
                                                                     columnNumber: 27
                                                                 }, this),
                                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
@@ -4505,12 +4981,12 @@ _Hotline: ${appSettings.companyPhone}_`;
                                                                         children: p.name
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/app/page.jsx",
-                                                                        lineNumber: 1916,
+                                                                        lineNumber: 2262,
                                                                         columnNumber: 29
                                                                     }, this)
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/app/page.jsx",
-                                                                    lineNumber: 1915,
+                                                                    lineNumber: 2261,
                                                                     columnNumber: 27
                                                                 }, this),
                                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
@@ -4518,7 +4994,7 @@ _Hotline: ${appSettings.companyPhone}_`;
                                                                     children: p.unit
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/app/page.jsx",
-                                                                    lineNumber: 1918,
+                                                                    lineNumber: 2264,
                                                                     columnNumber: 27
                                                                 }, this),
                                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
@@ -4526,7 +5002,7 @@ _Hotline: ${appSettings.companyPhone}_`;
                                                                     children: formatLKR(p.mrp)
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/app/page.jsx",
-                                                                    lineNumber: 1919,
+                                                                    lineNumber: 2265,
                                                                     columnNumber: 27
                                                                 }, this),
                                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
@@ -4544,12 +5020,12 @@ _Hotline: ${appSettings.companyPhone}_`;
                                                                                     className: "w-3.5 h-3.5"
                                                                                 }, void 0, false, {
                                                                                     fileName: "[project]/app/page.jsx",
-                                                                                    lineNumber: 1926,
+                                                                                    lineNumber: 2272,
                                                                                     columnNumber: 33
                                                                                 }, this)
                                                                             }, void 0, false, {
                                                                                 fileName: "[project]/app/page.jsx",
-                                                                                lineNumber: 1922,
+                                                                                lineNumber: 2268,
                                                                                 columnNumber: 31
                                                                             }, this),
                                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -4559,67 +5035,154 @@ _Hotline: ${appSettings.companyPhone}_`;
                                                                                     className: "w-3.5 h-3.5"
                                                                                 }, void 0, false, {
                                                                                     fileName: "[project]/app/page.jsx",
-                                                                                    lineNumber: 1929,
+                                                                                    lineNumber: 2275,
                                                                                     columnNumber: 33
                                                                                 }, this)
                                                                             }, void 0, false, {
                                                                                 fileName: "[project]/app/page.jsx",
-                                                                                lineNumber: 1928,
+                                                                                lineNumber: 2274,
                                                                                 columnNumber: 31
                                                                             }, this)
                                                                         ]
                                                                     }, void 0, true, {
                                                                         fileName: "[project]/app/page.jsx",
-                                                                        lineNumber: 1921,
+                                                                        lineNumber: 2267,
                                                                         columnNumber: 29
                                                                     }, this)
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/app/page.jsx",
-                                                                    lineNumber: 1920,
+                                                                    lineNumber: 2266,
                                                                     columnNumber: 27
                                                                 }, this)
                                                             ]
                                                         }, p.id, true, {
                                                             fileName: "[project]/app/page.jsx",
-                                                            lineNumber: 1899,
+                                                            lineNumber: 2245,
                                                             columnNumber: 25
                                                         }, this))
                                                 }, void 0, false, {
                                                     fileName: "[project]/app/page.jsx",
-                                                    lineNumber: 1894,
+                                                    lineNumber: 2240,
                                                     columnNumber: 19
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/app/page.jsx",
-                                            lineNumber: 1881,
+                                            lineNumber: 2227,
                                             columnNumber: 17
                                         }, this)
                                     }, void 0, false, {
                                         fileName: "[project]/app/page.jsx",
-                                        lineNumber: 1880,
+                                        lineNumber: 2226,
                                         columnNumber: 15
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/app/page.jsx",
-                                lineNumber: 1865,
+                                lineNumber: 2211,
                                 columnNumber: 13
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/app/page.jsx",
-                        lineNumber: 1617,
+                        lineNumber: 1963,
                         columnNumber: 11
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/app/page.jsx",
-                lineNumber: 1013,
+                lineNumber: 1306,
                 columnNumber: 7
             }, this),
+            hasOpenedCutWizard && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("section", {
+                className: `flex-col h-[calc(100dvh-59px)] sm:h-[calc(100dvh-67px)] no-print ${activeTab === 'cutwizard' ? 'flex' : 'hidden'}`,
+                children: [
+                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                        className: "flex items-center justify-between gap-3 px-3 sm:px-6 py-2 bg-white border-b border-[#E4E0D6]",
+                        children: [
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                className: "flex items-center gap-2 min-w-0",
+                                children: [
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$scissors$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__Scissors$3e$__["Scissors"], {
+                                        className: "w-4 h-4 text-[#B8975A] shrink-0"
+                                    }, void 0, false, {
+                                        fileName: "[project]/app/page.jsx",
+                                        lineNumber: 2298,
+                                        columnNumber: 15
+                                    }, this),
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                        className: "text-xs sm:text-sm font-semibold text-[#14263D] truncate",
+                                        children: [
+                                            "CutWizard ",
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                className: "font-normal text-slate-500 hidden sm:inline",
+                                                children: "· Board cut optimizer"
+                                            }, void 0, false, {
+                                                fileName: "[project]/app/page.jsx",
+                                                lineNumber: 2300,
+                                                columnNumber: 27
+                                            }, this)
+                                        ]
+                                    }, void 0, true, {
+                                        fileName: "[project]/app/page.jsx",
+                                        lineNumber: 2299,
+                                        columnNumber: 15
+                                    }, this)
+                                ]
+                            }, void 0, true, {
+                                fileName: "[project]/app/page.jsx",
+                                lineNumber: 2297,
+                                columnNumber: 13
+                            }, this),
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("a", {
+                                href: "/cutwizard/index.html",
+                                target: "_blank",
+                                rel: "noopener",
+                                className: "flex items-center gap-1.5 px-3 min-h-[36px] rounded-lg text-xs font-semibold text-[#14263D] border border-[#E4E0D6] hover:bg-[#F6F4EF] transition shrink-0",
+                                children: [
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$external$2d$link$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__ExternalLink$3e$__["ExternalLink"], {
+                                        className: "w-3.5 h-3.5"
+                                    }, void 0, false, {
+                                        fileName: "[project]/app/page.jsx",
+                                        lineNumber: 2309,
+                                        columnNumber: 15
+                                    }, this),
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                        children: "Open in new tab"
+                                    }, void 0, false, {
+                                        fileName: "[project]/app/page.jsx",
+                                        lineNumber: 2310,
+                                        columnNumber: 15
+                                    }, this)
+                                ]
+                            }, void 0, true, {
+                                fileName: "[project]/app/page.jsx",
+                                lineNumber: 2303,
+                                columnNumber: 13
+                            }, this)
+                        ]
+                    }, void 0, true, {
+                        fileName: "[project]/app/page.jsx",
+                        lineNumber: 2296,
+                        columnNumber: 11
+                    }, this),
+                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("iframe", {
+                        src: "/cutwizard/index.html",
+                        title: "CutWizard board cut optimizer",
+                        className: "flex-1 w-full border-0 bg-gray-100"
+                    }, void 0, false, {
+                        fileName: "[project]/app/page.jsx",
+                        lineNumber: 2313,
+                        columnNumber: 11
+                    }, this)
+                ]
+            }, void 0, true, {
+                fileName: "[project]/app/page.jsx",
+                lineNumber: 2293,
+                columnNumber: 9
+            }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                className: "lg:hidden fixed bottom-0 inset-x-0 z-40 bg-[#14263D] text-white border-t-2 border-[#B8975A] px-3 pt-2.5 pb-[calc(0.625rem+env(safe-area-inset-bottom))] shadow-2xl no-print",
+                className: `${activeTab === 'cutwizard' ? 'hidden' : 'lg:hidden'} fixed bottom-0 inset-x-0 z-40 bg-[#14263D] text-white border-t-2 border-[#B8975A] px-3 pt-2.5 pb-[calc(0.625rem+env(safe-area-inset-bottom))] shadow-2xl no-print`,
                 children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
                     onClick: ()=>setIsMobileDrawerOpen(true),
                     "aria-label": "Open current quotation",
@@ -4637,12 +5200,12 @@ _Hotline: ${appSettings.companyPhone}_`;
                                                 className: "w-5 h-5"
                                             }, void 0, false, {
                                                 fileName: "[project]/app/page.jsx",
-                                                lineNumber: 1955,
+                                                lineNumber: 2331,
                                                 columnNumber: 17
                                             }, this)
                                         }, void 0, false, {
                                             fileName: "[project]/app/page.jsx",
-                                            lineNumber: 1954,
+                                            lineNumber: 2330,
                                             columnNumber: 15
                                         }, this),
                                         totalCartCount > 0 && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -4650,24 +5213,40 @@ _Hotline: ${appSettings.companyPhone}_`;
                                             children: totalCartCount
                                         }, void 0, false, {
                                             fileName: "[project]/app/page.jsx",
-                                            lineNumber: 1958,
+                                            lineNumber: 2334,
                                             columnNumber: 17
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/app/page.jsx",
-                                    lineNumber: 1953,
+                                    lineNumber: 2329,
                                     columnNumber: 13
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                     className: "min-w-0",
                                     children: [
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                            className: "text-[11px] text-[#C9D3E0] uppercase tracking-wider font-semibold",
-                                            children: "Grand total"
-                                        }, void 0, false, {
+                                            className: "text-[11px] text-[#C9D3E0] uppercase tracking-wider font-semibold flex items-center gap-1.5",
+                                            children: [
+                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                    children: "Grand total"
+                                                }, void 0, false, {
+                                                    fileName: "[project]/app/page.jsx",
+                                                    lineNumber: 2341,
+                                                    columnNumber: 17
+                                                }, this),
+                                                totalCartCount > 0 && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                    className: "text-[9px] normal-case text-emerald-300 font-medium tracking-normal",
+                                                    children: "· cached"
+                                                }, void 0, false, {
+                                                    fileName: "[project]/app/page.jsx",
+                                                    lineNumber: 2343,
+                                                    columnNumber: 19
+                                                }, this)
+                                            ]
+                                        }, void 0, true, {
                                             fileName: "[project]/app/page.jsx",
-                                            lineNumber: 1964,
+                                            lineNumber: 2340,
                                             columnNumber: 15
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -4675,19 +5254,19 @@ _Hotline: ${appSettings.companyPhone}_`;
                                             children: formatLKR(calculations.grandTotal)
                                         }, void 0, false, {
                                             fileName: "[project]/app/page.jsx",
-                                            lineNumber: 1965,
+                                            lineNumber: 2346,
                                             columnNumber: 15
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/app/page.jsx",
-                                    lineNumber: 1963,
+                                    lineNumber: 2339,
                                     columnNumber: 13
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/app/page.jsx",
-                            lineNumber: 1952,
+                            lineNumber: 2328,
                             columnNumber: 11
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -4698,24 +5277,24 @@ _Hotline: ${appSettings.companyPhone}_`;
                                     className: "w-4 h-4 stroke-[2.5]"
                                 }, void 0, false, {
                                     fileName: "[project]/app/page.jsx",
-                                    lineNumber: 1970,
+                                    lineNumber: 2351,
                                     columnNumber: 13
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/app/page.jsx",
-                            lineNumber: 1968,
+                            lineNumber: 2349,
                             columnNumber: 11
                         }, this)
                     ]
                 }, void 0, true, {
                     fileName: "[project]/app/page.jsx",
-                    lineNumber: 1947,
+                    lineNumber: 2323,
                     columnNumber: 9
                 }, this)
             }, void 0, false, {
                 fileName: "[project]/app/page.jsx",
-                lineNumber: 1946,
+                lineNumber: 2322,
                 columnNumber: 7
             }, this),
             isMobileDrawerOpen && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -4731,24 +5310,24 @@ _Hotline: ${appSettings.companyPhone}_`;
                                 className: "w-10 h-1.5 rounded-full bg-white/30"
                             }, void 0, false, {
                                 fileName: "[project]/app/page.jsx",
-                                lineNumber: 1986,
+                                lineNumber: 2367,
                                 columnNumber: 15
                             }, this)
                         }, void 0, false, {
                             fileName: "[project]/app/page.jsx",
-                            lineNumber: 1985,
+                            lineNumber: 2366,
                             columnNumber: 13
                         }, this),
                         renderQuoteCalculatorContent(true)
                     ]
                 }, void 0, true, {
                     fileName: "[project]/app/page.jsx",
-                    lineNumber: 1981,
+                    lineNumber: 2362,
                     columnNumber: 11
                 }, this)
             }, void 0, false, {
                 fileName: "[project]/app/page.jsx",
-                lineNumber: 1977,
+                lineNumber: 2358,
                 columnNumber: 9
             }, this),
             isQuoteModalOpen && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -4770,12 +5349,12 @@ _Hotline: ${appSettings.companyPhone}_`;
                                                 className: "w-5 h-5"
                                             }, void 0, false, {
                                                 fileName: "[project]/app/page.jsx",
-                                                lineNumber: 2006,
+                                                lineNumber: 2387,
                                                 columnNumber: 19
                                             }, this)
                                         }, void 0, false, {
                                             fileName: "[project]/app/page.jsx",
-                                            lineNumber: 2001,
+                                            lineNumber: 2382,
                                             columnNumber: 17
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -4786,7 +5365,7 @@ _Hotline: ${appSettings.companyPhone}_`;
                                                     children: "Quotation preview"
                                                 }, void 0, false, {
                                                     fileName: "[project]/app/page.jsx",
-                                                    lineNumber: 2009,
+                                                    lineNumber: 2390,
                                                     columnNumber: 19
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -4798,19 +5377,19 @@ _Hotline: ${appSettings.companyPhone}_`;
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/app/page.jsx",
-                                                    lineNumber: 2010,
+                                                    lineNumber: 2391,
                                                     columnNumber: 19
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/app/page.jsx",
-                                            lineNumber: 2008,
+                                            lineNumber: 2389,
                                             columnNumber: 17
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/app/page.jsx",
-                                    lineNumber: 2000,
+                                    lineNumber: 2381,
                                     columnNumber: 15
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -4822,7 +5401,7 @@ _Hotline: ${appSettings.companyPhone}_`;
                                             children: sheetFit ? 'Zoom in' : 'Fit page'
                                         }, void 0, false, {
                                             fileName: "[project]/app/page.jsx",
-                                            lineNumber: 2015,
+                                            lineNumber: 2396,
                                             columnNumber: 17
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -4833,20 +5412,20 @@ _Hotline: ${appSettings.companyPhone}_`;
                                                     className: "w-4 h-4 text-[#D9C9A6]"
                                                 }, void 0, false, {
                                                     fileName: "[project]/app/page.jsx",
-                                                    lineNumber: 2025,
+                                                    lineNumber: 2406,
                                                     columnNumber: 19
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
                                                     children: "Save"
                                                 }, void 0, false, {
                                                     fileName: "[project]/app/page.jsx",
-                                                    lineNumber: 2026,
+                                                    lineNumber: 2407,
                                                     columnNumber: 19
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/app/page.jsx",
-                                            lineNumber: 2021,
+                                            lineNumber: 2402,
                                             columnNumber: 17
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -4857,20 +5436,20 @@ _Hotline: ${appSettings.companyPhone}_`;
                                                     className: "w-4 h-4 text-[#D9C9A6]"
                                                 }, void 0, false, {
                                                     fileName: "[project]/app/page.jsx",
-                                                    lineNumber: 2032,
+                                                    lineNumber: 2413,
                                                     columnNumber: 19
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
                                                     children: "PDF / Print"
                                                 }, void 0, false, {
                                                     fileName: "[project]/app/page.jsx",
-                                                    lineNumber: 2033,
+                                                    lineNumber: 2414,
                                                     columnNumber: 19
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/app/page.jsx",
-                                            lineNumber: 2028,
+                                            lineNumber: 2409,
                                             columnNumber: 17
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -4881,24 +5460,24 @@ _Hotline: ${appSettings.companyPhone}_`;
                                                 className: "w-5 h-5"
                                             }, void 0, false, {
                                                 fileName: "[project]/app/page.jsx",
-                                                lineNumber: 2040,
+                                                lineNumber: 2421,
                                                 columnNumber: 19
                                             }, this)
                                         }, void 0, false, {
                                             fileName: "[project]/app/page.jsx",
-                                            lineNumber: 2035,
+                                            lineNumber: 2416,
                                             columnNumber: 17
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/app/page.jsx",
-                                    lineNumber: 2014,
+                                    lineNumber: 2395,
                                     columnNumber: 15
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/app/page.jsx",
-                            lineNumber: 1999,
+                            lineNumber: 2380,
                             columnNumber: 13
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -4914,20 +5493,20 @@ _Hotline: ${appSettings.companyPhone}_`;
                                                     className: "w-4 h-4 text-[#7A602F]"
                                                 }, void 0, false, {
                                                     fileName: "[project]/app/page.jsx",
-                                                    lineNumber: 2050,
+                                                    lineNumber: 2431,
                                                     columnNumber: 19
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
                                                     children: "Customer & job details"
                                                 }, void 0, false, {
                                                     fileName: "[project]/app/page.jsx",
-                                                    lineNumber: 2051,
+                                                    lineNumber: 2432,
                                                     columnNumber: 19
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/app/page.jsx",
-                                            lineNumber: 2049,
+                                            lineNumber: 2430,
                                             columnNumber: 17
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -4941,7 +5520,7 @@ _Hotline: ${appSettings.companyPhone}_`;
                                                             children: "Customer name *"
                                                         }, void 0, false, {
                                                             fileName: "[project]/app/page.jsx",
-                                                            lineNumber: 2055,
+                                                            lineNumber: 2436,
                                                             columnNumber: 21
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
@@ -4957,13 +5536,13 @@ _Hotline: ${appSettings.companyPhone}_`;
                                                             className: "w-full min-h-[46px] px-3 bg-[#FAF8F3] border border-[#D6D0C2] rounded-xl text-base sm:text-sm focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#B8975A]"
                                                         }, void 0, false, {
                                                             fileName: "[project]/app/page.jsx",
-                                                            lineNumber: 2056,
+                                                            lineNumber: 2437,
                                                             columnNumber: 21
                                                         }, this)
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/app/page.jsx",
-                                                    lineNumber: 2054,
+                                                    lineNumber: 2435,
                                                     columnNumber: 19
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("label", {
@@ -4974,7 +5553,7 @@ _Hotline: ${appSettings.companyPhone}_`;
                                                             children: "WhatsApp number *"
                                                         }, void 0, false, {
                                                             fileName: "[project]/app/page.jsx",
-                                                            lineNumber: 2067,
+                                                            lineNumber: 2448,
                                                             columnNumber: 21
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
@@ -4991,13 +5570,13 @@ _Hotline: ${appSettings.companyPhone}_`;
                                                             className: "w-full min-h-[46px] px-3 bg-[#FAF8F3] border border-[#D6D0C2] rounded-xl text-base sm:text-sm tabular-nums focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#B8975A]"
                                                         }, void 0, false, {
                                                             fileName: "[project]/app/page.jsx",
-                                                            lineNumber: 2068,
+                                                            lineNumber: 2449,
                                                             columnNumber: 21
                                                         }, this)
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/app/page.jsx",
-                                                    lineNumber: 2066,
+                                                    lineNumber: 2447,
                                                     columnNumber: 19
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("label", {
@@ -5008,7 +5587,7 @@ _Hotline: ${appSettings.companyPhone}_`;
                                                             children: "Site address"
                                                         }, void 0, false, {
                                                             fileName: "[project]/app/page.jsx",
-                                                            lineNumber: 2080,
+                                                            lineNumber: 2461,
                                                             columnNumber: 21
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
@@ -5024,13 +5603,13 @@ _Hotline: ${appSettings.companyPhone}_`;
                                                             className: "w-full min-h-[46px] px-3 bg-[#FAF8F3] border border-[#D6D0C2] rounded-xl text-base sm:text-sm focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#B8975A]"
                                                         }, void 0, false, {
                                                             fileName: "[project]/app/page.jsx",
-                                                            lineNumber: 2081,
+                                                            lineNumber: 2462,
                                                             columnNumber: 21
                                                         }, this)
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/app/page.jsx",
-                                                    lineNumber: 2079,
+                                                    lineNumber: 2460,
                                                     columnNumber: 19
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("label", {
@@ -5041,7 +5620,7 @@ _Hotline: ${appSettings.companyPhone}_`;
                                                             children: "Quotation no *"
                                                         }, void 0, false, {
                                                             fileName: "[project]/app/page.jsx",
-                                                            lineNumber: 2092,
+                                                            lineNumber: 2473,
                                                             columnNumber: 21
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
@@ -5055,25 +5634,25 @@ _Hotline: ${appSettings.companyPhone}_`;
                                                             className: "w-full min-h-[46px] px-3 bg-[#FAF8F3] border border-[#D6D0C2] rounded-xl text-base sm:text-sm font-bold tabular-nums focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#B8975A]"
                                                         }, void 0, false, {
                                                             fileName: "[project]/app/page.jsx",
-                                                            lineNumber: 2093,
+                                                            lineNumber: 2474,
                                                             columnNumber: 21
                                                         }, this)
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/app/page.jsx",
-                                                    lineNumber: 2091,
+                                                    lineNumber: 2472,
                                                     columnNumber: 19
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/app/page.jsx",
-                                            lineNumber: 2053,
+                                            lineNumber: 2434,
                                             columnNumber: 17
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/app/page.jsx",
-                                    lineNumber: 2048,
+                                    lineNumber: 2429,
                                     columnNumber: 15
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -5083,7 +5662,7 @@ _Hotline: ${appSettings.companyPhone}_`;
                                             children: "Customer copy · A4"
                                         }, void 0, false, {
                                             fileName: "[project]/app/page.jsx",
-                                            lineNumber: 2105,
+                                            lineNumber: 2486,
                                             columnNumber: 17
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -5091,13 +5670,13 @@ _Hotline: ${appSettings.companyPhone}_`;
                                             children: sheetFit ? 'Tap "Zoom in" to read' : 'Swipe to see the full page'
                                         }, void 0, false, {
                                             fileName: "[project]/app/page.jsx",
-                                            lineNumber: 2106,
+                                            lineNumber: 2487,
                                             columnNumber: 17
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/app/page.jsx",
-                                    lineNumber: 2104,
+                                    lineNumber: 2485,
                                     columnNumber: 15
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -5120,14 +5699,14 @@ _Hotline: ${appSettings.companyPhone}_`;
                                                 className: "h-2 bg-[#14263D]"
                                             }, void 0, false, {
                                                 fileName: "[project]/app/page.jsx",
-                                                lineNumber: 2121,
+                                                lineNumber: 2502,
                                                 columnNumber: 19
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                                 className: "h-[2px] bg-[#B8975A]"
                                             }, void 0, false, {
                                                 fileName: "[project]/app/page.jsx",
-                                                lineNumber: 2122,
+                                                lineNumber: 2503,
                                                 columnNumber: 19
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -5142,7 +5721,7 @@ _Hotline: ${appSettings.companyPhone}_`;
                                                                 className: "h-[56px] w-auto object-contain"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/app/page.jsx",
-                                                                lineNumber: 2127,
+                                                                lineNumber: 2508,
                                                                 columnNumber: 23
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -5153,7 +5732,7 @@ _Hotline: ${appSettings.companyPhone}_`;
                                                                         children: "QUOTATION"
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/app/page.jsx",
-                                                                        lineNumber: 2129,
+                                                                        lineNumber: 2510,
                                                                         columnNumber: 25
                                                                     }, this),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -5161,19 +5740,19 @@ _Hotline: ${appSettings.companyPhone}_`;
                                                                         children: appSettings.companyTagline
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/app/page.jsx",
-                                                                        lineNumber: 2130,
+                                                                        lineNumber: 2511,
                                                                         columnNumber: 25
                                                                     }, this)
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/app/page.jsx",
-                                                                lineNumber: 2128,
+                                                                lineNumber: 2509,
                                                                 columnNumber: 23
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/app/page.jsx",
-                                                        lineNumber: 2126,
+                                                        lineNumber: 2507,
                                                         columnNumber: 21
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -5200,7 +5779,7 @@ _Hotline: ${appSettings.companyPhone}_`;
                                                                             children: label
                                                                         }, void 0, false, {
                                                                             fileName: "[project]/app/page.jsx",
-                                                                            lineNumber: 2142,
+                                                                            lineNumber: 2523,
                                                                             columnNumber: 27
                                                                         }, this),
                                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -5208,13 +5787,13 @@ _Hotline: ${appSettings.companyPhone}_`;
                                                                             children: val
                                                                         }, void 0, false, {
                                                                             fileName: "[project]/app/page.jsx",
-                                                                            lineNumber: 2143,
+                                                                            lineNumber: 2524,
                                                                             columnNumber: 27
                                                                         }, this)
                                                                     ]
                                                                 }, label, true, {
                                                                     fileName: "[project]/app/page.jsx",
-                                                                    lineNumber: 2141,
+                                                                    lineNumber: 2522,
                                                                     columnNumber: 25
                                                                 }, this)),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -5225,7 +5804,7 @@ _Hotline: ${appSettings.companyPhone}_`;
                                                                         children: "Amount due"
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/app/page.jsx",
-                                                                        lineNumber: 2147,
+                                                                        lineNumber: 2528,
                                                                         columnNumber: 25
                                                                     }, this),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -5233,19 +5812,19 @@ _Hotline: ${appSettings.companyPhone}_`;
                                                                         children: formatLKR(calculations.grandTotal)
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/app/page.jsx",
-                                                                        lineNumber: 2148,
+                                                                        lineNumber: 2529,
                                                                         columnNumber: 25
                                                                     }, this)
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/app/page.jsx",
-                                                                lineNumber: 2146,
+                                                                lineNumber: 2527,
                                                                 columnNumber: 23
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/app/page.jsx",
-                                                        lineNumber: 2135,
+                                                        lineNumber: 2516,
                                                         columnNumber: 21
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -5258,7 +5837,7 @@ _Hotline: ${appSettings.companyPhone}_`;
                                                                         children: "Prepared for"
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/app/page.jsx",
-                                                                        lineNumber: 2155,
+                                                                        lineNumber: 2536,
                                                                         columnNumber: 25
                                                                     }, this),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -5266,7 +5845,7 @@ _Hotline: ${appSettings.companyPhone}_`;
                                                                         children: currentQuote.customerName || 'Valued Customer'
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/app/page.jsx",
-                                                                        lineNumber: 2156,
+                                                                        lineNumber: 2537,
                                                                         columnNumber: 25
                                                                     }, this),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -5276,26 +5855,26 @@ _Hotline: ${appSettings.companyPhone}_`;
                                                                                 children: currentQuote.customerAddress
                                                                             }, void 0, false, {
                                                                                 fileName: "[project]/app/page.jsx",
-                                                                                lineNumber: 2158,
+                                                                                lineNumber: 2539,
                                                                                 columnNumber: 60
                                                                             }, this),
                                                                             currentQuote.customerPhone && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                                                                 children: currentQuote.customerPhone
                                                                             }, void 0, false, {
                                                                                 fileName: "[project]/app/page.jsx",
-                                                                                lineNumber: 2159,
+                                                                                lineNumber: 2540,
                                                                                 columnNumber: 58
                                                                             }, this)
                                                                         ]
                                                                     }, void 0, true, {
                                                                         fileName: "[project]/app/page.jsx",
-                                                                        lineNumber: 2157,
+                                                                        lineNumber: 2538,
                                                                         columnNumber: 25
                                                                     }, this)
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/app/page.jsx",
-                                                                lineNumber: 2154,
+                                                                lineNumber: 2535,
                                                                 columnNumber: 23
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -5305,7 +5884,7 @@ _Hotline: ${appSettings.companyPhone}_`;
                                                                         children: "Project"
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/app/page.jsx",
-                                                                        lineNumber: 2163,
+                                                                        lineNumber: 2544,
                                                                         columnNumber: 25
                                                                     }, this),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -5313,7 +5892,7 @@ _Hotline: ${appSettings.companyPhone}_`;
                                                                         children: "Pantry & cabinetry fabrication"
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/app/page.jsx",
-                                                                        lineNumber: 2164,
+                                                                        lineNumber: 2545,
                                                                         columnNumber: 25
                                                                     }, this),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -5327,32 +5906,32 @@ _Hotline: ${appSettings.companyPhone}_`;
                                                                                 ]
                                                                             }, void 0, true, {
                                                                                 fileName: "[project]/app/page.jsx",
-                                                                                lineNumber: 2166,
+                                                                                lineNumber: 2547,
                                                                                 columnNumber: 53
                                                                             }, this),
                                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                                                                 children: "Supply, fabrication & installation"
                                                                             }, void 0, false, {
                                                                                 fileName: "[project]/app/page.jsx",
-                                                                                lineNumber: 2167,
+                                                                                lineNumber: 2548,
                                                                                 columnNumber: 27
                                                                             }, this)
                                                                         ]
                                                                     }, void 0, true, {
                                                                         fileName: "[project]/app/page.jsx",
-                                                                        lineNumber: 2165,
+                                                                        lineNumber: 2546,
                                                                         columnNumber: 25
                                                                     }, this)
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/app/page.jsx",
-                                                                lineNumber: 2162,
+                                                                lineNumber: 2543,
                                                                 columnNumber: 23
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/app/page.jsx",
-                                                        lineNumber: 2153,
+                                                        lineNumber: 2534,
                                                         columnNumber: 21
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("table", {
@@ -5367,7 +5946,7 @@ _Hotline: ${appSettings.companyPhone}_`;
                                                                             children: "#"
                                                                         }, void 0, false, {
                                                                             fileName: "[project]/app/page.jsx",
-                                                                            lineNumber: 2176,
+                                                                            lineNumber: 2557,
                                                                             columnNumber: 27
                                                                         }, this),
                                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("th", {
@@ -5375,7 +5954,7 @@ _Hotline: ${appSettings.companyPhone}_`;
                                                                             children: "Item"
                                                                         }, void 0, false, {
                                                                             fileName: "[project]/app/page.jsx",
-                                                                            lineNumber: 2177,
+                                                                            lineNumber: 2558,
                                                                             columnNumber: 27
                                                                         }, this),
                                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("th", {
@@ -5383,7 +5962,7 @@ _Hotline: ${appSettings.companyPhone}_`;
                                                                             children: "Qty"
                                                                         }, void 0, false, {
                                                                             fileName: "[project]/app/page.jsx",
-                                                                            lineNumber: 2178,
+                                                                            lineNumber: 2559,
                                                                             columnNumber: 27
                                                                         }, this),
                                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("th", {
@@ -5391,7 +5970,7 @@ _Hotline: ${appSettings.companyPhone}_`;
                                                                             children: "Rate"
                                                                         }, void 0, false, {
                                                                             fileName: "[project]/app/page.jsx",
-                                                                            lineNumber: 2179,
+                                                                            lineNumber: 2560,
                                                                             columnNumber: 27
                                                                         }, this),
                                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("th", {
@@ -5399,18 +5978,18 @@ _Hotline: ${appSettings.companyPhone}_`;
                                                                             children: "Amount"
                                                                         }, void 0, false, {
                                                                             fileName: "[project]/app/page.jsx",
-                                                                            lineNumber: 2180,
+                                                                            lineNumber: 2561,
                                                                             columnNumber: 27
                                                                         }, this)
                                                                     ]
                                                                 }, void 0, true, {
                                                                     fileName: "[project]/app/page.jsx",
-                                                                    lineNumber: 2175,
+                                                                    lineNumber: 2556,
                                                                     columnNumber: 25
                                                                 }, this)
                                                             }, void 0, false, {
                                                                 fileName: "[project]/app/page.jsx",
-                                                                lineNumber: 2174,
+                                                                lineNumber: 2555,
                                                                 columnNumber: 23
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("tbody", {
@@ -5423,7 +6002,7 @@ _Hotline: ${appSettings.companyPhone}_`;
                                                                                     children: idx + 1
                                                                                 }, void 0, false, {
                                                                                     fileName: "[project]/app/page.jsx",
-                                                                                    lineNumber: 2186,
+                                                                                    lineNumber: 2567,
                                                                                     columnNumber: 29
                                                                                 }, this),
                                                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
@@ -5441,7 +6020,7 @@ _Hotline: ${appSettings.companyPhone}_`;
                                                                                                 className: "qt-img w-10 h-10 object-contain border border-[#EFEBE2] rounded-md shrink-0 bg-white"
                                                                                             }, void 0, false, {
                                                                                                 fileName: "[project]/app/page.jsx",
-                                                                                                lineNumber: 2189,
+                                                                                                lineNumber: 2570,
                                                                                                 columnNumber: 33
                                                                                             }, this),
                                                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -5452,7 +6031,7 @@ _Hotline: ${appSettings.companyPhone}_`;
                                                                                                         children: item.name
                                                                                                     }, void 0, false, {
                                                                                                         fileName: "[project]/app/page.jsx",
-                                                                                                        lineNumber: 2196,
+                                                                                                        lineNumber: 2577,
                                                                                                         columnNumber: 35
                                                                                                     }, this),
                                                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -5463,24 +6042,24 @@ _Hotline: ${appSettings.companyPhone}_`;
                                                                                                         ]
                                                                                                     }, void 0, true, {
                                                                                                         fileName: "[project]/app/page.jsx",
-                                                                                                        lineNumber: 2197,
+                                                                                                        lineNumber: 2578,
                                                                                                         columnNumber: 35
                                                                                                     }, this)
                                                                                                 ]
                                                                                             }, void 0, true, {
                                                                                                 fileName: "[project]/app/page.jsx",
-                                                                                                lineNumber: 2195,
+                                                                                                lineNumber: 2576,
                                                                                                 columnNumber: 33
                                                                                             }, this)
                                                                                         ]
                                                                                     }, void 0, true, {
                                                                                         fileName: "[project]/app/page.jsx",
-                                                                                        lineNumber: 2188,
+                                                                                        lineNumber: 2569,
                                                                                         columnNumber: 31
                                                                                     }, this)
                                                                                 }, void 0, false, {
                                                                                     fileName: "[project]/app/page.jsx",
-                                                                                    lineNumber: 2187,
+                                                                                    lineNumber: 2568,
                                                                                     columnNumber: 29
                                                                                 }, this),
                                                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
@@ -5492,7 +6071,7 @@ _Hotline: ${appSettings.companyPhone}_`;
                                                                                     ]
                                                                                 }, void 0, true, {
                                                                                     fileName: "[project]/app/page.jsx",
-                                                                                    lineNumber: 2204,
+                                                                                    lineNumber: 2585,
                                                                                     columnNumber: 29
                                                                                 }, this),
                                                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
@@ -5500,7 +6079,7 @@ _Hotline: ${appSettings.companyPhone}_`;
                                                                                     children: formatLKR(item.mrp).replace('Rs. ', '')
                                                                                 }, void 0, false, {
                                                                                     fileName: "[project]/app/page.jsx",
-                                                                                    lineNumber: 2205,
+                                                                                    lineNumber: 2586,
                                                                                     columnNumber: 29
                                                                                 }, this),
                                                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
@@ -5508,13 +6087,13 @@ _Hotline: ${appSettings.companyPhone}_`;
                                                                                     children: formatLKR(item.quantity * item.mrp).replace('Rs. ', '')
                                                                                 }, void 0, false, {
                                                                                     fileName: "[project]/app/page.jsx",
-                                                                                    lineNumber: 2206,
+                                                                                    lineNumber: 2587,
                                                                                     columnNumber: 29
                                                                                 }, this)
                                                                             ]
                                                                         }, item.id, true, {
                                                                             fileName: "[project]/app/page.jsx",
-                                                                            lineNumber: 2185,
+                                                                            lineNumber: 2566,
                                                                             columnNumber: 27
                                                                         }, this)),
                                                                     currentQuote.sqft > 0 && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("tr", {
@@ -5525,7 +6104,7 @@ _Hotline: ${appSettings.companyPhone}_`;
                                                                                 children: currentQuote.items.length + 1
                                                                             }, void 0, false, {
                                                                                 fileName: "[project]/app/page.jsx",
-                                                                                lineNumber: 2211,
+                                                                                lineNumber: 2592,
                                                                                 columnNumber: 29
                                                                             }, this),
                                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
@@ -5536,7 +6115,7 @@ _Hotline: ${appSettings.companyPhone}_`;
                                                                                         children: "Labour & machinery"
                                                                                     }, void 0, false, {
                                                                                         fileName: "[project]/app/page.jsx",
-                                                                                        lineNumber: 2213,
+                                                                                        lineNumber: 2594,
                                                                                         columnNumber: 31
                                                                                     }, this),
                                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -5544,13 +6123,13 @@ _Hotline: ${appSettings.companyPhone}_`;
                                                                                         children: "Fabrication & installation"
                                                                                     }, void 0, false, {
                                                                                         fileName: "[project]/app/page.jsx",
-                                                                                        lineNumber: 2214,
+                                                                                        lineNumber: 2595,
                                                                                         columnNumber: 31
                                                                                     }, this)
                                                                                 ]
                                                                             }, void 0, true, {
                                                                                 fileName: "[project]/app/page.jsx",
-                                                                                lineNumber: 2212,
+                                                                                lineNumber: 2593,
                                                                                 columnNumber: 29
                                                                             }, this),
                                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
@@ -5561,7 +6140,7 @@ _Hotline: ${appSettings.companyPhone}_`;
                                                                                 ]
                                                                             }, void 0, true, {
                                                                                 fileName: "[project]/app/page.jsx",
-                                                                                lineNumber: 2216,
+                                                                                lineNumber: 2597,
                                                                                 columnNumber: 29
                                                                             }, this),
                                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
@@ -5569,7 +6148,7 @@ _Hotline: ${appSettings.companyPhone}_`;
                                                                                 children: formatLKR(calculations.labourRate).replace('Rs. ', '')
                                                                             }, void 0, false, {
                                                                                 fileName: "[project]/app/page.jsx",
-                                                                                lineNumber: 2217,
+                                                                                lineNumber: 2598,
                                                                                 columnNumber: 29
                                                                             }, this),
                                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
@@ -5577,13 +6156,13 @@ _Hotline: ${appSettings.companyPhone}_`;
                                                                                 children: formatLKR(calculations.labourTotal).replace('Rs. ', '')
                                                                             }, void 0, false, {
                                                                                 fileName: "[project]/app/page.jsx",
-                                                                                lineNumber: 2218,
+                                                                                lineNumber: 2599,
                                                                                 columnNumber: 29
                                                                             }, this)
                                                                         ]
                                                                     }, void 0, true, {
                                                                         fileName: "[project]/app/page.jsx",
-                                                                        lineNumber: 2210,
+                                                                        lineNumber: 2591,
                                                                         columnNumber: 27
                                                                     }, this),
                                                                     currentQuote.items.length === 0 && !(currentQuote.sqft > 0) && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("tr", {
@@ -5593,24 +6172,24 @@ _Hotline: ${appSettings.companyPhone}_`;
                                                                             children: "No items added yet"
                                                                         }, void 0, false, {
                                                                             fileName: "[project]/app/page.jsx",
-                                                                            lineNumber: 2223,
+                                                                            lineNumber: 2604,
                                                                             columnNumber: 29
                                                                         }, this)
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/app/page.jsx",
-                                                                        lineNumber: 2222,
+                                                                        lineNumber: 2603,
                                                                         columnNumber: 27
                                                                     }, this)
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/app/page.jsx",
-                                                                lineNumber: 2183,
+                                                                lineNumber: 2564,
                                                                 columnNumber: 23
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/app/page.jsx",
-                                                        lineNumber: 2173,
+                                                        lineNumber: 2554,
                                                         columnNumber: 21
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -5624,14 +6203,14 @@ _Hotline: ${appSettings.companyPhone}_`;
                                                                         children: "Amount in words"
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/app/page.jsx",
-                                                                        lineNumber: 2232,
+                                                                        lineNumber: 2613,
                                                                         columnNumber: 25
                                                                     }, this),
                                                                     numberToWords(calculations.grandTotal)
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/app/page.jsx",
-                                                                lineNumber: 2231,
+                                                                lineNumber: 2612,
                                                                 columnNumber: 23
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -5645,7 +6224,7 @@ _Hotline: ${appSettings.companyPhone}_`;
                                                                                 children: "Materials"
                                                                             }, void 0, false, {
                                                                                 fileName: "[project]/app/page.jsx",
-                                                                                lineNumber: 2236,
+                                                                                lineNumber: 2617,
                                                                                 columnNumber: 70
                                                                             }, this),
                                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -5653,13 +6232,13 @@ _Hotline: ${appSettings.companyPhone}_`;
                                                                                 children: formatLKR(calculations.compTotal).replace('Rs. ', '')
                                                                             }, void 0, false, {
                                                                                 fileName: "[project]/app/page.jsx",
-                                                                                lineNumber: 2236,
+                                                                                lineNumber: 2617,
                                                                                 columnNumber: 119
                                                                             }, this)
                                                                         ]
                                                                     }, void 0, true, {
                                                                         fileName: "[project]/app/page.jsx",
-                                                                        lineNumber: 2236,
+                                                                        lineNumber: 2617,
                                                                         columnNumber: 25
                                                                     }, this),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -5670,7 +6249,7 @@ _Hotline: ${appSettings.companyPhone}_`;
                                                                                 children: "Labour & machinery"
                                                                             }, void 0, false, {
                                                                                 fileName: "[project]/app/page.jsx",
-                                                                                lineNumber: 2237,
+                                                                                lineNumber: 2618,
                                                                                 columnNumber: 70
                                                                             }, this),
                                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -5678,13 +6257,13 @@ _Hotline: ${appSettings.companyPhone}_`;
                                                                                 children: formatLKR(calculations.labourTotal).replace('Rs. ', '')
                                                                             }, void 0, false, {
                                                                                 fileName: "[project]/app/page.jsx",
-                                                                                lineNumber: 2237,
+                                                                                lineNumber: 2618,
                                                                                 columnNumber: 132
                                                                             }, this)
                                                                         ]
                                                                     }, void 0, true, {
                                                                         fileName: "[project]/app/page.jsx",
-                                                                        lineNumber: 2237,
+                                                                        lineNumber: 2618,
                                                                         columnNumber: 25
                                                                     }, this),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -5699,7 +6278,7 @@ _Hotline: ${appSettings.companyPhone}_`;
                                                                                 ]
                                                                             }, void 0, true, {
                                                                                 fileName: "[project]/app/page.jsx",
-                                                                                lineNumber: 2238,
+                                                                                lineNumber: 2619,
                                                                                 columnNumber: 96
                                                                             }, this),
                                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -5707,13 +6286,13 @@ _Hotline: ${appSettings.companyPhone}_`;
                                                                                 children: formatLKR(calculations.commTotal).replace('Rs. ', '')
                                                                             }, void 0, false, {
                                                                                 fileName: "[project]/app/page.jsx",
-                                                                                lineNumber: 2238,
+                                                                                lineNumber: 2619,
                                                                                 columnNumber: 179
                                                                             }, this)
                                                                         ]
                                                                     }, void 0, true, {
                                                                         fileName: "[project]/app/page.jsx",
-                                                                        lineNumber: 2238,
+                                                                        lineNumber: 2619,
                                                                         columnNumber: 25
                                                                     }, this),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -5724,7 +6303,7 @@ _Hotline: ${appSettings.companyPhone}_`;
                                                                                 children: "Grand total"
                                                                             }, void 0, false, {
                                                                                 fileName: "[project]/app/page.jsx",
-                                                                                lineNumber: 2240,
+                                                                                lineNumber: 2621,
                                                                                 columnNumber: 27
                                                                             }, this),
                                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -5732,25 +6311,25 @@ _Hotline: ${appSettings.companyPhone}_`;
                                                                                 children: formatLKR(calculations.grandTotal)
                                                                             }, void 0, false, {
                                                                                 fileName: "[project]/app/page.jsx",
-                                                                                lineNumber: 2241,
+                                                                                lineNumber: 2622,
                                                                                 columnNumber: 27
                                                                             }, this)
                                                                         ]
                                                                     }, void 0, true, {
                                                                         fileName: "[project]/app/page.jsx",
-                                                                        lineNumber: 2239,
+                                                                        lineNumber: 2620,
                                                                         columnNumber: 25
                                                                     }, this)
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/app/page.jsx",
-                                                                lineNumber: 2235,
+                                                                lineNumber: 2616,
                                                                 columnNumber: 23
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/app/page.jsx",
-                                                        lineNumber: 2230,
+                                                        lineNumber: 2611,
                                                         columnNumber: 21
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -5761,7 +6340,7 @@ _Hotline: ${appSettings.companyPhone}_`;
                                                                 children: "Terms & conditions"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/app/page.jsx",
-                                                                lineNumber: 2248,
+                                                                lineNumber: 2629,
                                                                 columnNumber: 23
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -5769,13 +6348,13 @@ _Hotline: ${appSettings.companyPhone}_`;
                                                                 children: appSettings.termsAndConditions
                                                             }, void 0, false, {
                                                                 fileName: "[project]/app/page.jsx",
-                                                                lineNumber: 2249,
+                                                                lineNumber: 2630,
                                                                 columnNumber: 23
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/app/page.jsx",
-                                                        lineNumber: 2247,
+                                                        lineNumber: 2628,
                                                         columnNumber: 21
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -5787,7 +6366,7 @@ _Hotline: ${appSettings.companyPhone}_`;
                                                                         className: "h-9 border-b border-[#14263D]"
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/app/page.jsx",
-                                                                        lineNumber: 2255,
+                                                                        lineNumber: 2636,
                                                                         columnNumber: 25
                                                                     }, this),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -5798,7 +6377,7 @@ _Hotline: ${appSettings.companyPhone}_`;
                                                                         ]
                                                                     }, void 0, true, {
                                                                         fileName: "[project]/app/page.jsx",
-                                                                        lineNumber: 2256,
+                                                                        lineNumber: 2637,
                                                                         columnNumber: 25
                                                                     }, this),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -5806,13 +6385,13 @@ _Hotline: ${appSettings.companyPhone}_`;
                                                                         children: "Authorised signature"
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/app/page.jsx",
-                                                                        lineNumber: 2257,
+                                                                        lineNumber: 2638,
                                                                         columnNumber: 25
                                                                     }, this)
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/app/page.jsx",
-                                                                lineNumber: 2254,
+                                                                lineNumber: 2635,
                                                                 columnNumber: 23
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -5821,7 +6400,7 @@ _Hotline: ${appSettings.companyPhone}_`;
                                                                         className: "h-9 border-b border-[#14263D]"
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/app/page.jsx",
-                                                                        lineNumber: 2260,
+                                                                        lineNumber: 2641,
                                                                         columnNumber: 25
                                                                     }, this),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -5829,7 +6408,7 @@ _Hotline: ${appSettings.companyPhone}_`;
                                                                         children: "Customer acceptance"
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/app/page.jsx",
-                                                                        lineNumber: 2261,
+                                                                        lineNumber: 2642,
                                                                         columnNumber: 25
                                                                     }, this),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -5837,25 +6416,25 @@ _Hotline: ${appSettings.companyPhone}_`;
                                                                         children: "Signature & date"
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/app/page.jsx",
-                                                                        lineNumber: 2262,
+                                                                        lineNumber: 2643,
                                                                         columnNumber: 25
                                                                     }, this)
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/app/page.jsx",
-                                                                lineNumber: 2259,
+                                                                lineNumber: 2640,
                                                                 columnNumber: 23
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/app/page.jsx",
-                                                        lineNumber: 2253,
+                                                        lineNumber: 2634,
                                                         columnNumber: 21
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/app/page.jsx",
-                                                lineNumber: 2124,
+                                                lineNumber: 2505,
                                                 columnNumber: 19
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -5865,21 +6444,21 @@ _Hotline: ${appSettings.companyPhone}_`;
                                                         children: appSettings.companyAddress
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/page.jsx",
-                                                        lineNumber: 2269,
+                                                        lineNumber: 2650,
                                                         columnNumber: 21
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
                                                         children: appSettings.companyPhone
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/page.jsx",
-                                                        lineNumber: 2270,
+                                                        lineNumber: 2651,
                                                         columnNumber: 21
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
                                                         children: appSettings.companyEmail
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/page.jsx",
-                                                        lineNumber: 2271,
+                                                        lineNumber: 2652,
                                                         columnNumber: 21
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -5887,30 +6466,30 @@ _Hotline: ${appSettings.companyPhone}_`;
                                                         children: appSettings.companyWeb
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/page.jsx",
-                                                        lineNumber: 2272,
+                                                        lineNumber: 2653,
                                                         columnNumber: 21
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/app/page.jsx",
-                                                lineNumber: 2268,
+                                                lineNumber: 2649,
                                                 columnNumber: 19
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/app/page.jsx",
-                                        lineNumber: 2115,
+                                        lineNumber: 2496,
                                         columnNumber: 17
                                     }, this)
                                 }, void 0, false, {
                                     fileName: "[project]/app/page.jsx",
-                                    lineNumber: 2110,
+                                    lineNumber: 2491,
                                     columnNumber: 15
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/app/page.jsx",
-                            lineNumber: 2045,
+                            lineNumber: 2426,
                             columnNumber: 13
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -5926,20 +6505,20 @@ _Hotline: ${appSettings.companyPhone}_`;
                                                 className: "w-5 h-5"
                                             }, void 0, false, {
                                                 fileName: "[project]/app/page.jsx",
-                                                lineNumber: 2285,
+                                                lineNumber: 2666,
                                                 columnNumber: 19
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
                                                 children: "Save & send on WhatsApp"
                                             }, void 0, false, {
                                                 fileName: "[project]/app/page.jsx",
-                                                lineNumber: 2286,
+                                                lineNumber: 2667,
                                                 columnNumber: 19
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/app/page.jsx",
-                                        lineNumber: 2281,
+                                        lineNumber: 2662,
                                         columnNumber: 17
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -5950,20 +6529,20 @@ _Hotline: ${appSettings.companyPhone}_`;
                                                 className: "w-4 h-4 text-[#7A602F]"
                                             }, void 0, false, {
                                                 fileName: "[project]/app/page.jsx",
-                                                lineNumber: 2292,
+                                                lineNumber: 2673,
                                                 columnNumber: 19
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
                                                 children: "Save"
                                             }, void 0, false, {
                                                 fileName: "[project]/app/page.jsx",
-                                                lineNumber: 2293,
+                                                lineNumber: 2674,
                                                 columnNumber: 19
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/app/page.jsx",
-                                        lineNumber: 2288,
+                                        lineNumber: 2669,
                                         columnNumber: 17
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -5974,20 +6553,20 @@ _Hotline: ${appSettings.companyPhone}_`;
                                                 className: "w-4 h-4 text-[#7A602F]"
                                             }, void 0, false, {
                                                 fileName: "[project]/app/page.jsx",
-                                                lineNumber: 2299,
+                                                lineNumber: 2680,
                                                 columnNumber: 19
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
                                                 children: "Print"
                                             }, void 0, false, {
                                                 fileName: "[project]/app/page.jsx",
-                                                lineNumber: 2300,
+                                                lineNumber: 2681,
                                                 columnNumber: 19
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/app/page.jsx",
-                                        lineNumber: 2295,
+                                        lineNumber: 2676,
                                         columnNumber: 17
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -5998,42 +6577,42 @@ _Hotline: ${appSettings.companyPhone}_`;
                                                 className: "w-4 h-4 text-[#D9C9A6]"
                                             }, void 0, false, {
                                                 fileName: "[project]/app/page.jsx",
-                                                lineNumber: 2306,
+                                                lineNumber: 2687,
                                                 columnNumber: 19
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
                                                 children: "Save PDF"
                                             }, void 0, false, {
                                                 fileName: "[project]/app/page.jsx",
-                                                lineNumber: 2307,
+                                                lineNumber: 2688,
                                                 columnNumber: 19
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/app/page.jsx",
-                                        lineNumber: 2302,
+                                        lineNumber: 2683,
                                         columnNumber: 17
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/app/page.jsx",
-                                lineNumber: 2280,
+                                lineNumber: 2661,
                                 columnNumber: 15
                             }, this)
                         }, void 0, false, {
                             fileName: "[project]/app/page.jsx",
-                            lineNumber: 2279,
+                            lineNumber: 2660,
                             columnNumber: 13
                         }, this)
                     ]
                 }, void 0, true, {
                     fileName: "[project]/app/page.jsx",
-                    lineNumber: 1996,
+                    lineNumber: 2377,
                     columnNumber: 11
                 }, this)
             }, void 0, false, {
                 fileName: "[project]/app/page.jsx",
-                lineNumber: 1995,
+                lineNumber: 2376,
                 columnNumber: 9
             }, this),
             isProductModalOpen && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -6049,7 +6628,7 @@ _Hotline: ${appSettings.companyPhone}_`;
                                     children: editingProduct?.id ? 'Edit Component' : 'Add New Component'
                                 }, void 0, false, {
                                     fileName: "[project]/app/page.jsx",
-                                    lineNumber: 2321,
+                                    lineNumber: 2702,
                                     columnNumber: 15
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -6059,18 +6638,18 @@ _Hotline: ${appSettings.companyPhone}_`;
                                         className: "w-5 h-5"
                                     }, void 0, false, {
                                         fileName: "[project]/app/page.jsx",
-                                        lineNumber: 2322,
+                                        lineNumber: 2703,
                                         columnNumber: 116
                                     }, this)
                                 }, void 0, false, {
                                     fileName: "[project]/app/page.jsx",
-                                    lineNumber: 2322,
+                                    lineNumber: 2703,
                                     columnNumber: 15
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/app/page.jsx",
-                            lineNumber: 2320,
+                            lineNumber: 2701,
                             columnNumber: 13
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("form", {
@@ -6087,7 +6666,7 @@ _Hotline: ${appSettings.companyPhone}_`;
                                                     children: "Article No / Code *"
                                                 }, void 0, false, {
                                                     fileName: "[project]/app/page.jsx",
-                                                    lineNumber: 2328,
+                                                    lineNumber: 2709,
                                                     columnNumber: 19
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
@@ -6101,13 +6680,13 @@ _Hotline: ${appSettings.companyPhone}_`;
                                                     className: "w-full p-2 border border-[#E4E0D6] rounded-lg text-xs"
                                                 }, void 0, false, {
                                                     fileName: "[project]/app/page.jsx",
-                                                    lineNumber: 2329,
+                                                    lineNumber: 2710,
                                                     columnNumber: 19
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/app/page.jsx",
-                                            lineNumber: 2327,
+                                            lineNumber: 2708,
                                             columnNumber: 17
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -6117,7 +6696,7 @@ _Hotline: ${appSettings.companyPhone}_`;
                                                     children: "Category *"
                                                 }, void 0, false, {
                                                     fileName: "[project]/app/page.jsx",
-                                                    lineNumber: 2338,
+                                                    lineNumber: 2719,
                                                     columnNumber: 19
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
@@ -6131,19 +6710,19 @@ _Hotline: ${appSettings.companyPhone}_`;
                                                     className: "w-full p-2 border border-[#E4E0D6] rounded-lg text-xs"
                                                 }, void 0, false, {
                                                     fileName: "[project]/app/page.jsx",
-                                                    lineNumber: 2339,
+                                                    lineNumber: 2720,
                                                     columnNumber: 19
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/app/page.jsx",
-                                            lineNumber: 2337,
+                                            lineNumber: 2718,
                                             columnNumber: 17
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/app/page.jsx",
-                                    lineNumber: 2326,
+                                    lineNumber: 2707,
                                     columnNumber: 15
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -6153,7 +6732,7 @@ _Hotline: ${appSettings.companyPhone}_`;
                                             children: "Product Title / Name *"
                                         }, void 0, false, {
                                             fileName: "[project]/app/page.jsx",
-                                            lineNumber: 2350,
+                                            lineNumber: 2731,
                                             columnNumber: 17
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
@@ -6167,13 +6746,13 @@ _Hotline: ${appSettings.companyPhone}_`;
                                             className: "w-full p-2 border border-[#E4E0D6] rounded-lg text-xs"
                                         }, void 0, false, {
                                             fileName: "[project]/app/page.jsx",
-                                            lineNumber: 2351,
+                                            lineNumber: 2732,
                                             columnNumber: 17
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/app/page.jsx",
-                                    lineNumber: 2349,
+                                    lineNumber: 2730,
                                     columnNumber: 15
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -6183,7 +6762,7 @@ _Hotline: ${appSettings.companyPhone}_`;
                                             children: "Full Description"
                                         }, void 0, false, {
                                             fileName: "[project]/app/page.jsx",
-                                            lineNumber: 2361,
+                                            lineNumber: 2742,
                                             columnNumber: 17
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("textarea", {
@@ -6196,13 +6775,13 @@ _Hotline: ${appSettings.companyPhone}_`;
                                             className: "w-full p-2 border border-[#E4E0D6] rounded-lg text-xs"
                                         }, void 0, false, {
                                             fileName: "[project]/app/page.jsx",
-                                            lineNumber: 2362,
+                                            lineNumber: 2743,
                                             columnNumber: 17
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/app/page.jsx",
-                                    lineNumber: 2360,
+                                    lineNumber: 2741,
                                     columnNumber: 15
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -6215,7 +6794,7 @@ _Hotline: ${appSettings.companyPhone}_`;
                                                     children: "Unit *"
                                                 }, void 0, false, {
                                                     fileName: "[project]/app/page.jsx",
-                                                    lineNumber: 2372,
+                                                    lineNumber: 2753,
                                                     columnNumber: 19
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
@@ -6229,13 +6808,13 @@ _Hotline: ${appSettings.companyPhone}_`;
                                                     className: "w-full p-2 border border-[#E4E0D6] rounded-lg text-xs"
                                                 }, void 0, false, {
                                                     fileName: "[project]/app/page.jsx",
-                                                    lineNumber: 2373,
+                                                    lineNumber: 2754,
                                                     columnNumber: 19
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/app/page.jsx",
-                                            lineNumber: 2371,
+                                            lineNumber: 2752,
                                             columnNumber: 17
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -6245,7 +6824,7 @@ _Hotline: ${appSettings.companyPhone}_`;
                                                     children: "MRP Price (LKR) *"
                                                 }, void 0, false, {
                                                     fileName: "[project]/app/page.jsx",
-                                                    lineNumber: 2382,
+                                                    lineNumber: 2763,
                                                     columnNumber: 19
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
@@ -6260,19 +6839,19 @@ _Hotline: ${appSettings.companyPhone}_`;
                                                     className: "w-full p-2 border border-[#E4E0D6] rounded-lg tabular-nums font-bold text-xs"
                                                 }, void 0, false, {
                                                     fileName: "[project]/app/page.jsx",
-                                                    lineNumber: 2383,
+                                                    lineNumber: 2764,
                                                     columnNumber: 19
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/app/page.jsx",
-                                            lineNumber: 2381,
+                                            lineNumber: 2762,
                                             columnNumber: 17
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/app/page.jsx",
-                                    lineNumber: 2370,
+                                    lineNumber: 2751,
                                     columnNumber: 15
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -6282,7 +6861,7 @@ _Hotline: ${appSettings.companyPhone}_`;
                                             children: "Image URL / Path"
                                         }, void 0, false, {
                                             fileName: "[project]/app/page.jsx",
-                                            lineNumber: 2395,
+                                            lineNumber: 2776,
                                             columnNumber: 17
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
@@ -6296,13 +6875,13 @@ _Hotline: ${appSettings.companyPhone}_`;
                                             className: "w-full p-2 border border-[#E4E0D6] rounded-lg text-xs"
                                         }, void 0, false, {
                                             fileName: "[project]/app/page.jsx",
-                                            lineNumber: 2396,
+                                            lineNumber: 2777,
                                             columnNumber: 17
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/app/page.jsx",
-                                    lineNumber: 2394,
+                                    lineNumber: 2775,
                                     columnNumber: 15
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -6315,7 +6894,7 @@ _Hotline: ${appSettings.companyPhone}_`;
                                             children: "Cancel"
                                         }, void 0, false, {
                                             fileName: "[project]/app/page.jsx",
-                                            lineNumber: 2406,
+                                            lineNumber: 2787,
                                             columnNumber: 17
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -6324,30 +6903,30 @@ _Hotline: ${appSettings.companyPhone}_`;
                                             children: "Save"
                                         }, void 0, false, {
                                             fileName: "[project]/app/page.jsx",
-                                            lineNumber: 2409,
+                                            lineNumber: 2790,
                                             columnNumber: 17
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/app/page.jsx",
-                                    lineNumber: 2405,
+                                    lineNumber: 2786,
                                     columnNumber: 15
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/app/page.jsx",
-                            lineNumber: 2325,
+                            lineNumber: 2706,
                             columnNumber: 13
                         }, this)
                     ]
                 }, void 0, true, {
                     fileName: "[project]/app/page.jsx",
-                    lineNumber: 2319,
+                    lineNumber: 2700,
                     columnNumber: 11
                 }, this)
             }, void 0, false, {
                 fileName: "[project]/app/page.jsx",
-                lineNumber: 2318,
+                lineNumber: 2699,
                 columnNumber: 9
             }, this),
             isSqlModalOpen && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -6367,12 +6946,12 @@ _Hotline: ${appSettings.companyPhone}_`;
                                                 className: "w-4 h-4"
                                             }, void 0, false, {
                                                 fileName: "[project]/app/page.jsx",
-                                                lineNumber: 2425,
+                                                lineNumber: 2806,
                                                 columnNumber: 19
                                             }, this)
                                         }, void 0, false, {
                                             fileName: "[project]/app/page.jsx",
-                                            lineNumber: 2424,
+                                            lineNumber: 2805,
                                             columnNumber: 17
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -6382,7 +6961,7 @@ _Hotline: ${appSettings.companyPhone}_`;
                                                     children: "Supabase SQL Schema Setup"
                                                 }, void 0, false, {
                                                     fileName: "[project]/app/page.jsx",
-                                                    lineNumber: 2428,
+                                                    lineNumber: 2809,
                                                     columnNumber: 19
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -6390,19 +6969,19 @@ _Hotline: ${appSettings.companyPhone}_`;
                                                     children: "Run this once in Supabase SQL Editor to initialize tables."
                                                 }, void 0, false, {
                                                     fileName: "[project]/app/page.jsx",
-                                                    lineNumber: 2429,
+                                                    lineNumber: 2810,
                                                     columnNumber: 19
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/app/page.jsx",
-                                            lineNumber: 2427,
+                                            lineNumber: 2808,
                                             columnNumber: 17
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/app/page.jsx",
-                                    lineNumber: 2423,
+                                    lineNumber: 2804,
                                     columnNumber: 15
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -6412,18 +6991,18 @@ _Hotline: ${appSettings.companyPhone}_`;
                                         className: "w-4 h-4"
                                     }, void 0, false, {
                                         fileName: "[project]/app/page.jsx",
-                                        lineNumber: 2436,
+                                        lineNumber: 2817,
                                         columnNumber: 17
                                     }, this)
                                 }, void 0, false, {
                                     fileName: "[project]/app/page.jsx",
-                                    lineNumber: 2432,
+                                    lineNumber: 2813,
                                     columnNumber: 15
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/app/page.jsx",
-                            lineNumber: 2422,
+                            lineNumber: 2803,
                             columnNumber: 13
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -6436,20 +7015,20 @@ _Hotline: ${appSettings.companyPhone}_`;
                                             className: "w-4 h-4 text-[#1F3A5A]"
                                         }, void 0, false, {
                                             fileName: "[project]/app/page.jsx",
-                                            lineNumber: 2442,
+                                            lineNumber: 2823,
                                             columnNumber: 17
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
                                             children: "Quick Setup (30 Seconds):"
                                         }, void 0, false, {
                                             fileName: "[project]/app/page.jsx",
-                                            lineNumber: 2443,
+                                            lineNumber: 2824,
                                             columnNumber: 17
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/app/page.jsx",
-                                    lineNumber: 2441,
+                                    lineNumber: 2822,
                                     columnNumber: 15
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("ol", {
@@ -6462,14 +7041,14 @@ _Hotline: ${appSettings.companyPhone}_`;
                                                     children: "Copy SQL"
                                                 }, void 0, false, {
                                                     fileName: "[project]/app/page.jsx",
-                                                    lineNumber: 2446,
+                                                    lineNumber: 2827,
                                                     columnNumber: 27
                                                 }, this),
                                                 " below."
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/app/page.jsx",
-                                            lineNumber: 2446,
+                                            lineNumber: 2827,
                                             columnNumber: 17
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("li", {
@@ -6479,14 +7058,14 @@ _Hotline: ${appSettings.companyPhone}_`;
                                                     children: "Supabase Dashboard SQL Editor"
                                                 }, void 0, false, {
                                                     fileName: "[project]/app/page.jsx",
-                                                    lineNumber: 2447,
+                                                    lineNumber: 2828,
                                                     columnNumber: 31
                                                 }, this),
                                                 "."
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/app/page.jsx",
-                                            lineNumber: 2447,
+                                            lineNumber: 2828,
                                             columnNumber: 17
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("li", {
@@ -6496,14 +7075,14 @@ _Hotline: ${appSettings.companyPhone}_`;
                                                     children: "Run"
                                                 }, void 0, false, {
                                                     fileName: "[project]/app/page.jsx",
-                                                    lineNumber: 2448,
+                                                    lineNumber: 2829,
                                                     columnNumber: 48
                                                 }, this),
                                                 "."
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/app/page.jsx",
-                                            lineNumber: 2448,
+                                            lineNumber: 2829,
                                             columnNumber: 17
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("li", {
@@ -6513,26 +7092,26 @@ _Hotline: ${appSettings.companyPhone}_`;
                                                     children: "Sync Local Data to Supabase"
                                                 }, void 0, false, {
                                                     fileName: "[project]/app/page.jsx",
-                                                    lineNumber: 2449,
+                                                    lineNumber: 2830,
                                                     columnNumber: 43
                                                 }, this),
                                                 "!"
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/app/page.jsx",
-                                            lineNumber: 2449,
+                                            lineNumber: 2830,
                                             columnNumber: 17
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/app/page.jsx",
-                                    lineNumber: 2445,
+                                    lineNumber: 2826,
                                     columnNumber: 15
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/app/page.jsx",
-                            lineNumber: 2440,
+                            lineNumber: 2821,
                             columnNumber: 13
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -6581,7 +7160,7 @@ create table if not exists public.settings (
   company_tagline text default 'Premium Modern Kitchen & Pantry Solutions',
   company_address text default 'Colombo, Sri Lanka',
   company_phone text default '+94 77 000 0000',
-  company_email text default 'sales@pantrylk.com',
+  company_email text default 'pantrylk2026@gmail.com',
   company_web text default 'www.pantrylk.com',
   labour_rate_per_sq_ft numeric default 1800.0,
   sales_commission_rate numeric default 5.0,
@@ -6618,31 +7197,31 @@ create policy "Allow public update settings" on public.settings for update to an
                                                 className: "w-3 h-3 text-[#E6D6B0]"
                                             }, void 0, false, {
                                                 fileName: "[project]/app/page.jsx",
-                                                lineNumber: 2530,
+                                                lineNumber: 2911,
                                                 columnNumber: 32
                                             }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$copy$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__Copy$3e$__["Copy"], {
                                                 className: "w-3 h-3"
                                             }, void 0, false, {
                                                 fileName: "[project]/app/page.jsx",
-                                                lineNumber: 2530,
+                                                lineNumber: 2911,
                                                 columnNumber: 79
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
                                                 children: copiedSql ? 'Copied!' : 'Copy SQL'
                                             }, void 0, false, {
                                                 fileName: "[project]/app/page.jsx",
-                                                lineNumber: 2531,
+                                                lineNumber: 2912,
                                                 columnNumber: 19
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/app/page.jsx",
-                                        lineNumber: 2455,
+                                        lineNumber: 2836,
                                         columnNumber: 17
                                     }, this)
                                 }, void 0, false, {
                                     fileName: "[project]/app/page.jsx",
-                                    lineNumber: 2454,
+                                    lineNumber: 2835,
                                     columnNumber: 15
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("pre", {
@@ -6684,7 +7263,7 @@ create table if not exists public.settings (
   company_tagline text default 'Premium Modern Kitchen & Pantry Solutions',
   company_address text default 'Colombo, Sri Lanka',
   company_phone text default '+94 77 000 0000',
-  company_email text default 'sales@pantrylk.com',
+  company_email text default 'pantrylk2026@gmail.com',
   company_web text default 'www.pantrylk.com',
   labour_rate_per_sq_ft numeric default 1800.0,
   sales_commission_rate numeric default 5.0,
@@ -6714,13 +7293,13 @@ create policy "Allow public insert settings" on public.settings for insert to an
 create policy "Allow public update settings" on public.settings for update to anon, authenticated using (true) with check (true);`
                                 }, void 0, false, {
                                     fileName: "[project]/app/page.jsx",
-                                    lineNumber: 2535,
+                                    lineNumber: 2916,
                                     columnNumber: 15
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/app/page.jsx",
-                            lineNumber: 2453,
+                            lineNumber: 2834,
                             columnNumber: 13
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -6736,20 +7315,20 @@ create policy "Allow public update settings" on public.settings for update to an
                                             children: "Open Supabase SQL Editor"
                                         }, void 0, false, {
                                             fileName: "[project]/app/page.jsx",
-                                            lineNumber: 2611,
+                                            lineNumber: 2992,
                                             columnNumber: 17
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$external$2d$link$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__ExternalLink$3e$__["ExternalLink"], {
                                             className: "w-3.5 h-3.5"
                                         }, void 0, false, {
                                             fileName: "[project]/app/page.jsx",
-                                            lineNumber: 2612,
+                                            lineNumber: 2993,
                                             columnNumber: 17
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/app/page.jsx",
-                                    lineNumber: 2605,
+                                    lineNumber: 2986,
                                     columnNumber: 15
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -6761,39 +7340,573 @@ create policy "Allow public update settings" on public.settings for update to an
                                         children: "Done"
                                     }, void 0, false, {
                                         fileName: "[project]/app/page.jsx",
-                                        lineNumber: 2616,
+                                        lineNumber: 2997,
                                         columnNumber: 17
                                     }, this)
                                 }, void 0, false, {
                                     fileName: "[project]/app/page.jsx",
-                                    lineNumber: 2615,
+                                    lineNumber: 2996,
                                     columnNumber: 15
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/app/page.jsx",
-                            lineNumber: 2604,
+                            lineNumber: 2985,
                             columnNumber: 13
                         }, this)
                     ]
                 }, void 0, true, {
                     fileName: "[project]/app/page.jsx",
-                    lineNumber: 2421,
+                    lineNumber: 2802,
                     columnNumber: 11
                 }, this)
             }, void 0, false, {
                 fileName: "[project]/app/page.jsx",
-                lineNumber: 2420,
+                lineNumber: 2801,
+                columnNumber: 9
+            }, this),
+            selectedProductForZoom && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                className: "fixed inset-0 z-50 bg-[#14263D]/75 backdrop-blur-sm p-3 sm:p-5 flex items-center justify-center",
+                onClick: ()=>{
+                    setSelectedProductForZoom(null);
+                    setIsMagnified(false);
+                    setIsHoverZooming(false);
+                },
+                children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                    className: "bg-white w-full max-w-4xl max-h-[92vh] rounded-3xl shadow-2xl border border-[#E4E0D6] overflow-hidden flex flex-col",
+                    onClick: (e)=>e.stopPropagation(),
+                    children: [
+                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                            className: "flex items-center justify-between px-4 sm:px-6 py-3.5 border-b border-[#EFEBE2] bg-[#FAF8F3]",
+                            children: [
+                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                    className: "flex flex-wrap items-center gap-1.5 sm:gap-2",
+                                    children: [
+                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                            className: "badge-tag bg-[#14263D] text-white font-mono font-bold text-[11px] sm:text-xs px-2.5 py-0.5 rounded-lg",
+                                            children: selectedProductForZoom.articleNo
+                                        }, void 0, false, {
+                                            fileName: "[project]/app/page.jsx",
+                                            lineNumber: 3027,
+                                            columnNumber: 17
+                                        }, this),
+                                        getShopBadge(getProductShop(selectedProductForZoom)),
+                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                            className: "text-[11px] sm:text-xs bg-[#F0EDE6] text-slate-700 font-medium px-2.5 py-0.5 rounded-full truncate max-w-[200px]",
+                                            children: selectedProductForZoom.category
+                                        }, void 0, false, {
+                                            fileName: "[project]/app/page.jsx",
+                                            lineNumber: 3031,
+                                            columnNumber: 17
+                                        }, this)
+                                    ]
+                                }, void 0, true, {
+                                    fileName: "[project]/app/page.jsx",
+                                    lineNumber: 3026,
+                                    columnNumber: 15
+                                }, this),
+                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                                    onClick: ()=>{
+                                        setSelectedProductForZoom(null);
+                                        setIsMagnified(false);
+                                        setIsHoverZooming(false);
+                                    },
+                                    className: "p-1.5 rounded-full text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition",
+                                    title: "Close (Esc)",
+                                    children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$x$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__X$3e$__["X"], {
+                                        className: "w-5 h-5"
+                                    }, void 0, false, {
+                                        fileName: "[project]/app/page.jsx",
+                                        lineNumber: 3044,
+                                        columnNumber: 17
+                                    }, this)
+                                }, void 0, false, {
+                                    fileName: "[project]/app/page.jsx",
+                                    lineNumber: 3035,
+                                    columnNumber: 15
+                                }, this)
+                            ]
+                        }, void 0, true, {
+                            fileName: "[project]/app/page.jsx",
+                            lineNumber: 3025,
+                            columnNumber: 13
+                        }, this),
+                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                            className: "flex-1 overflow-y-auto p-4 sm:p-6 grid grid-cols-1 md:grid-cols-12 gap-5 sm:gap-7 items-start",
+                            children: [
+                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                    className: "md:col-span-6 flex flex-col items-center",
+                                    children: [
+                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                            className: "relative w-full h-64 sm:h-96 rounded-2xl bg-[#FAF8F3] border border-[#E4E0D6] overflow-hidden flex items-center justify-center cursor-crosshair select-none group/lens",
+                                            onMouseEnter: ()=>setIsHoverZooming(true),
+                                            onMouseLeave: ()=>{
+                                                setIsHoverZooming(false);
+                                                if (!isMagnified) setZoomPosition({
+                                                    x: 50,
+                                                    y: 50
+                                                });
+                                            },
+                                            onMouseMove: (e)=>{
+                                                const rect = e.currentTarget.getBoundingClientRect();
+                                                const x = Math.max(0, Math.min(100, (e.clientX - rect.left) / rect.width * 100));
+                                                const y = Math.max(0, Math.min(100, (e.clientY - rect.top) / rect.height * 100));
+                                                setZoomPosition({
+                                                    x,
+                                                    y
+                                                });
+                                            },
+                                            onClick: ()=>setIsMagnified((prev)=>!prev),
+                                            children: [
+                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("img", {
+                                                    src: resolveProductImage(selectedProductForZoom.image),
+                                                    alt: selectedProductForZoom.name,
+                                                    className: "max-h-full max-w-full object-contain pointer-events-none transition-transform duration-75 ease-out",
+                                                    style: {
+                                                        transformOrigin: `${zoomPosition.x}% ${zoomPosition.y}%`,
+                                                        transform: isMagnified || isHoverZooming ? 'scale(2.5)' : 'scale(1)'
+                                                    },
+                                                    onError: (e)=>{
+                                                        e.currentTarget.onerror = null;
+                                                        e.currentTarget.src = '/images/placeholder.svg';
+                                                    }
+                                                }, void 0, false, {
+                                                    fileName: "[project]/app/page.jsx",
+                                                    lineNumber: 3068,
+                                                    columnNumber: 19
+                                                }, this),
+                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                    className: "absolute bottom-3 left-3 bg-[#14263D]/80 text-white text-[11px] font-medium px-3 py-1 rounded-full backdrop-blur-xs flex items-center space-x-1.5 pointer-events-none shadow-sm",
+                                                    children: isMagnified || isHoverZooming ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Fragment"], {
+                                                        children: [
+                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$zoom$2d$out$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__ZoomOut$3e$__["ZoomOut"], {
+                                                                className: "w-3.5 h-3.5 text-[#E6D6B0]"
+                                                            }, void 0, false, {
+                                                                fileName: "[project]/app/page.jsx",
+                                                                lineNumber: 3086,
+                                                                columnNumber: 25
+                                                            }, this),
+                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                                children: "2.5x Zoom Active (Click to toggle)"
+                                                            }, void 0, false, {
+                                                                fileName: "[project]/app/page.jsx",
+                                                                lineNumber: 3087,
+                                                                columnNumber: 25
+                                                            }, this)
+                                                        ]
+                                                    }, void 0, true, {
+                                                        fileName: "[project]/app/page.jsx",
+                                                        lineNumber: 3085,
+                                                        columnNumber: 23
+                                                    }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Fragment"], {
+                                                        children: [
+                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$zoom$2d$in$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__ZoomIn$3e$__["ZoomIn"], {
+                                                                className: "w-3.5 h-3.5 text-[#E6D6B0]"
+                                                            }, void 0, false, {
+                                                                fileName: "[project]/app/page.jsx",
+                                                                lineNumber: 3091,
+                                                                columnNumber: 25
+                                                            }, this),
+                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                                children: "Hover or Click to Zoom In"
+                                                            }, void 0, false, {
+                                                                fileName: "[project]/app/page.jsx",
+                                                                lineNumber: 3092,
+                                                                columnNumber: 25
+                                                            }, this)
+                                                        ]
+                                                    }, void 0, true, {
+                                                        fileName: "[project]/app/page.jsx",
+                                                        lineNumber: 3090,
+                                                        columnNumber: 23
+                                                    }, this)
+                                                }, void 0, false, {
+                                                    fileName: "[project]/app/page.jsx",
+                                                    lineNumber: 3083,
+                                                    columnNumber: 19
+                                                }, this)
+                                            ]
+                                        }, void 0, true, {
+                                            fileName: "[project]/app/page.jsx",
+                                            lineNumber: 3053,
+                                            columnNumber: 17
+                                        }, this),
+                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                            className: "w-full flex items-center justify-between mt-2.5 text-xs text-slate-500 px-1",
+                                            children: [
+                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                    className: "text-[11px] text-slate-400",
+                                                    children: "Move cursor or tap to pan across details"
+                                                }, void 0, false, {
+                                                    fileName: "[project]/app/page.jsx",
+                                                    lineNumber: 3100,
+                                                    columnNumber: 19
+                                                }, this),
+                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                                                    type: "button",
+                                                    onClick: ()=>setIsMagnified((prev)=>!prev),
+                                                    className: "px-2.5 py-1 bg-[#F0EDE6] hover:bg-[#E4E0D6] text-[#14263D] rounded-lg font-semibold text-[11px] flex items-center space-x-1 transition",
+                                                    children: [
+                                                        isMagnified ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$zoom$2d$out$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__ZoomOut$3e$__["ZoomOut"], {
+                                                            className: "w-3.5 h-3.5"
+                                                        }, void 0, false, {
+                                                            fileName: "[project]/app/page.jsx",
+                                                            lineNumber: 3106,
+                                                            columnNumber: 36
+                                                        }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$zoom$2d$in$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__ZoomIn$3e$__["ZoomIn"], {
+                                                            className: "w-3.5 h-3.5"
+                                                        }, void 0, false, {
+                                                            fileName: "[project]/app/page.jsx",
+                                                            lineNumber: 3106,
+                                                            columnNumber: 74
+                                                        }, this),
+                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                            children: isMagnified ? 'Reset: 1x View' : 'Lock: 2.5x Zoom'
+                                                        }, void 0, false, {
+                                                            fileName: "[project]/app/page.jsx",
+                                                            lineNumber: 3107,
+                                                            columnNumber: 21
+                                                        }, this)
+                                                    ]
+                                                }, void 0, true, {
+                                                    fileName: "[project]/app/page.jsx",
+                                                    lineNumber: 3101,
+                                                    columnNumber: 19
+                                                }, this)
+                                            ]
+                                        }, void 0, true, {
+                                            fileName: "[project]/app/page.jsx",
+                                            lineNumber: 3099,
+                                            columnNumber: 17
+                                        }, this)
+                                    ]
+                                }, void 0, true, {
+                                    fileName: "[project]/app/page.jsx",
+                                    lineNumber: 3052,
+                                    columnNumber: 15
+                                }, this),
+                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                    className: "md:col-span-6 flex flex-col justify-between space-y-4",
+                                    children: [
+                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                            children: [
+                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("h3", {
+                                                    className: "font-extrabold text-base sm:text-lg text-[#14263D] leading-snug",
+                                                    children: selectedProductForZoom.name
+                                                }, void 0, false, {
+                                                    fileName: "[project]/app/page.jsx",
+                                                    lineNumber: 3115,
+                                                    columnNumber: 19
+                                                }, this),
+                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                    className: "mt-2.5 flex flex-wrap items-baseline gap-2",
+                                                    children: [
+                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                            className: "text-xl sm:text-2xl font-black text-[#14263D] font-mono tabular-nums",
+                                                            children: formatLKR(selectedProductForZoom.mrp)
+                                                        }, void 0, false, {
+                                                            fileName: "[project]/app/page.jsx",
+                                                            lineNumber: 3120,
+                                                            columnNumber: 21
+                                                        }, this),
+                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                            className: "text-xs text-slate-500 font-semibold",
+                                                            children: [
+                                                                "/ ",
+                                                                selectedProductForZoom.unit
+                                                            ]
+                                                        }, void 0, true, {
+                                                            fileName: "[project]/app/page.jsx",
+                                                            lineNumber: 3123,
+                                                            columnNumber: 21
+                                                        }, this),
+                                                        selectedProductForZoom.perSqfRate && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                            className: "text-xs text-[#1F3A5A] font-bold bg-[#EEF2F7] px-2.5 py-0.5 rounded-full ml-1",
+                                                            children: [
+                                                                "Rs. ",
+                                                                selectedProductForZoom.perSqfRate,
+                                                                "/sqf"
+                                                            ]
+                                                        }, void 0, true, {
+                                                            fileName: "[project]/app/page.jsx",
+                                                            lineNumber: 3127,
+                                                            columnNumber: 23
+                                                        }, this)
+                                                    ]
+                                                }, void 0, true, {
+                                                    fileName: "[project]/app/page.jsx",
+                                                    lineNumber: 3119,
+                                                    columnNumber: 19
+                                                }, this),
+                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                    className: "mt-3.5 p-3.5 bg-[#FAF8F3] rounded-2xl border border-[#EFEBE2] space-y-1.5",
+                                                    children: [
+                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                            className: "text-[10px] font-bold uppercase tracking-wider text-slate-400",
+                                                            children: "Product Specifications"
+                                                        }, void 0, false, {
+                                                            fileName: "[project]/app/page.jsx",
+                                                            lineNumber: 3135,
+                                                            columnNumber: 21
+                                                        }, this),
+                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                                            className: "text-xs sm:text-[13px] text-slate-700 leading-relaxed whitespace-pre-line",
+                                                            children: selectedProductForZoom.description || 'Standard pantry manufacturing component with certified specifications.'
+                                                        }, void 0, false, {
+                                                            fileName: "[project]/app/page.jsx",
+                                                            lineNumber: 3138,
+                                                            columnNumber: 21
+                                                        }, this)
+                                                    ]
+                                                }, void 0, true, {
+                                                    fileName: "[project]/app/page.jsx",
+                                                    lineNumber: 3134,
+                                                    columnNumber: 19
+                                                }, this),
+                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                    className: "mt-3 grid grid-cols-2 gap-2 text-xs",
+                                                    children: [
+                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                            className: "p-2.5 bg-slate-50 rounded-xl border border-slate-100",
+                                                            children: [
+                                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                                    className: "text-slate-400 text-[10px] uppercase font-bold block",
+                                                                    children: "Supplier Shop"
+                                                                }, void 0, false, {
+                                                                    fileName: "[project]/app/page.jsx",
+                                                                    lineNumber: 3146,
+                                                                    columnNumber: 23
+                                                                }, this),
+                                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                                    className: "font-bold text-slate-800 text-[12px]",
+                                                                    children: getProductShop(selectedProductForZoom)
+                                                                }, void 0, false, {
+                                                                    fileName: "[project]/app/page.jsx",
+                                                                    lineNumber: 3147,
+                                                                    columnNumber: 23
+                                                                }, this)
+                                                            ]
+                                                        }, void 0, true, {
+                                                            fileName: "[project]/app/page.jsx",
+                                                            lineNumber: 3145,
+                                                            columnNumber: 21
+                                                        }, this),
+                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                            className: "p-2.5 bg-slate-50 rounded-xl border border-slate-100",
+                                                            children: [
+                                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                                    className: "text-slate-400 text-[10px] uppercase font-bold block",
+                                                                    children: "Catalog / Category"
+                                                                }, void 0, false, {
+                                                                    fileName: "[project]/app/page.jsx",
+                                                                    lineNumber: 3150,
+                                                                    columnNumber: 23
+                                                                }, this),
+                                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                                    className: "font-bold text-slate-800 text-[12px] truncate block",
+                                                                    children: selectedProductForZoom.category
+                                                                }, void 0, false, {
+                                                                    fileName: "[project]/app/page.jsx",
+                                                                    lineNumber: 3151,
+                                                                    columnNumber: 23
+                                                                }, this)
+                                                            ]
+                                                        }, void 0, true, {
+                                                            fileName: "[project]/app/page.jsx",
+                                                            lineNumber: 3149,
+                                                            columnNumber: 21
+                                                        }, this)
+                                                    ]
+                                                }, void 0, true, {
+                                                    fileName: "[project]/app/page.jsx",
+                                                    lineNumber: 3144,
+                                                    columnNumber: 19
+                                                }, this)
+                                            ]
+                                        }, void 0, true, {
+                                            fileName: "[project]/app/page.jsx",
+                                            lineNumber: 3114,
+                                            columnNumber: 17
+                                        }, this),
+                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                            className: "pt-3.5 border-t border-[#EFEBE2] space-y-2.5",
+                                            children: [
+                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("a", {
+                                                    href: getProductSourceUrl(selectedProductForZoom),
+                                                    target: "_blank",
+                                                    rel: "noopener noreferrer",
+                                                    className: "w-full py-3 px-4 bg-white hover:bg-[#FAF8F3] text-[#14263D] border-2 border-[#1F3A5A] rounded-2xl text-xs sm:text-sm font-bold flex items-center justify-center space-x-2 transition shadow-xs group",
+                                                    children: [
+                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$store$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__Store$3e$__["Store"], {
+                                                            className: "w-4 h-4 text-[#1F3A5A]"
+                                                        }, void 0, false, {
+                                                            fileName: "[project]/app/page.jsx",
+                                                            lineNumber: 3165,
+                                                            columnNumber: 21
+                                                        }, this),
+                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                            children: [
+                                                                "Visit ",
+                                                                getProductShop(selectedProductForZoom),
+                                                                " Original Website"
+                                                            ]
+                                                        }, void 0, true, {
+                                                            fileName: "[project]/app/page.jsx",
+                                                            lineNumber: 3166,
+                                                            columnNumber: 21
+                                                        }, this),
+                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$external$2d$link$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__ExternalLink$3e$__["ExternalLink"], {
+                                                            className: "w-4 h-4 text-[#1F3A5A] group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform"
+                                                        }, void 0, false, {
+                                                            fileName: "[project]/app/page.jsx",
+                                                            lineNumber: 3167,
+                                                            columnNumber: 21
+                                                        }, this)
+                                                    ]
+                                                }, void 0, true, {
+                                                    fileName: "[project]/app/page.jsx",
+                                                    lineNumber: 3159,
+                                                    columnNumber: 19
+                                                }, this),
+                                                (()=>{
+                                                    const inCart = currentQuote.items.find((i)=>i.id === selectedProductForZoom.id);
+                                                    const qty = inCart ? inCart.quantity : 0;
+                                                    if (qty > 0) {
+                                                        return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                            className: "flex items-center justify-between bg-[#EEF2F7] border border-[#C3CFDD] rounded-2xl p-2",
+                                                            children: [
+                                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                                    className: "pl-2",
+                                                                    children: [
+                                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                                            className: "text-xs font-bold text-[#14263D] block",
+                                                                            children: "In Quotation:"
+                                                                        }, void 0, false, {
+                                                                            fileName: "[project]/app/page.jsx",
+                                                                            lineNumber: 3178,
+                                                                            columnNumber: 29
+                                                                        }, this),
+                                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                                            className: "text-[11px] text-slate-500 font-mono",
+                                                                            children: formatLKR(selectedProductForZoom.mrp * qty)
+                                                                        }, void 0, false, {
+                                                                            fileName: "[project]/app/page.jsx",
+                                                                            lineNumber: 3179,
+                                                                            columnNumber: 29
+                                                                        }, this)
+                                                                    ]
+                                                                }, void 0, true, {
+                                                                    fileName: "[project]/app/page.jsx",
+                                                                    lineNumber: 3177,
+                                                                    columnNumber: 27
+                                                                }, this),
+                                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                                    className: "flex items-center space-x-2",
+                                                                    children: [
+                                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                                                                            onClick: ()=>updateItemQty(selectedProductForZoom.id, -1),
+                                                                            className: "w-9 h-9 rounded-xl bg-white text-[#14263D] hover:bg-[#DCE4EE] flex items-center justify-center font-bold text-base shadow-xs touch-manipulation",
+                                                                            children: "-"
+                                                                        }, void 0, false, {
+                                                                            fileName: "[project]/app/page.jsx",
+                                                                            lineNumber: 3182,
+                                                                            columnNumber: 29
+                                                                        }, this),
+                                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                                            className: "w-10 text-center font-mono font-bold text-sm text-[#14263D]",
+                                                                            children: qty
+                                                                        }, void 0, false, {
+                                                                            fileName: "[project]/app/page.jsx",
+                                                                            lineNumber: 3188,
+                                                                            columnNumber: 29
+                                                                        }, this),
+                                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                                                                            onClick: ()=>updateItemQty(selectedProductForZoom.id, 1),
+                                                                            className: "w-9 h-9 rounded-xl bg-[#1F3A5A] text-white hover:bg-[#2C4D74] flex items-center justify-center font-bold text-base shadow-xs touch-manipulation",
+                                                                            children: "+"
+                                                                        }, void 0, false, {
+                                                                            fileName: "[project]/app/page.jsx",
+                                                                            lineNumber: 3191,
+                                                                            columnNumber: 29
+                                                                        }, this)
+                                                                    ]
+                                                                }, void 0, true, {
+                                                                    fileName: "[project]/app/page.jsx",
+                                                                    lineNumber: 3181,
+                                                                    columnNumber: 27
+                                                                }, this)
+                                                            ]
+                                                        }, void 0, true, {
+                                                            fileName: "[project]/app/page.jsx",
+                                                            lineNumber: 3176,
+                                                            columnNumber: 25
+                                                        }, this);
+                                                    }
+                                                    return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                                                        onClick: ()=>{
+                                                            addItemToQuote(selectedProductForZoom, 1);
+                                                            showToast(`Added ${selectedProductForZoom.name} to quote`);
+                                                        },
+                                                        className: "w-full py-3.5 px-4 bg-[#1F3A5A] hover:bg-[#2C4D74] active:scale-98 text-white rounded-2xl text-xs sm:text-sm font-bold flex items-center justify-center space-x-2 shadow-sm transition touch-manipulation",
+                                                        children: [
+                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$plus$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__Plus$3e$__["Plus"], {
+                                                                className: "w-4 h-4"
+                                                            }, void 0, false, {
+                                                                fileName: "[project]/app/page.jsx",
+                                                                lineNumber: 3209,
+                                                                columnNumber: 25
+                                                            }, this),
+                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                                children: "Add to Current Quotation"
+                                                            }, void 0, false, {
+                                                                fileName: "[project]/app/page.jsx",
+                                                                lineNumber: 3210,
+                                                                columnNumber: 25
+                                                            }, this)
+                                                        ]
+                                                    }, void 0, true, {
+                                                        fileName: "[project]/app/page.jsx",
+                                                        lineNumber: 3202,
+                                                        columnNumber: 23
+                                                    }, this);
+                                                })()
+                                            ]
+                                        }, void 0, true, {
+                                            fileName: "[project]/app/page.jsx",
+                                            lineNumber: 3157,
+                                            columnNumber: 17
+                                        }, this)
+                                    ]
+                                }, void 0, true, {
+                                    fileName: "[project]/app/page.jsx",
+                                    lineNumber: 3113,
+                                    columnNumber: 15
+                                }, this)
+                            ]
+                        }, void 0, true, {
+                            fileName: "[project]/app/page.jsx",
+                            lineNumber: 3049,
+                            columnNumber: 13
+                        }, this)
+                    ]
+                }, void 0, true, {
+                    fileName: "[project]/app/page.jsx",
+                    lineNumber: 3020,
+                    columnNumber: 11
+                }, this)
+            }, void 0, false, {
+                fileName: "[project]/app/page.jsx",
+                lineNumber: 3012,
                 columnNumber: 9
             }, this)
         ]
     }, void 0, true, {
         fileName: "[project]/app/page.jsx",
-        lineNumber: 931,
+        lineNumber: 1214,
         columnNumber: 5
     }, this);
 }
-_s(PantryQuotationApp, "vLtMK+lGuKjr9+P0JemP+RInsA4=");
+_s(PantryQuotationApp, "Xzv/zo3YR3QOmHhkTBi4cG6F6yA=");
 _c = PantryQuotationApp;
 var _c;
 __turbopack_context__.k.register(_c, "PantryQuotationApp");

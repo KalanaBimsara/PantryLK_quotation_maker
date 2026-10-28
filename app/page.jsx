@@ -10,12 +10,17 @@ import {
   Box, Grid, Sparkles, Wrench, Lightbulb, Droplets, Flame, LayoutGrid, FileText,
   Database, Cloud, UploadCloud, Copy, ExternalLink, ShieldCheck,
   Lock, Unlock, Eye, EyeOff, KeyRound, LogOut, Store, Package,
-  ZoomIn, ZoomOut
+  ZoomIn, ZoomOut, Scissors
 } from 'lucide-react';
 
 export default function PantryQuotationApp() {
   // Navigation & UI State
   const [activeTab, setActiveTab] = useState('maker');
+  // CutWizard stays mounted after the first visit so its work survives tab switches
+  const [hasOpenedCutWizard, setHasOpenedCutWizard] = useState(false);
+  useEffect(() => {
+    if (activeTab === 'cutwizard') setHasOpenedCutWizard(true);
+  }, [activeTab]);
   const [toast, setToast] = useState({ show: false, message: '', isSuccess: true });
   const [isMobileDrawerOpen, setIsMobileDrawerOpen] = useState(false);
 
@@ -1206,7 +1211,7 @@ _Hotline: ${appSettings.companyPhone}_`;
   );
 
   return (
-    <div className="app-root min-h-screen flex flex-col bg-[#F6F4EF] pb-28 lg:pb-0">
+    <div className={`app-root min-h-screen flex flex-col bg-[#F6F4EF] lg:pb-0 ${activeTab === 'cutwizard' ? 'pb-0' : 'pb-28'}`}>
 
       {/* TOP NAVBAR */}
       <nav className="sticky top-0 z-40 bg-[#14263D] text-white shadow-lg border-b-[3px] border-[#B8975A] no-print">
@@ -1253,6 +1258,16 @@ _Hotline: ${appSettings.companyPhone}_`;
               </button>
 
               <button
+                onClick={() => setActiveTab('cutwizard')}
+                className={`flex items-center space-x-1.5 px-3 sm:px-4 min-h-[44px] rounded-lg text-xs sm:text-sm font-medium transition ${
+                  activeTab === 'cutwizard' ? 'bg-[#1F3A5A] text-white shadow-sm' : 'text-slate-300 hover:text-white hover:bg-[#1F3A5A]'
+                }`}
+              >
+                <Scissors className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+                <span className="hidden md:inline">CutWizard</span>
+              </button>
+
+              <button
                 onClick={() => setActiveTab('admin')}
                 className={`flex items-center space-x-1.5 px-3 sm:px-4 min-h-[44px] rounded-lg text-xs sm:text-sm font-medium transition ${
                   activeTab === 'admin' ? 'bg-[#1F3A5A] text-white shadow-sm' : 'text-slate-300 hover:text-white hover:bg-[#1F3A5A]'
@@ -1288,7 +1303,7 @@ _Hotline: ${appSettings.companyPhone}_`;
       </div>
 
       {/* MAIN CONTAINER */}
-      <main className="flex-1 max-w-7xl w-full mx-auto p-3 sm:p-5 lg:p-8 no-print">
+      <main className={`flex-1 max-w-7xl w-full mx-auto p-3 sm:p-5 lg:p-8 no-print ${activeTab === 'cutwizard' ? 'hidden' : ''}`}>
 
         {/* TAB 1: QUOTATION MAKER */}
         {activeTab === 'maker' && (
@@ -2273,8 +2288,38 @@ _Hotline: ${appSettings.companyPhone}_`;
 
       </main>
 
+      {/* TAB 4: CUTWIZARD (board cut optimizer, built into public/cutwizard by `npm run build:cutwizard`) */}
+      {hasOpenedCutWizard && (
+        <section
+          className={`flex-col h-[calc(100dvh-59px)] sm:h-[calc(100dvh-67px)] no-print ${activeTab === 'cutwizard' ? 'flex' : 'hidden'}`}
+        >
+          <div className="flex items-center justify-between gap-3 px-3 sm:px-6 py-2 bg-white border-b border-[#E4E0D6]">
+            <div className="flex items-center gap-2 min-w-0">
+              <Scissors className="w-4 h-4 text-[#B8975A] shrink-0" />
+              <p className="text-xs sm:text-sm font-semibold text-[#14263D] truncate">
+                CutWizard <span className="font-normal text-slate-500 hidden sm:inline">· Board cut optimizer</span>
+              </p>
+            </div>
+            <a
+              href="/cutwizard/index.html"
+              target="_blank"
+              rel="noopener"
+              className="flex items-center gap-1.5 px-3 min-h-[36px] rounded-lg text-xs font-semibold text-[#14263D] border border-[#E4E0D6] hover:bg-[#F6F4EF] transition shrink-0"
+            >
+              <ExternalLink className="w-3.5 h-3.5" />
+              <span>Open in new tab</span>
+            </a>
+          </div>
+          <iframe
+            src="/cutwizard/index.html"
+            title="CutWizard board cut optimizer"
+            className="flex-1 w-full border-0 bg-gray-100"
+          />
+        </section>
+      )}
+
       {/* MOBILE STICKY BOTTOM FLOATING BAR (Appears on screens < lg) */}
-      <div className="lg:hidden fixed bottom-0 inset-x-0 z-40 bg-[#14263D] text-white border-t-2 border-[#B8975A] px-3 pt-2.5 pb-[calc(0.625rem+env(safe-area-inset-bottom))] shadow-2xl no-print">
+      <div className={`${activeTab === 'cutwizard' ? 'hidden' : 'lg:hidden'} fixed bottom-0 inset-x-0 z-40 bg-[#14263D] text-white border-t-2 border-[#B8975A] px-3 pt-2.5 pb-[calc(0.625rem+env(safe-area-inset-bottom))] shadow-2xl no-print`}>
         <button
           onClick={() => setIsMobileDrawerOpen(true)}
           aria-label="Open current quotation"

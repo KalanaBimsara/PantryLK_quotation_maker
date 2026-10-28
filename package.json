@@ -5,7 +5,8 @@
   "scripts": {
     "dev": "next dev -p 3000",
     "build": "next build",
-    "start": "next start -p 3000"
+    "start": "next start -p 3000",
+    "build:cutwizard": "pnpm --dir ../cutwiz/CutWizard exec vite build --base=/cutwizard/ --outDir \"../../pantry quotation/public/cutwizard\" --emptyOutDir"
   },
   "dependencies": {
     "@supabase/ssr": "^0.12.7",

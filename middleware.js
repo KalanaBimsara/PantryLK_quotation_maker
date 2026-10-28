@@ -17,8 +17,9 @@ export const config = {
      * - _next/image (image optimization files)
      * - favicon.ico (favicon file)
      * - images/ (public images)
+     * - cutwizard/ (embedded CutWizard build)
      * - Static asset extensions (.svg, .png, .jpg, .jpeg, .gif, .webp)
      */
-    "/((?!_next/static|_next/image|favicon.ico|images/|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)",
+    "/((?!_next/static|_next/image|favicon.ico|images/|cutwizard/|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)",
   ],
 };
