@@ -84,6 +84,13 @@ export interface Settings {
   machineRentPerSqFt?: number;
   laborPerSqFt?: number;
   frontAreaSqFt?: number;
+  // boardWidth/boardHeight/boardPrice son el tablero de estructura; estos, los de AGT y HMR
+  agtWidth: number;
+  agtHeight: number;
+  agtPrice?: number;
+  hmrWidth: number;
+  hmrHeight: number;
+  hmrPrice?: number;
 }
 
 export interface BoardPreset {

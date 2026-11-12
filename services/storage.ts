@@ -1,5 +1,6 @@
 import { Piece, Settings, Template, InventoryItem } from '../types';
 import { isCabinetSeriesId } from './cabinetSeries';
+import { isMaterialId } from './materials';
 
 const STORAGE_KEYS = {
   PIECES: 'cutwizard_pieces_v2',
@@ -13,6 +14,11 @@ export const DEFAULT_SETTINGS: Settings = {
   kerf: 3,
   trimMargin: 10,
   enableTrimMargin: false, // Desactivado por defecto
+  // Hojas de AGT y HMR: 8×4 por defecto
+  agtWidth: 2440,
+  agtHeight: 1220,
+  hmrWidth: 2440,
+  hmrHeight: 1220,
 };
 
 // Piezas de ejemplo: solo se cargan con "Cargar ejemplo", nunca al iniciar
@@ -30,7 +36,8 @@ const num = (value: unknown, fallback: number): number => {
   return value !== null && value !== undefined && value !== '' && Number.isFinite(n) ? n : fallback;
 };
 
-const COST_FIELDS = ['boardPrice', 'edgeBandPricePerM', 'machineRentPerSqFt', 'laborPerSqFt', 'frontAreaSqFt'] as const;
+const COST_FIELDS = ['boardPrice', 'agtPrice', 'hmrPrice', 'edgeBandPricePerM', 'machineRentPerSqFt', 'laborPerSqFt', 'frontAreaSqFt'] as const;
+const SHEET_FIELDS = ['agtWidth', 'agtHeight', 'hmrWidth', 'hmrHeight'] as const;
 
 export const loadStoredSettings = (): Settings => {
   try {
@@ -43,7 +50,13 @@ export const loadStoredSettings = (): Settings => {
       kerf: num(parsed.kerf, DEFAULT_SETTINGS.kerf),
       trimMargin: num(parsed.trimMargin, DEFAULT_SETTINGS.trimMargin),
       enableTrimMargin: Boolean(parsed.enableTrimMargin),
+      agtWidth: DEFAULT_SETTINGS.agtWidth,
+      agtHeight: DEFAULT_SETTINGS.agtHeight,
+      hmrWidth: DEFAULT_SETTINGS.hmrWidth,
+      hmrHeight: DEFAULT_SETTINGS.hmrHeight,
     };
+    // Hojas de AGT y HMR: un valor vacío, cero o no numérico vuelve a la medida por defecto
+    for (const field of SHEET_FIELDS) settings[field] = num(parsed[field], DEFAULT_SETTINGS[field]) || DEFAULT_SETTINGS[field];
     if (parsed.jobNumber !== undefined && parsed.jobNumber !== null) settings.jobNumber = String(parsed.jobNumber);
     // Campos de costos: solo se copian si fueron guardados
     for (const field of COST_FIELDS) {
@@ -79,6 +92,7 @@ export const loadStoredPieces = (): Piece[] => {
       quantity: Math.max(1, Number(p.quantity) || 1),
       canRotate: p.canRotate !== false,
       color: p.color,
+      ...(isMaterialId(p.material) ? { material: p.material } : {}),
       // Datos de grupo/gabinete: se conservan para no perder los gabinetes al recargar
       ...(p.groupId ? { groupId: String(p.groupId) } : {}),
       ...(p.groupName ? { groupName: String(p.groupName) } : {}),

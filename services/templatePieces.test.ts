@@ -21,6 +21,13 @@ describe('template round trip', () => {
     expect(loaded.every((p) => p.groupName === 'Deep base 900 + drawers')).toBe(true);
   });
 
+  it('keeps each piece on its board type', () => {
+    const template: Template = { id: 'u1', name: 'Kitchen A', pieces: templatePiecesFrom(drawerCabinets()) };
+    const loaded = piecesFromTemplate(template);
+    expect(loaded.find((p) => p.name === 'back')?.material).toBe('hmr');
+    expect(loaded.find((p) => p.name === 'drawerFront')?.material).toBe('agt');
+  });
+
   it('gives loaded pieces fresh ids and groups each time', () => {
     const template: Template = { id: 'u1', name: 'Kitchen A', pieces: templatePiecesFrom(drawerCabinets()) };
     const first = piecesFromTemplate(template);

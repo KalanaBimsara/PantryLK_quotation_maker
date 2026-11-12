@@ -7,6 +7,7 @@ import {
   saveStoredSettings,
   loadStoredTemplates,
 } from './storage';
+import { materialOf } from './materials';
 
 beforeEach(() => {
   const store = new Map<string, string>();
@@ -31,6 +32,16 @@ describe('pieces storage', () => {
     };
     saveStoredPieces([piece]);
     expect(loadStoredPieces()[0]).toMatchObject(piece);
+  });
+
+  it('keeps a known board type and drops an unknown one', () => {
+    localStorage.setItem('cutwizard_pieces_v2', JSON.stringify([
+      { id: 'a', width: 1, height: 1, quantity: 1, material: 'agt' },
+      { id: 'b', width: 1, height: 1, quantity: 1, material: 'plywood' },
+    ]));
+    const [a, b] = loadStoredPieces();
+    expect(a.material).toBe('agt');
+    expect('material' in b).toBe(false);
   });
 
   it('drops an unknown cabinetSeriesId but keeps the group', () => {
@@ -72,6 +83,28 @@ describe('settings storage', () => {
   it('falls back to default kerf and trim when missing', () => {
     localStorage.setItem('cutwizard_settings_v2', JSON.stringify({ boardWidth: 2440, boardHeight: 1220 }));
     expect(loadStoredSettings()).toMatchObject({ kerf: DEFAULT_SETTINGS.kerf, trimMargin: DEFAULT_SETTINGS.trimMargin });
+  });
+});
+
+describe('board type settings', () => {
+  it('keeps AGT and HMR sizes and prices across save/load', () => {
+    const s = { ...DEFAULT_SETTINGS, agtWidth: 2745, agtHeight: 1830, agtPrice: 30000, hmrPrice: 4500 };
+    saveStoredSettings(s);
+    expect(loadStoredSettings()).toMatchObject(s);
+  });
+
+  it('opens a job saved before board types existed', () => {
+    localStorage.setItem('cutwizard_settings_v2', JSON.stringify({ boardWidth: 2440, boardHeight: 1220 }));
+    localStorage.setItem('cutwizard_pieces_v2', JSON.stringify([{ id: 'a', name: 'Door', width: 750, height: 600, quantity: 1 }]));
+    const s = loadStoredSettings();
+    expect(s).toMatchObject({ agtWidth: 2440, agtHeight: 1220, hmrWidth: 2440, hmrHeight: 1220 });
+    expect('agtPrice' in s || 'hmrPrice' in s).toBe(false);
+    expect(loadStoredPieces().map(materialOf)).toEqual(['carcass']);
+  });
+
+  it('falls back to the default sheet when a saved size is zero or not a number', () => {
+    localStorage.setItem('cutwizard_settings_v2', JSON.stringify({ agtWidth: 0, agtHeight: 'abc', hmrWidth: null }));
+    expect(loadStoredSettings()).toMatchObject({ agtWidth: 2440, agtHeight: 1220, hmrWidth: 2440, hmrHeight: 1220 });
   });
 });
 
