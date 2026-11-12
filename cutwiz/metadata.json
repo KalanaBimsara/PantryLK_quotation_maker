@@ -1,0 +1,5 @@
+{
+  "name": "CutWizard",
+  "description": "A professional 2D bin packing optimizer for woodworking and metal cutting. Calculate optimal cutting layouts, minimize waste, and estimate material requirements.",
+  "requestFramePermissions": []
+}
