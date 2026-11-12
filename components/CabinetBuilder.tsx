@@ -17,6 +17,7 @@ import { createCabinetGroups, clampCabinetQuantity, MAX_CABINET_QUANTITY } from 
 import { useLanguage } from '../contexts/LanguageContext';
 import { TranslationKey } from '../contexts/translations';
 import { fmtMm } from '../services/format';
+import { MATERIAL_NAMES } from '../services/materials';
 
 const PART_NAME_KEYS: Record<CabinetPartKey, TranslationKey> = {
   bottom: 'partBottom',
@@ -261,7 +262,21 @@ export const CabinetBuilder: React.FC<CabinetBuilderProps> = ({ darkMode, onAdd 
         <ul className="text-xs space-y-1 mb-3 font-mono" aria-label={groupName}>
           {build.parts.map((p) => (
             <li key={p.key} className="flex justify-between gap-2">
-              <span className="font-sans">{t(PART_NAME_KEYS[p.key])}</span>
+              <span className="font-sans">
+                {t(PART_NAME_KEYS[p.key])}
+                {/* Piezas que no salen del tablero de estructura: se indica de cuál */}
+                {p.material !== 'carcass' && (
+                  <span
+                    className={`ml-1.5 text-[10px] font-bold px-1.5 py-0.5 rounded ${
+                      p.material === 'agt'
+                        ? 'bg-orange-100 text-orange-800 dark:bg-orange-900/50 dark:text-orange-200'
+                        : 'bg-teal-100 text-teal-800 dark:bg-teal-900/50 dark:text-teal-200'
+                    }`}
+                  >
+                    {MATERIAL_NAMES[p.material]}
+                  </span>
+                )}
+              </span>
               <span className="text-gray-500 dark:text-gray-400">
                 {fmtMm(p.width)} × {fmtMm(p.height)} · ×{p.quantity}
               </span>

@@ -2,6 +2,8 @@ import React from 'react';
 import { Sliders, Layers } from 'lucide-react';
 import { Settings, BoardPreset } from '../types';
 import { useLanguage } from '../contexts/LanguageContext';
+import { MATERIAL_THICKNESS } from '../services/cabinetSeries';
+import { AGT_SIZES, sheetLabel } from '../services/materials';
 
 interface SettingsPanelProps {
   settings: Settings;
@@ -25,6 +27,75 @@ export const SettingsPanel: React.FC<SettingsPanelProps> = ({ settings, onChange
     });
   };
 
+  const blockTitleClass = 'text-xs font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400';
+
+  const presetClass = (isSelected: boolean) =>
+    `px-2.5 py-1.5 text-left rounded-lg text-xs font-medium transition-all border ${isSelected
+      ? 'border-blue-500 bg-blue-50/80 text-blue-700 dark:bg-blue-900/40 dark:text-blue-300 dark:border-blue-400 shadow-sm'
+      : 'border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600 bg-gray-50/50 dark:bg-gray-750 text-gray-600 dark:text-gray-300'
+    }`;
+
+  const fieldClass = `w-full px-3 py-2 rounded-lg border text-sm font-semibold outline-none focus:ring-2 focus:ring-blue-500 transition-all ${
+    darkMode ? 'bg-gray-700/60 border-gray-600 text-white' : 'bg-gray-50 border-gray-300 text-gray-900'
+  }`;
+
+  // Ancho, alto y precio por hoja de un tipo de tablero
+  const boardFields = (
+    idPrefix: string,
+    widthField: 'boardWidth' | 'agtWidth' | 'hmrWidth',
+    heightField: 'boardHeight' | 'agtHeight' | 'hmrHeight',
+    priceField: 'boardPrice' | 'agtPrice' | 'hmrPrice'
+  ) => (
+    <div className="grid grid-cols-3 gap-3">
+      <div>
+        <label htmlFor={`${idPrefix}-width`} className="text-xs font-medium text-gray-600 dark:text-gray-300 block mb-1">
+          {t('widthMm')}
+        </label>
+        <input
+          id={`${idPrefix}-width`}
+          name={widthField}
+          type="number"
+          min="100"
+          step="0.1"
+          value={settings[widthField] || ''}
+          onChange={(e) => handleInputChange(widthField, Number(e.target.value))}
+          className={fieldClass}
+        />
+      </div>
+      <div>
+        <label htmlFor={`${idPrefix}-height`} className="text-xs font-medium text-gray-600 dark:text-gray-300 block mb-1">
+          {t('heightMm')}
+        </label>
+        <input
+          id={`${idPrefix}-height`}
+          name={heightField}
+          type="number"
+          min="100"
+          step="0.1"
+          value={settings[heightField] || ''}
+          onChange={(e) => handleInputChange(heightField, Number(e.target.value))}
+          className={fieldClass}
+        />
+      </div>
+      <div>
+        <label htmlFor={`${idPrefix}-price`} className="text-xs font-medium text-gray-600 dark:text-gray-300 block mb-1">
+          {t('pricePerSheet')} (Rs.)
+        </label>
+        <input
+          id={`${idPrefix}-price`}
+          name={priceField}
+          type="number"
+          min="0"
+          step="100"
+          value={settings[priceField] || ''}
+          onChange={(e) => handleInputChange(priceField, Number(e.target.value))}
+          placeholder="0.00"
+          className={fieldClass}
+        />
+      </div>
+    </div>
+  );
+
   const handleApplyPreset = (preset: BoardPreset) => {
     onChange({
       ...settings,
@@ -46,7 +117,8 @@ export const SettingsPanel: React.FC<SettingsPanelProps> = ({ settings, onChange
         </div>
       </div>
 
-      {/* Selector de Presets de Placas */}
+      {/* Tablero de estructura: presets, medida y precio */}
+      <h3 className={`${blockTitleClass} mb-2`}>{t('carcassBoard')} · {MATERIAL_THICKNESS.carcass} mm</h3>
       <div className="mb-4">
         <span className="text-xs font-medium text-gray-500 dark:text-gray-400 mb-1.5 flex items-center gap-1.5">
           <Layers className="w-3.5 h-3.5" />
@@ -60,10 +132,7 @@ export const SettingsPanel: React.FC<SettingsPanelProps> = ({ settings, onChange
                 key={preset.id}
                 type="button"
                 onClick={() => handleApplyPreset(preset)}
-                className={`px-2.5 py-1.5 text-left rounded-lg text-xs font-medium transition-all border ${isSelected
-                  ? 'border-blue-500 bg-blue-50/80 text-blue-700 dark:bg-blue-900/40 dark:text-blue-300 dark:border-blue-400 shadow-sm'
-                  : 'border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600 bg-gray-50/50 dark:bg-gray-750 text-gray-600 dark:text-gray-300'
-                  }`}
+                className={presetClass(isSelected)}
               >
                 <div className="font-semibold truncate">{preset.name}</div>
                 <div className="text-[10px] opacity-75">{preset.description}</div>
@@ -76,40 +145,39 @@ export const SettingsPanel: React.FC<SettingsPanelProps> = ({ settings, onChange
       {/* Inputs de Medidas */}
       <div className="space-y-3">
         {/* El nombre del trabajo se edita en la barra del trabajo (JobBar) */}
-        <div className="grid grid-cols-2 gap-3">
-          <div>
-            <label htmlFor="board-width" className="text-xs font-medium text-gray-600 dark:text-gray-300 block mb-1">
-              {t('widthMm')}
-            </label>
-            <input
-              id="board-width"
-              name="boardWidth"
-              type="number"
-              min="100"
-              step="0.1"
-              value={settings.boardWidth || ''}
-              onChange={(e) => handleInputChange('boardWidth', Number(e.target.value))}
-              className={`w-full px-3 py-2 rounded-lg border text-sm font-semibold outline-none focus:ring-2 focus:ring-blue-500 transition-all ${darkMode ? 'bg-gray-700/60 border-gray-600 text-white' : 'bg-gray-50 border-gray-300 text-gray-900'
-                }`}
-            />
+        {boardFields('board', 'boardWidth', 'boardHeight', 'boardPrice')}
+
+        {/* Tablero AGT: puertas y frentes de cajón */}
+        <div className="pt-3 border-t border-gray-100 dark:border-gray-700 space-y-2">
+          <h3 className={blockTitleClass}>{t('agtBoard')} · {MATERIAL_THICKNESS.agt} mm</h3>
+          <div className="grid grid-cols-2 gap-1.5" role="group" aria-label={t('agtBoard')}>
+            {AGT_SIZES.map((size) => {
+              const label = sheetLabel(size.width, size.height);
+              const isSelected = sheetLabel(settings.agtWidth, settings.agtHeight) === label;
+              return (
+                <button
+                  key={size.id}
+                  type="button"
+                  aria-pressed={isSelected}
+                  onClick={() => onChange({ ...settings, agtWidth: size.width, agtHeight: size.height })}
+                  className={presetClass(isSelected)}
+                >
+                  <div className="font-semibold truncate">{label}</div>
+                  <div className="text-[10px] opacity-75">{size.width} × {size.height} mm</div>
+                </button>
+              );
+            })}
           </div>
-          <div>
-            <label htmlFor="board-height" className="text-xs font-medium text-gray-600 dark:text-gray-300 block mb-1">
-              {t('heightMm')}
-            </label>
-            <input
-              id="board-height"
-              name="boardHeight"
-              type="number"
-              min="100"
-              step="0.1"
-              value={settings.boardHeight || ''}
-              onChange={(e) => handleInputChange('boardHeight', Number(e.target.value))}
-              className={`w-full px-3 py-2 rounded-lg border text-sm font-semibold outline-none focus:ring-2 focus:ring-blue-500 transition-all ${darkMode ? 'bg-gray-700/60 border-gray-600 text-white' : 'bg-gray-50 border-gray-300 text-gray-900'
-                }`}
-            />
-          </div>
+          {boardFields('agt', 'agtWidth', 'agtHeight', 'agtPrice')}
         </div>
+
+        {/* Tablero HMR: traseras */}
+        <div className="pt-3 border-t border-gray-100 dark:border-gray-700 space-y-2">
+          <h3 className={blockTitleClass}>{t('hmrBoard')} · {MATERIAL_THICKNESS.hmr} mm</h3>
+          {boardFields('hmr', 'hmrWidth', 'hmrHeight', 'hmrPrice')}
+        </div>
+
+        <div className="pt-3 border-t border-gray-100 dark:border-gray-700" />
 
         <div className="grid grid-cols-2 gap-3">
           <div>
@@ -174,21 +242,7 @@ export const SettingsPanel: React.FC<SettingsPanelProps> = ({ settings, onChange
         <div className="pt-3 mt-3 border-t border-gray-100 dark:border-gray-700">
           <h3 className="text-xs font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400 mb-3">Job Costing (Rs.)</h3>
           <div className="grid grid-cols-2 gap-2">
-            <div>
-              <label htmlFor="board-price" className="text-[10px] font-medium text-gray-600 dark:text-gray-300 block mb-1">
-                Board Price (Rs.)
-              </label>
-              <input
-                id="board-price"
-                type="number"
-                min="0"
-                step="100"
-                value={settings.boardPrice || ''}
-                onChange={(e) => handleInputChange('boardPrice', Number(e.target.value))}
-                placeholder="0.00"
-                className={`w-full px-2 py-1.5 rounded border text-xs font-semibold outline-none focus:ring-2 focus:ring-green-500 transition-all ${darkMode ? 'bg-gray-700/60 border-gray-600 text-white' : 'bg-gray-50 border-gray-300 text-gray-900'}`}
-              />
-            </div>
+            {/* El precio de cada tablero se edita junto a su medida */}
             <div>
               <label htmlFor="edge-band-price" className="text-[10px] font-medium text-gray-600 dark:text-gray-300 block mb-1">
                 Edge Band (Rs/m)

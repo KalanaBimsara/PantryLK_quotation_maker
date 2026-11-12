@@ -17,13 +17,24 @@ import {
   Eraser,
   PackagePlus,
 } from 'lucide-react';
-import { Piece, Template } from '../types';
+import { MaterialId, Piece, Template } from '../types';
 import { parsePiecesCSV, exportPiecesListCSV } from '../services/csvHelper';
 import { loadStoredTemplates, saveStoredTemplates } from '../services/storage';
 import { useLanguage } from '../contexts/LanguageContext';
 import { templatePiecesFrom, piecesFromTemplate } from '../services/templatePieces';
 import { groupPieces } from '../services/cutList';
 import { fmtMm } from '../services/format';
+import { MATERIAL_NAMES, MATERIAL_ORDER, materialOf } from '../services/materials';
+
+// Columnas de la tabla (cabecera y filas): nombre, ancho, alto, cantidad, tablero, veta, acciones
+const ROW_GRID = 'grid grid-cols-[minmax(0,1fr)_3rem_3rem_2.25rem_3.25rem_1.75rem_3.25rem] gap-1';
+
+// Color del selector de tablero: AGT y HMR resaltan; estructura queda neutro
+const MATERIAL_SELECT_CLASS: Record<MaterialId, string> = {
+  carcass: 'bg-transparent border-gray-200 dark:border-gray-600 text-gray-600 dark:text-gray-300',
+  agt: 'bg-orange-100 border-orange-300 text-orange-800 dark:bg-orange-900/50 dark:border-orange-700 dark:text-orange-200',
+  hmr: 'bg-teal-100 border-teal-300 text-teal-800 dark:bg-teal-900/50 dark:border-teal-700 dark:text-teal-200',
+};
 
 interface PieceListProps {
   pieces: Piece[];
@@ -207,12 +218,13 @@ export const PieceList: React.FC<PieceListProps> = ({
   const renderRow = (p: Piece, idx: number) => {
     const isHovered = hoveredPieceId === p.id;
     const label = translateDefaultName(p.name || '') || `${t('piece')} #${idx + 1}`;
+    const material = materialOf(p);
     return (
       <div
         key={p.id}
         onMouseEnter={() => onHoverPiece(p.id)}
         onMouseLeave={() => onHoverPiece(null)}
-        className={`grid grid-cols-12 gap-2 items-center p-2 rounded-xl transition-all border ${
+        className={`${ROW_GRID} items-center p-2 rounded-xl transition-all border ${
           isHovered
             ? 'border-blue-500 bg-blue-50/70 dark:bg-blue-900/30 ring-1 ring-blue-500'
             : darkMode
@@ -220,7 +232,7 @@ export const PieceList: React.FC<PieceListProps> = ({
               : 'bg-gray-50/80 border-gray-200/80 hover:bg-gray-100/90'
         }`}
       >
-        <div className="col-span-4">
+        <div className="min-w-0">
           <input
             aria-label={`${t('name')} – ${label}`}
             type="text"
@@ -230,7 +242,7 @@ export const PieceList: React.FC<PieceListProps> = ({
             className={`w-full text-xs font-medium px-2 py-1 rounded bg-transparent border-0 border-b border-transparent hover:border-gray-300 dark:hover:border-gray-600 focus:border-orange-500 ${FOCUS}`}
           />
         </div>
-        <div className="col-span-2">
+        <div>
           <input
             aria-label={`${t('width')} (mm) – ${label}`}
             type="number"
@@ -241,7 +253,7 @@ export const PieceList: React.FC<PieceListProps> = ({
             placeholder="W"
           />
         </div>
-        <div className="col-span-2">
+        <div>
           <input
             aria-label={`${t('height')} (mm) – ${label}`}
             type="number"
@@ -252,7 +264,7 @@ export const PieceList: React.FC<PieceListProps> = ({
             placeholder="H"
           />
         </div>
-        <div className="col-span-1">
+        <div>
           <input
             aria-label={`${t('qty')} – ${label}`}
             type="number"
@@ -263,7 +275,22 @@ export const PieceList: React.FC<PieceListProps> = ({
             className={`w-full text-xs font-bold text-center px-0.5 py-1 ${inputBase}`}
           />
         </div>
-        <div className="col-span-1 flex justify-center">
+        <div>
+          <select
+            aria-label={`${t('boardType')} – ${label}`}
+            title={t('boardType')}
+            value={material}
+            onChange={(e) => updateField(p.id, 'material', e.target.value as MaterialId)}
+            className={`w-full text-[11px] font-bold text-center px-0.5 py-1 rounded border cursor-pointer appearance-none ${MATERIAL_SELECT_CLASS[material]} ${FOCUS}`}
+          >
+            {MATERIAL_ORDER.map((m) => (
+              <option key={m} value={m} className="bg-white text-gray-900 dark:bg-gray-800 dark:text-gray-100">
+                {m === 'carcass' ? t('materialCarcass') : MATERIAL_NAMES[m]}
+              </option>
+            ))}
+          </select>
+        </div>
+        <div className="flex justify-center">
           <button
             type="button"
             onClick={() => updateField(p.id, 'canRotate', !p.canRotate)}
@@ -279,7 +306,7 @@ export const PieceList: React.FC<PieceListProps> = ({
             {p.canRotate ? <RotateCw className="w-3.5 h-3.5" aria-hidden="true" /> : <Lock className="w-3.5 h-3.5" aria-hidden="true" />}
           </button>
         </div>
-        <div className="col-span-2 flex justify-end items-center gap-1">
+        <div className="flex justify-end items-center gap-1">
           <button
             type="button"
             onClick={() => duplicatePiece(p.id)}
@@ -379,13 +406,17 @@ export const PieceList: React.FC<PieceListProps> = ({
           <div className="overflow-x-auto">
             <div className="min-w-[440px]">
               {/* Cabecera de la tabla */}
-              <div className="grid grid-cols-12 gap-2 text-[11px] font-bold uppercase tracking-wider text-gray-400 dark:text-gray-500 px-2 py-1.5 mb-1">
-                <div className="col-span-4">{t('name')}</div>
-                <div className="col-span-2 text-center">{t('width')}</div>
-                <div className="col-span-2 text-center">{t('height')}</div>
-                <div className="col-span-1 text-center">{t('qty')}</div>
-                <div className="col-span-1 text-center">{t('rotate')}</div>
-                <div className="col-span-2 text-right pr-2">{t('actions')}</div>
+              <div className={`${ROW_GRID} text-[11px] font-bold uppercase tracking-wider text-gray-400 dark:text-gray-500 px-2 py-1.5 mb-1`}>
+                <div>{t('name')}</div>
+                <div className="text-center">{t('width')}</div>
+                <div className="text-center">{t('height')}</div>
+                <div className="text-center">{t('qty')}</div>
+                <div className="text-center">{t('board')}</div>
+                <div className="flex justify-center items-center" title={t('rotate')}>
+                  <RotateCw className="w-3 h-3" aria-hidden="true" />
+                  <span className="sr-only">{t('rotate')}</span>
+                </div>
+                <div className="text-right truncate">{t('actions')}</div>
               </div>
 
               <div className="overflow-y-auto max-h-[60vh] space-y-1.5 pr-1 custom-scrollbar">

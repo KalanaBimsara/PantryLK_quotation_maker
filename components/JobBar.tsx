@@ -2,6 +2,7 @@ import React from 'react';
 import { Settings2, FileText, Download } from 'lucide-react';
 import { Settings } from '../types';
 import { useLanguage } from '../contexts/LanguageContext';
+import { sheetText } from '../services/materials';
 
 interface JobBarProps {
   settings: Settings;
@@ -28,7 +29,8 @@ export const JobBar: React.FC<JobBarProps> = ({
   const { t } = useLanguage();
 
   const trimText = settings.enableTrimMargin ? `${settings.trimMargin}` : t('off');
-  const boardChip = `${settings.boardWidth} × ${settings.boardHeight} · ${t('kerf')} ${settings.kerf} · ${t('trim')} ${trimText}`;
+  // Tablero de estructura, hoja de AGT, corte y refilado
+  const boardChip = `${settings.boardWidth} × ${settings.boardHeight} · AGT ${sheetText(settings.agtWidth, settings.agtHeight)} · ${t('kerf')} ${settings.kerf} · ${t('trim')} ${trimText}`;
 
   const buttonClass = `flex items-center gap-1.5 text-xs font-semibold px-3 py-2 rounded-lg border transition-colors disabled:opacity-50 disabled:cursor-not-allowed ${FOCUS} ${
     darkMode ? 'border-gray-700 text-gray-200 hover:bg-gray-750' : 'border-gray-200 text-gray-700 hover:bg-gray-100'
