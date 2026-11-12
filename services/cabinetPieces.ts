@@ -45,6 +45,7 @@ export function createCabinetGroups(params: {
         height: part.height,
         quantity: part.quantity,
         canRotate: part.canRotate,
+        material: part.material,
         groupId,
         groupName: params.groupName,
         cabinetWidth: build.width,

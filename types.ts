@@ -1,4 +1,7 @@
-import type { CabinetSeriesId } from './services/cabinetSeries';
+import type { CabinetMaterial, CabinetSeriesId } from './services/cabinetSeries';
+
+// Tipo de tablero del que se corta una pieza
+export type MaterialId = CabinetMaterial;
 
 export interface Piece {
   id: string;
@@ -9,6 +12,7 @@ export interface Piece {
   color?: string;
   label?: string;
   canRotate: boolean; // Control de veta: si es false, no puede girar 90º
+  material?: MaterialId; // Sin valor = tablero de estructura (carcass)
   groupId?: string;
   groupName?: string;
   cabinetWidth?: number;

@@ -20,12 +20,18 @@ export type CabinetPartKey =
 
 export type HardwareKey = 'legs' | 'hinges' | 'handles' | 'drawerRails';
 
+// Board type a part is cut from: the 18 mm carcass board, 18 mm AGT for fronts, 6 mm HMR for backs.
+export type CabinetMaterial = 'carcass' | 'agt' | 'hmr';
+
+export const MATERIAL_THICKNESS: Readonly<Record<CabinetMaterial, number>> = { carcass: 18, agt: 18, hmr: 6 };
+
 export interface CabinetPart {
   key: CabinetPartKey;
   width: number;
   height: number;
   quantity: number;
   canRotate: boolean;
+  material: CabinetMaterial;
 }
 
 export interface HardwareItem {
@@ -75,6 +81,9 @@ const DRAWER_COUNT = 3;
 // Visible faces keep their grain direction; hidden parts may be rotated by the optimizer.
 const GRAIN_LOCKED: ReadonlySet<CabinetPartKey> = new Set(['side', 'door', 'drawerFront']);
 
+// Fronts are cut from AGT and backs from HMR; every other part comes from the carcass board.
+const PART_MATERIAL: Partial<Record<CabinetPartKey, CabinetMaterial>> = { door: 'agt', drawerFront: 'agt', back: 'hmr' };
+
 // `depth` is the series' default depth; custom sizes may override it.
 export const CABINET_SERIES: readonly { id: CabinetSeriesId; depth: number; height: number; supportsDrawers: boolean }[] = [
   { id: 'deep-560', depth: 560, height: STANDARD_HEIGHT, supportsDrawers: true },
@@ -87,6 +96,7 @@ const part = (key: CabinetPartKey, width: number, height: number, quantity = 1):
   height,
   quantity,
   canRotate: !GRAIN_LOCKED.has(key),
+  material: PART_MATERIAL[key] ?? 'carcass',
 });
 
 const bodies: Record<CabinetSeriesId, (s: CabinetSize) => { parts: CabinetPart[]; hardware: HardwareItem[] }> = {

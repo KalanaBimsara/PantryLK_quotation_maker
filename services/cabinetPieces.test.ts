@@ -19,6 +19,12 @@ describe('createCabinetGroups', () => {
     expect(pieces.find((p) => p.name === 'drawerFront')).toMatchObject({ width: 900, height: 250, quantity: 3, canRotate: false });
   });
 
+  it('puts each piece on the board type of its part', () => {
+    const pieces = make({ size: { width: 600, height: 750, depth: 560 }, drawers: false, quantity: 1 });
+    const material = (name: string) => pieces.find((p) => p.name === name)?.material;
+    expect([material('door'), material('back'), material('bottom')]).toEqual(['agt', 'hmr', 'carcass']);
+  });
+
   it('gives every piece and group a distinct id', () => {
     const pieces = [...make({ quantity: 3 }), ...make({ quantity: 3 })];
     expect(new Set(pieces.map((p) => p.id)).size).toBe(pieces.length);

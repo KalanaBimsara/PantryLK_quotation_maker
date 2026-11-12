@@ -9,6 +9,7 @@ import {
   isCabinetSeriesId,
   CABINET_SERIES,
   STANDARD_WIDTHS,
+  MATERIAL_THICKNESS,
   CabinetBuild,
 } from './cabinetSeries';
 
@@ -133,5 +134,23 @@ describe('isCabinetSeriesId', () => {
   it('recognises series ids', () => {
     expect(isCabinetSeriesId('deep-560')).toBe(true);
     expect(isCabinetSeriesId('base-600')).toBe(false);
+  });
+});
+
+describe('part materials', () => {
+  const byKey = (b: CabinetBuild) => Object.fromEntries(b.parts.map((p) => [p.key, p.material]));
+
+  it('puts doors and drawer fronts on AGT, backs on HMR and the rest on carcass', () => {
+    expect(byKey(buildCabinet('deep-560', deep(600), { drawers: false }))).toEqual({
+      bottom: 'carcass', shelf: 'carcass', side: 'carcass', back: 'hmr', topRail: 'carcass', door: 'agt',
+    });
+    expect(byKey(buildCabinet('deep-560', deep(900), { drawers: true })).drawerFront).toBe('agt');
+    expect(byKey(buildCabinet('shallow-300', shallow(600), { drawers: false }))).toEqual({
+      bottom: 'carcass', top: 'carcass', shelf: 'carcass', side: 'carcass', back: 'hmr', backSupport: 'carcass', door: 'agt',
+    });
+  });
+
+  it('knows each material thickness', () => {
+    expect(MATERIAL_THICKNESS).toEqual({ carcass: 18, agt: 18, hmr: 6 });
   });
 });
