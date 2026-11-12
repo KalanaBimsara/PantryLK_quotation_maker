@@ -159,6 +159,8 @@ export const translations = {
     agtBoard: "AGT board (doors and drawer fronts)",
     hmrBoard: "HMR board (back panels)",
     pricePerSheet: "Price per sheet",
+    priceNotSet: "Price not set",
+    costWithout: "Not counting {boards}: no price set",
   },
   es: {
     productionReport: "Reporte de Producción",
@@ -318,6 +320,8 @@ export const translations = {
     agtBoard: "Tablero AGT (puertas y frentes de cajón)",
     hmrBoard: "Tablero HMR (traseras)",
     pricePerSheet: "Precio por hoja",
+    priceNotSet: "Sin precio",
+    costWithout: "Sin contar {boards}: falta el precio",
   },
   si: {
     productionReport: "නිෂ්පාදන වාර්තාව",
@@ -477,6 +481,8 @@ export const translations = {
     agtBoard: "AGT පුවරුව (දොර සහ ලාච්චු මුහුණත්)",
     hmrBoard: "HMR පුවරුව (පිටුපස තහඩු)",
     pricePerSheet: "තහඩුවක මිල",
+    priceNotSet: "මිල සකසා නැත",
+    costWithout: "{boards} ගණන් නොගෙන: මිල සකසා නැත",
   }
 };
 

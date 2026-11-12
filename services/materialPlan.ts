@@ -125,3 +125,8 @@ export function boardsToBuy(plans: MaterialPlan[], settings: Settings, extraBoar
 export function boardsCost(rows: BuyRow[], settings: Settings): number {
   return rows.reduce((sum, row) => sum + row.total * boardFor(settings, row.material).price, 0);
 }
+
+// Tipos de tablero a comprar que no tienen precio: su costo no entra en el total y hay que avisarlo
+export function unpricedMaterials(rows: BuyRow[], settings: Settings): MaterialId[] {
+  return rows.filter((row) => row.total > 0 && boardFor(settings, row.material).price <= 0).map((row) => row.material);
+}

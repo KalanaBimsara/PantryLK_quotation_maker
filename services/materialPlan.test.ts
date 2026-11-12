@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { boardKey, boardsCost, boardsToBuy, planByMaterial, summarizePlans } from './materialPlan';
+import { boardKey, boardsCost, boardsToBuy, planByMaterial, summarizePlans, unpricedMaterials } from './materialPlan';
 import { DEFAULT_SETTINGS } from './storage';
 import { MaterialId, Piece } from '../types';
 
@@ -88,6 +88,21 @@ describe('boardsToBuy', () => {
   it('drops a board type whose parts all failed to fit', () => {
     const rows = boardsToBuy(planByMaterial([pc('b', 750, 600, 'hmr')], { ...S, hmrWidth: 0 }), S, 0);
     expect(rows).toEqual([]);
+  });
+});
+
+describe('unpricedMaterials', () => {
+  const rows = () =>
+    boardsToBuy(planByMaterial([pc('s', 750, 560), pc('d', 750, 450, 'agt'), pc('b', 750, 600, 'hmr')], S), S, 0);
+
+  it('names the board types to buy that have no price, so the cost is not silently short', () => {
+    expect(unpricedMaterials(rows(), { ...S, boardPrice: 9000 })).toEqual(['agt', 'hmr']);
+    expect(unpricedMaterials(rows(), S)).toEqual(['carcass', 'agt', 'hmr']);
+  });
+
+  it('is empty once every board type to buy has a price', () => {
+    expect(unpricedMaterials(rows(), { ...S, boardPrice: 9000, agtPrice: 30000, hmrPrice: 4500 })).toEqual([]);
+    expect(unpricedMaterials([], S)).toEqual([]);
   });
 });
 
