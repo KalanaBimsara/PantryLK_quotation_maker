@@ -27,7 +27,7 @@ export const Navbar: React.FC<NavbarProps> = ({
       <div className="max-w-7xl mx-auto flex justify-between items-center">
         <div className="flex items-center gap-3">
           <img
-            src="/favicon.svg"
+            src={`${import.meta.env.BASE_URL}favicon.svg`}
             alt="Pantry LK CutWIZ Logo"
             className="w-8 h-8 sm:w-10 sm:h-10 object-contain select-none shrink-0"
           />
