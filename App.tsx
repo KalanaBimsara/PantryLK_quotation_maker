@@ -3,6 +3,7 @@ import { Axe, Layers } from 'lucide-react';
 import { Piece, Settings, OptimizationResult } from './types';
 import { optimizeCuts } from './services/optimizer';
 import { exportOptimizationCSV } from './services/csvHelper';
+import { planByMaterial } from './services/materialPlan';
 import { countExtraBoards } from './services/cabinetPieces';
 import {
   loadStoredPieces,
@@ -80,7 +81,7 @@ const App: React.FC = () => {
   };
 
   const handleExportCsv = () => {
-    if (result) exportOptimizationCSV(result);
+    exportOptimizationCSV(planByMaterial(pieces, settings));
   };
 
   const closeSettings = useCallback(() => setSettingsOpen(false), []);

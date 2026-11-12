@@ -1,5 +1,7 @@
-import { Piece, OptimizationResult } from '../types';
+import { Piece } from '../types';
 import { fmtMm } from './format';
+import { MATERIAL_NAMES, materialOf, parseMaterial } from './materials';
+import { MaterialPlan } from './materialPlan';
 
 /**
  * Detecta el delimitador más probable en un texto CSV (, o ; o tab)
@@ -35,6 +37,7 @@ export const parsePiecesCSV = (content: string): Piece[] => {
   let qtyIdx = -1;
   let nameIdx = -1;
   let rotateIdx = -1;
+  let materialIdx = -1;
 
   header.forEach((col, idx) => {
     if (/^(ancho|width|w|x|largo|longitud)$/i.test(col) && widthIdx === -1) {
@@ -47,6 +50,8 @@ export const parsePiecesCSV = (content: string): Piece[] => {
       nameIdx = idx;
     } else if (/^(rotar|rotacion|rotacion libre|canrotate|can rotate|rotate|girar|veta)$/i.test(col)) {
       rotateIdx = idx;
+    } else if (/^(board type|boardtype|material|tablero|tipo de tablero)$/i.test(col)) {
+      materialIdx = idx;
     }
   });
 
@@ -76,6 +81,9 @@ export const parsePiecesCSV = (content: string): Piece[] => {
       }
     }
 
+    // Tipo de tablero: solo si la columna existe y el valor se reconoce; si no, va a estructura
+    const material = materialIdx !== -1 ? parseMaterial(rawCols[materialIdx]) : undefined;
+
     if (!isNaN(w) && !isNaN(h) && w > 0 && h > 0) {
       parsedPieces.push({
         id: `csv-${Date.now()}-${i}`,
@@ -85,6 +93,7 @@ export const parsePiecesCSV = (content: string): Piece[] => {
         height: Math.round(h * 10) / 10,
         quantity: Math.max(1, isNaN(qty) ? 1 : qty),
         canRotate,
+        ...(material ? { material } : {}),
       });
     }
   }
@@ -95,32 +104,35 @@ export const parsePiecesCSV = (content: string): Piece[] => {
 /**
  * Exporta el resultado de optimización a CSV con coordenadas y detalles de taller
  */
-export const buildOptimizationCSV = (result: OptimizationResult): string => {
-  let csv = 'Board,Part,Description,Width (mm),Height (mm),X (mm),Y (mm),Rotated 90°,Color\n';
+export const buildOptimizationCSV = (plans: MaterialPlan[]): string => {
+  let csv = 'Board type,Board,Part,Description,Width (mm),Height (mm),X (mm),Y (mm),Rotated 90°,Color\n';
 
-  result.boards.forEach((board) => {
-    board.placedPieces.forEach((p) => {
-      const name = (p.name || 'Unnamed').replace(/,/g, ' ');
-      csv += `${board.id},${p.originalId},"${name}",${fmtMm(p.w)},${fmtMm(p.h)},${Math.round(p.x)},${Math.round(p.y)},${p.isRotated ? 'YES' : 'NO'},${p.color}\n`;
+  // Un bloque por tipo de tablero; el número de tablero vuelve a empezar en cada tipo
+  plans.forEach((plan) => {
+    plan.result.boards.forEach((board) => {
+      board.placedPieces.forEach((p) => {
+        const name = (p.name || 'Unnamed').replace(/,/g, ' ');
+        csv += `${MATERIAL_NAMES[plan.material]},${board.id},${p.originalId},"${name}",${fmtMm(p.w)},${fmtMm(p.h)},${Math.round(p.x)},${Math.round(p.y)},${p.isRotated ? 'YES' : 'NO'},${p.color}\n`;
+      });
     });
   });
 
   return csv;
 };
 
-export const exportOptimizationCSV = (result: OptimizationResult): void => {
-  if (!result || result.boards.length === 0) return;
-  downloadCSV(buildOptimizationCSV(result), `cutwizard_plan_${new Date().toISOString().slice(0, 10)}.csv`);
+export const exportOptimizationCSV = (plans: MaterialPlan[]): void => {
+  if (!plans.some((plan) => plan.result.boards.length > 0)) return;
+  downloadCSV(buildOptimizationCSV(plans), `cutwizard_plan_${new Date().toISOString().slice(0, 10)}.csv`);
 };
 
 /**
  * Exporta la lista de piezas cargadas
  */
 export const buildPiecesListCSV = (pieces: Piece[]): string => {
-  let csv = 'Name,Width (mm),Height (mm),Quantity,Can rotate\n';
+  let csv = 'Name,Width (mm),Height (mm),Quantity,Can rotate,Board type\n';
   pieces.forEach((p) => {
     const name = (p.name || 'Part').replace(/,/g, ' ');
-    csv += `"${name}",${fmtMm(p.width)},${fmtMm(p.height)},${p.quantity},${p.canRotate ? 'YES' : 'NO'}\n`;
+    csv += `"${name}",${fmtMm(p.width)},${fmtMm(p.height)},${p.quantity},${p.canRotate ? 'YES' : 'NO'},${MATERIAL_NAMES[materialOf(p)]}\n`;
   });
   return csv;
 };
