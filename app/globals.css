@@ -1,5 +1,10 @@
 @import "tailwindcss";
 
+/* CutWizard has its own Tailwind; keep its classes out of this stylesheet */
+@source not "../cutwiz";
+@source not "../public/cutwizard";
+@source not "../pantrylk-core";
+
 :root {
   /* Pantry LK brand — taken from the logo */
   --navy-900: #14263D;

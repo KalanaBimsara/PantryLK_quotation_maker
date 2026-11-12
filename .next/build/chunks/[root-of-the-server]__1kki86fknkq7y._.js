@@ -1,5 +1,22 @@
 module.exports = [
-(()=>{"use strict";return[
+"[externals]/fs [external] (fs, cjs)", ((__turbopack_context__, module, exports) => {
+
+var mod = __turbopack_context__.x("fs", () => require("fs"));
+
+module.exports = mod;
+}),
+"[externals]/path [external] (path, cjs)", ((__turbopack_context__, module, exports) => {
+
+var mod = __turbopack_context__.x("path", () => require("path"));
+
+module.exports = mod;
+}),
+"[externals]/url [external] (url, cjs)", ((__turbopack_context__, module, exports) => {
+
+var mod = __turbopack_context__.x("url", () => require("url"));
+
+module.exports = mod;
+}),
 "[project]/postcss.config.mjs [postcss] (ecmascript)", ((__turbopack_context__) => {
 "use strict";
 
@@ -166,25 +183,6 @@ process.env = new Proxy(originalEnv, {
 function getReadEnvVariables() {
     return Array.from(readEnvVars);
 }
-}),
-]})(),
-"[externals]/fs [external] (fs, cjs)", ((__turbopack_context__, module, exports) => {
-
-var mod = __turbopack_context__.x("fs", () => require("fs"));
-
-module.exports = mod;
-}),
-"[externals]/path [external] (path, cjs)", ((__turbopack_context__, module, exports) => {
-
-var mod = __turbopack_context__.x("path", () => require("path"));
-
-module.exports = mod;
-}),
-"[externals]/url [external] (url, cjs)", ((__turbopack_context__, module, exports) => {
-
-var mod = __turbopack_context__.x("url", () => require("url"));
-
-module.exports = mod;
 }),
 ];
 

@@ -103,3 +103,16 @@ pantry quotation/
 ├── package.json                 # Node dependencies & scripts
 └── start_app.bat                # 1-click Windows launcher
 ```
+
+---
+
+## ✂️ CutWizard (board cut optimizer)
+
+The **CutWizard** tab embeds the CutWizard app. Its source lives in `cutwiz/` (React + Vite, uses pnpm), and the built copy served by the quotation maker lives in `public/cutwizard/`.
+
+After changing anything in `cutwiz/`, rebuild the embedded copy:
+
+```bash
+pnpm --dir cutwiz install   # first time only
+npm run build:cutwizard
+```
