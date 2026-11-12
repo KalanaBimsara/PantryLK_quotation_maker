@@ -1,11 +1,15 @@
 import React, { useState } from 'react';
 import { TrendingUp, AlertTriangle, Layers, Ruler, Sparkles, CheckCircle2, HelpCircle, ChevronDown, ChevronUp } from 'lucide-react';
-import { OptimizationResult, Settings } from '../types';
+import { MaterialId, Settings } from '../types';
 import { useLanguage } from '../contexts/LanguageContext';
+import { TranslationKey } from '../contexts/translations';
 import { fmtMm } from '../services/format';
+import { MATERIAL_THICKNESS } from '../services/cabinetSeries';
+import { MATERIAL_NAMES, boardFor, boardTitle, sheetLabel } from '../services/materials';
+import { MaterialPlan, boardsCost, boardsToBuy, summarizePlans } from '../services/materialPlan';
 
 interface StatsSummaryProps {
-  result: OptimizationResult | null;
+  plans: MaterialPlan[] | null;
   settings: Settings;
   darkMode: boolean;
   extraBoards: number;
@@ -13,18 +17,33 @@ interface StatsSummaryProps {
 
 const FOCUS = 'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500';
 
-// Resumen del panel derecho: aviso de piezas que no caben, 4 cifras clave y "Más" con el resto
-export const StatsSummary: React.FC<StatsSummaryProps> = ({ result, settings, darkMode, extraBoards }) => {
+// Qué piezas van en cada tipo de tablero
+const USES_KEYS: Record<MaterialId, TranslationKey> = {
+  carcass: 'usesCarcass',
+  agt: 'usesAgt',
+  hmr: 'usesHmr',
+};
+
+// Color de la etiqueta de espesor por tipo de tablero
+const TAG_CLASS: Record<MaterialId, string> = {
+  carcass: 'bg-gray-100 text-gray-700 dark:bg-gray-700 dark:text-gray-200',
+  agt: 'bg-orange-100 text-orange-800 dark:bg-orange-900/50 dark:text-orange-200',
+  hmr: 'bg-teal-100 text-teal-800 dark:bg-teal-900/50 dark:text-teal-200',
+};
+
+// Resumen del panel derecho: aviso de piezas que no caben, tableros a comprar por tipo, cifras clave y "Más"
+export const StatsSummary: React.FC<StatsSummaryProps> = ({ plans, settings, darkMode, extraBoards }) => {
   const { t } = useLanguage();
   const [showMore, setShowMore] = useState(false);
 
-  if (!result) return null;
+  if (!plans) return null;
 
-  const hasBoards = result.boards.length > 0;
-  const unplaced = result.unplacedPieces;
+  const carcassName = t('materialCarcass');
+  const rows = boardsToBuy(plans, settings, extraBoards);
+  const totals = summarizePlans(plans);
 
   // Aviso arriba del todo: también se muestra cuando ninguna pieza cabe (sin tableros)
-  const unplacedWarning = unplaced.length > 0 && (
+  const unplacedWarning = totals.unplaced.length > 0 && (
     <div
       role="alert"
       className="p-3 rounded-xl bg-red-50 dark:bg-red-900/30 border border-red-200 dark:border-red-800 text-red-700 dark:text-red-300 text-xs"
@@ -34,87 +53,118 @@ export const StatsSummary: React.FC<StatsSummaryProps> = ({ result, settings, da
         <span>{t('unplacedWarning')}</span>
       </div>
       <ul className="mt-1.5 ml-6 list-disc space-y-0.5">
-        {unplaced.map((p, i) => (
-          <li key={`${p.id}-${i}`}>
-            {p.name} · {fmtMm(p.width)} × {fmtMm(p.height)} mm
-          </li>
-        ))}
+        {totals.unplaced.map(({ piece, material }, i) => {
+          const board = boardFor(settings, material);
+          return (
+            <li key={`${piece.id}-${i}`}>
+              {piece.name} · {fmtMm(piece.width)} × {fmtMm(piece.height)} mm · {boardTitle(material, board.width, board.height, carcassName)}
+            </li>
+          );
+        })}
       </ul>
     </div>
   );
 
-  if (!hasBoards) return unplaced.length > 0 ? <div className="no-print">{unplacedWarning}</div> : null;
+  if (rows.length === 0) return unplacedWarning ? <div className="no-print">{unplacedWarning}</div> : null;
 
-  const usefulOffcutsTotal = result.boards.reduce((acc, b) => acc + (b.usefulOffcutsCount || 0), 0);
-
-  // Calcular perímetro total para tapacantos (edge banding)
-  let edgeBandMeters = 0;
+  // Área frontal automática: una vez por gabinete
   let autoFrontAreaSqFt = 0;
   const processedGroups = new Set<string>();
-
-  result.boards.forEach((board) => {
-    board.placedPieces.forEach((piece) => {
-      edgeBandMeters += (2 * (piece.w + piece.h)) / 1000;
-
-      // Área frontal automática: una vez por gabinete
-      if (piece.groupId && piece.cabinetWidth && piece.cabinetHeight && !processedGroups.has(piece.groupId)) {
-        processedGroups.add(piece.groupId);
-        autoFrontAreaSqFt += (piece.cabinetWidth / 304.8) * (piece.cabinetHeight / 304.8);
-      }
+  plans.forEach((plan) => {
+    plan.result.boards.forEach((board) => {
+      board.placedPieces.forEach((piece) => {
+        if (piece.groupId && piece.cabinetWidth && piece.cabinetHeight && !processedGroups.has(piece.groupId)) {
+          processedGroups.add(piece.groupId);
+          autoFrontAreaSqFt += (piece.cabinetWidth / 304.8) * (piece.cabinetHeight / 304.8);
+        }
+      });
     });
   });
 
   const edgeBandPrice = settings.edgeBandPricePerM ?? 60;
   const machineRentPrice = settings.machineRentPerSqFt ?? 500;
   const laborPrice = settings.laborPerSqFt ?? 850;
-  const boardPrice = settings.boardPrice || 0;
 
   // Use user input if provided, otherwise use auto-calculated area
   const frontArea = settings.frontAreaSqFt || autoFrontAreaSqFt;
 
-  // Los tableros extra de cajones se compran aparte del plan de corte
+  // Cada tipo de tablero con su precio; los tableros extra de cajones ya vienen en la fila de estructura
   const totalCost =
-    (result.totalBoards + extraBoards) * boardPrice +
-    edgeBandMeters * edgeBandPrice +
+    boardsCost(rows, settings) +
+    totals.edgeBandMeters * edgeBandPrice +
     frontArea * machineRentPrice +
     frontArea * laborPrice;
+
+  const totalToBuy = rows.reduce((sum, row) => sum + row.total, 0);
 
   const card = (tone: string) =>
     `p-4 rounded-2xl border transition-all ${tone}`;
   const neutral = darkMode ? 'bg-gray-750/50 border-gray-700' : 'bg-gray-50/80 border-gray-200';
+  const panel = `rounded-2xl shadow-sm border p-4 transition-colors duration-200 ${
+    darkMode ? 'bg-gray-800/80 border-gray-700/80 text-gray-100' : 'bg-white border-gray-200 text-gray-800'
+  }`;
 
   return (
     <div className="no-print space-y-3">
       {unplacedWarning}
 
-      <div
-        className={`rounded-2xl shadow-sm border p-4 transition-colors duration-200 ${
-          darkMode ? 'bg-gray-800/80 border-gray-700/80 text-gray-100' : 'bg-white border-gray-200 text-gray-800'
-        }`}
-      >
-        {/* Cifras clave */}
-        <div className="grid grid-cols-2 xl:grid-cols-4 gap-3">
-          <div className={card(darkMode ? 'bg-blue-950/20 border-blue-800/60' : 'bg-blue-50/70 border-blue-200')}>
-            <div className="flex items-center gap-2 text-xs font-semibold text-blue-700 dark:text-blue-300 mb-1.5">
-              <Layers className="w-4 h-4 flex-shrink-0" aria-hidden="true" />
-              <span>{t('boards')}</span>
-            </div>
-            <div className="text-2xl font-extrabold text-blue-600 dark:text-blue-400">
-              {result.totalBoards}
-              {extraBoards > 0 && (
-                <span className="ml-1.5 text-xs font-semibold text-blue-500 dark:text-blue-300">
-                  + {extraBoards} {t('forDrawers')}
-                </span>
-              )}
-            </div>
-          </div>
+      {/* Tableros a comprar, por tipo */}
+      <section className={panel} aria-labelledby="boards-to-buy-title">
+        <div className="flex items-center gap-2 pb-3">
+          <Layers className="w-4 h-4 text-blue-500 flex-shrink-0" aria-hidden="true" />
+          <h2 id="boards-to-buy-title" className="text-xs font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400">
+            {t('boardsToBuy')}
+          </h2>
+          <span className="ml-auto text-xs text-gray-500 dark:text-gray-400">
+            {t('boardsInTotal').replace('{n}', String(totalToBuy))}
+          </span>
+        </div>
 
+        <ul>
+          {rows.map((row) => {
+            const label = sheetLabel(row.boardWidth, row.boardHeight);
+            const size = `${fmtMm(row.boardWidth)} × ${fmtMm(row.boardHeight)} mm`;
+            return (
+              <li
+                key={row.material}
+                className="flex items-center justify-between gap-4 py-2.5 border-t border-gray-100 dark:border-gray-700"
+              >
+                <div className="min-w-0">
+                  <div className="flex items-center gap-2 text-sm font-bold">
+                    <span>{row.material === 'carcass' ? carcassName : MATERIAL_NAMES[row.material]}</span>
+                    <span className={`text-[11px] font-semibold px-2 py-0.5 rounded-md ${TAG_CLASS[row.material]}`}>
+                      {MATERIAL_THICKNESS[row.material]} mm
+                    </span>
+                  </div>
+                  <div className="text-xs text-gray-500 dark:text-gray-400">
+                    {label ? `${label} · ${size}` : size} · {t(USES_KEYS[row.material])}
+                  </div>
+                </div>
+                <div className="text-right flex-shrink-0">
+                  <div className="text-2xl font-extrabold leading-tight text-blue-600 dark:text-blue-400">{row.total}</div>
+                  <div className="text-[11px] text-gray-500 dark:text-gray-400">
+                    {row.extra > 0
+                      ? t('cutAndDrawers').replace('{cut}', String(row.cut)).replace('{extra}', String(row.extra))
+                      : row.total === 1
+                        ? t('boardSingular')
+                        : t('boardPlural')}
+                  </div>
+                </div>
+              </li>
+            );
+          })}
+        </ul>
+      </section>
+
+      <div className={panel}>
+        {/* Cifras clave, sumando todos los tipos de tablero */}
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
           <div className={card(darkMode ? 'bg-green-950/20 border-green-800/60' : 'bg-green-50/70 border-green-200')}>
             <div className="flex items-center gap-2 text-xs font-semibold text-green-700 dark:text-green-300 mb-1.5">
               <TrendingUp className="w-4 h-4 flex-shrink-0" aria-hidden="true" />
               <span>{t('yield')}</span>
             </div>
-            <div className="text-2xl font-extrabold text-green-700 dark:text-green-400">{result.totalEfficiency.toFixed(1)}%</div>
+            <div className="text-2xl font-extrabold text-green-700 dark:text-green-400">{totals.efficiency.toFixed(1)}%</div>
           </div>
 
           <div className={card(neutral)}>
@@ -122,7 +172,7 @@ export const StatsSummary: React.FC<StatsSummaryProps> = ({ result, settings, da
               <CheckCircle2 className="w-4 h-4 text-indigo-500 flex-shrink-0" aria-hidden="true" />
               <span>{t('parts')}</span>
             </div>
-            <div className="text-2xl font-extrabold text-gray-800 dark:text-gray-100">{result.totalPartsCount}</div>
+            <div className="text-2xl font-extrabold text-gray-800 dark:text-gray-100">{totals.totalParts}</div>
           </div>
 
           <div className={card(darkMode ? 'bg-indigo-950/20 border-indigo-800/60' : 'bg-indigo-50/70 border-indigo-200')}>
@@ -157,7 +207,7 @@ export const StatsSummary: React.FC<StatsSummaryProps> = ({ result, settings, da
                   <HelpCircle className="w-3.5 h-3.5" aria-hidden="true" />
                 </span>
               </div>
-              <div className="text-2xl font-extrabold text-amber-600 dark:text-amber-400">{result.totalWaste.toFixed(1)}%</div>
+              <div className="text-2xl font-extrabold text-amber-600 dark:text-amber-400">{totals.waste.toFixed(1)}%</div>
             </div>
 
             <div className={card(neutral)}>
@@ -169,7 +219,7 @@ export const StatsSummary: React.FC<StatsSummaryProps> = ({ result, settings, da
                 </span>
               </div>
               <div className="text-2xl font-extrabold text-purple-600 dark:text-purple-400">
-                {result.totalLinearCuts} <span className="text-sm font-semibold">m</span>
+                {totals.linearCuts} <span className="text-sm font-semibold">m</span>
               </div>
             </div>
 
@@ -178,7 +228,7 @@ export const StatsSummary: React.FC<StatsSummaryProps> = ({ result, settings, da
                 <Sparkles className="w-4 h-4 text-teal-500 flex-shrink-0" aria-hidden="true" />
                 <span>{t('usefulOffcuts')}</span>
               </div>
-              <div className="text-2xl font-extrabold text-teal-600 dark:text-teal-400">{usefulOffcutsTotal}</div>
+              <div className="text-2xl font-extrabold text-teal-600 dark:text-teal-400">{totals.usefulOffcuts}</div>
             </div>
           </div>
         )}

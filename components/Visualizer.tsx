@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useId, useState, useRef } from 'react';
 import { ZoomIn, ZoomOut, RotateCcw, Maximize2, RotateCw, Lock } from 'lucide-react';
 import { Board, PlacedPiece } from '../types';
 import { useLanguage } from '../contexts/LanguageContext';
@@ -15,8 +15,10 @@ interface VisualizerProps {
   totalBoards?: number;
   // groupId → nombre del gabinete, para el tooltip de cada pieza
   groupNames?: Record<string, string>;
-  // Tableros 8x4 extra para cajones; se avisa en la hoja impresa del tablero 1
-  extraBoards?: number;
+  // Tipo de tablero de esta hoja, p. ej. "AGT 18 mm · 9×6 ft"; boardIndex/totalBoards cuentan dentro del tipo
+  title?: string;
+  // Lista de tableros a comprar; se imprime solo en la primera hoja
+  buyLines?: string[];
 }
 
 // Nombre visible dentro de la pieza solo si hay sitio (en unidades del tablero, mm)
@@ -33,10 +35,14 @@ export const Visualizer: React.FC<VisualizerProps> = ({
   boardIndex,
   totalBoards,
   groupNames = {},
-  extraBoards = 0,
+  title,
+  buyLines = [],
 }) => {
   const { width, height, placedPieces, freeRects, trimMargin = 0 } = board;
   const { t } = useLanguage();
+  // Los ids de tablero se repiten entre tipos de tablero: el patrón SVG necesita un id propio
+  const wastePatternId = `waste-pattern-${useId().replace(/[^a-zA-Z0-9_-]/g, '')}`;
+  const boardNumber = boardIndex ?? board.id;
 
   // Estados para Zoom y Pan interactivo
   const [zoom, setZoom] = useState(1);
@@ -165,13 +171,19 @@ export const Visualizer: React.FC<VisualizerProps> = ({
         <div>
           <h1 className="text-base font-black tracking-tight">Pantry LK CutWIZ {jobNumber ? `- [${jobNumber}]` : ''}</h1>
           <p className="text-[10px] text-gray-600">
-            {t('date')}: {new Date().toLocaleDateString()} | Board {boardIndex} of {totalBoards}
+            {t('date')}: {new Date().toLocaleDateString()} | {title ? `${title} · ` : ''}{t('board')}{' '}
+            {t('nOfM').replace('{n}', String(boardNumber)).replace('{m}', String(totalBoards ?? boardNumber))}
           </p>
         </div>
         <div className="text-right text-[9px] font-mono text-gray-700">
           <div>{t('bladeKerf')}: {kerf} mm</div>
-          {boardIndex === 1 && extraBoards > 0 && (
-            <div className="font-bold text-black">+ {extraBoards} {t('extraBoardsForDrawers')}</div>
+          {buyLines.length > 0 && (
+            <div className="font-bold text-black">
+              <div>{t('boardsToBuy')}</div>
+              {buyLines.map((line) => (
+                <div key={line}>{line}</div>
+              ))}
+            </div>
           )}
         </div>
       </div>
@@ -181,7 +193,7 @@ export const Visualizer: React.FC<VisualizerProps> = ({
         <div className="flex items-center gap-2">
           <span className="w-2.5 h-2.5 rounded-full bg-blue-500"></span>
           <h3 className="text-sm font-bold uppercase tracking-wider text-gray-800 dark:text-gray-200 print:text-black">
-            {t('board')} #{board.id}
+            {title ? `${title} · ` : ''}{t('board')} #{boardNumber}
           </h3>
           <span className="text-xs font-mono px-2 py-0.5 rounded-md bg-gray-100 dark:bg-gray-750 text-gray-600 dark:text-gray-300 print:bg-gray-100 print:text-black border border-transparent print:border-gray-300">
             {width} × {height} mm
@@ -284,7 +296,7 @@ export const Visualizer: React.FC<VisualizerProps> = ({
           >
             <defs>
               <pattern
-                id={`waste-pattern-${board.id}`}
+                id={wastePatternId}
                 width="20"
                 height="20"
                 patternUnits="userSpaceOnUse"
@@ -336,7 +348,7 @@ export const Visualizer: React.FC<VisualizerProps> = ({
                     y={rect.y}
                     width={rect.w}
                     height={rect.h}
-                    fill={isUseful ? (darkMode ? '#132e2b' : '#f0fdf4') : `url(#waste-pattern-${board.id})`}
+                    fill={isUseful ? (darkMode ? '#132e2b' : '#f0fdf4') : `url(#${wastePatternId})`}
                     stroke={isUseful ? '#10b981' : darkMode ? '#334155' : '#cbd5e1'}
                     strokeWidth={strokeWidth}
                     opacity={isUseful ? 0.9 : 0.6}

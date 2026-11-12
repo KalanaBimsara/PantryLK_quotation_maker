@@ -1,4 +1,6 @@
 import { MaterialId, Settings } from '../types';
+import { MATERIAL_THICKNESS } from './cabinetSeries';
+import { fmtMm } from './format';
 
 // Tipos de tablero de un trabajo: estructura (carcass), AGT para frentes y HMR para fondos.
 // Funciones puras, sin React.
@@ -46,4 +48,14 @@ export const sheetLabel = (width: number, height: number): string | null => {
     (s) => Math.abs(s.width - width) <= SHEET_TOLERANCE && Math.abs(s.height - height) <= SHEET_TOLERANCE
   );
   return match ? match.label : null;
+};
+
+// Texto de la hoja: "9×6 ft" si es estándar; si no, la medida en mm
+export const sheetText = (width: number, height: number): string =>
+  sheetLabel(width, height) ?? `${fmtMm(width)} × ${fmtMm(height)} mm`;
+
+// Título de un tipo de tablero, p. ej. "AGT 18 mm · 9×6 ft". El nombre de estructura llega traducido.
+export const boardTitle = (material: MaterialId, width: number, height: number, carcassName: string): string => {
+  const name = material === 'carcass' ? carcassName : MATERIAL_NAMES[material];
+  return `${name} ${MATERIAL_THICKNESS[material]} mm · ${sheetText(width, height)}`;
 };

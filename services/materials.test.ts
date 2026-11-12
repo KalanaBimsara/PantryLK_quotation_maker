@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { AGT_SIZES, MATERIAL_ORDER, boardFor, materialOf, parseMaterial, sheetLabel } from './materials';
+import { AGT_SIZES, MATERIAL_ORDER, boardFor, boardTitle, materialOf, parseMaterial, sheetLabel } from './materials';
 import { DEFAULT_SETTINGS } from './storage';
 
 const S = { ...DEFAULT_SETTINGS, boardPrice: 9000, agtWidth: 2745, agtHeight: 1830, agtPrice: 30000 };
@@ -28,6 +28,13 @@ describe('materials', () => {
     expect(parseMaterial('Carcass')).toBe('carcass');
     expect(parseMaterial('oak')).toBeUndefined();
     expect(parseMaterial(undefined)).toBeUndefined();
+  });
+
+  it('titles a board with its name, thickness and sheet', () => {
+    expect(boardTitle('agt', 2745, 1830, 'Carcass')).toBe('AGT 18 mm · 9×6 ft');
+    expect(boardTitle('hmr', 2440, 1220, 'Carcass')).toBe('HMR 6 mm · 8×4 ft');
+    expect(boardTitle('carcass', 2000, 1000, 'Estructura')).toBe('Estructura 18 mm · 2000 × 1000 mm');
+    expect(boardTitle('carcass', 2000.5, 1000, 'Carcass')).toBe('Carcass 18 mm · 2000.5 × 1000 mm');
   });
 
   it('labels the two standard sheets, within 3 mm', () => {

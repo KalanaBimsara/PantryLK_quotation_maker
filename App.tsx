@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { Axe, Layers } from 'lucide-react';
-import { Piece, Settings, OptimizationResult } from './types';
-import { optimizeCuts } from './services/optimizer';
+import { Piece, Settings } from './types';
 import { exportOptimizationCSV } from './services/csvHelper';
-import { planByMaterial } from './services/materialPlan';
+import { MaterialPlan, boardKey, boardsToBuy, planByMaterial } from './services/materialPlan';
+import { boardTitle } from './services/materials';
 import { countExtraBoards } from './services/cabinetPieces';
 import {
   loadStoredPieces,
@@ -37,8 +37,8 @@ const App: React.FC = () => {
   
   const { t, language } = useLanguage();
 
-  // 2. Resultados de optimización
-  const [result, setResult] = useState<OptimizationResult | null>(null);
+  // 2. Resultados de optimización: un plan por tipo de tablero
+  const [plans, setPlans] = useState<MaterialPlan[] | null>(null);
   const [settingsOpen, setSettingsOpen] = useState<boolean>(false);
 
   // 3. Sincronización visual (Hover bidireccional)
@@ -72,7 +72,7 @@ const App: React.FC = () => {
   // Optimización automática (Multi-Pass) al montar o cambiar piezas/ajustes.
   // El pequeño retraso agrupa cambios seguidos (p. ej. al escribir medidas).
   useEffect(() => {
-    const timer = setTimeout(() => setResult(optimizeCuts(pieces, settings)), 60);
+    const timer = setTimeout(() => setPlans(planByMaterial(pieces, settings)), 60);
     return () => clearTimeout(timer);
   }, [pieces, settings]);
 
@@ -81,11 +81,14 @@ const App: React.FC = () => {
   };
 
   const handleExportCsv = () => {
-    exportOptimizationCSV(planByMaterial(pieces, settings));
+    if (plans) exportOptimizationCSV(plans);
   };
 
   const closeSettings = useCallback(() => setSettingsOpen(false), []);
-  const hasPlan = !!result && result.boards.length > 0;
+  // Solo los tipos de tablero que llegaron a usar alguna hoja
+  const drawnPlans = useMemo(() => (plans ?? []).filter((plan) => plan.result.boards.length > 0), [plans]);
+  const hasPlan = drawnPlans.length > 0;
+  const drawnBoards = drawnPlans.reduce((sum, plan) => sum + plan.result.boards.length, 0);
 
   const autoFrontAreaSqFt = useMemo(() => {
     let area = 0;
@@ -101,6 +104,16 @@ const App: React.FC = () => {
 
   // Tableros 8x4 extra para cajones (no forman parte del plan de corte)
   const extraBoards = useMemo(() => countExtraBoards(pieces), [pieces]);
+
+  // Lista de compra para la primera hoja impresa: una línea por tipo de tablero
+  const carcassName = t('materialCarcass');
+  const buyLines = useMemo(
+    () =>
+      boardsToBuy(plans ?? [], settings, extraBoards).map(
+        (row) => `${boardTitle(row.material, row.boardWidth, row.boardHeight, carcassName)}: ${row.total}`
+      ),
+    [plans, settings, extraBoards, carcassName]
+  );
 
   // groupId → nombre del gabinete, para los tooltips del plan de corte
   const groupNames = useMemo(() => {
@@ -164,7 +177,7 @@ const App: React.FC = () => {
             <div className="lg:col-span-7 space-y-5 print:space-y-0 print:block">
               {/* Resumen de Estadísticas */}
               <StatsSummary
-                result={result}
+                plans={plans}
                 settings={settings}
                 darkMode={darkMode}
                 extraBoards={extraBoards}
@@ -180,7 +193,7 @@ const App: React.FC = () => {
                   <div className="flex items-center gap-2">
                     <Layers className="w-4 h-4 text-blue-500" />
                     <h2 className="text-xs font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400">
-                      {t('cuttingPlans')} ({result?.boards.length || 0} {t('boards')})
+                      {t('cuttingPlans')} ({drawnBoards} {t('boards')})
                     </h2>
                   </div>
                   <span className="text-[11px] text-gray-400">
@@ -188,23 +201,36 @@ const App: React.FC = () => {
                   </span>
                 </div>
 
-                {result && result.boards.length > 0 ? (
+                {hasPlan ? (
                   <div className="space-y-6 print:space-y-0 print:block">
-                    {result.boards.map((board, index) => (
-                      <Visualizer
-                        key={board.id}
-                        board={board}
-                        kerf={settings.kerf}
-                        darkMode={darkMode}
-                        hoveredPieceId={hoveredPieceId}
-                        onHoverPiece={setHoveredPieceId}
-                        jobNumber={settings.jobNumber}
-                        boardIndex={index + 1}
-                        totalBoards={result.boards.length}
-                        groupNames={groupNames}
-                        extraBoards={extraBoards}
-                      />
-                    ))}
+                    {drawnPlans.map((plan, planIndex) => {
+                      const boards = plan.result.boards;
+                      const title = boardTitle(plan.material, plan.boardWidth, plan.boardHeight, carcassName);
+                      return (
+                        <section key={plan.material} aria-label={title} className="print:block">
+                          {/* Encabezado del tipo de tablero; en papel cada hoja lleva su propio título */}
+                          <h3 className="no-print mb-3 text-sm font-bold text-gray-700 dark:text-gray-200">
+                            {title} · {boards.length} {boards.length === 1 ? t('boardSingular') : t('boardPlural')}
+                          </h3>
+                          {boards.map((board, index) => (
+                            <Visualizer
+                              key={boardKey(plan.material, board.id)}
+                              board={board}
+                              kerf={settings.kerf}
+                              darkMode={darkMode}
+                              hoveredPieceId={hoveredPieceId}
+                              onHoverPiece={setHoveredPieceId}
+                              jobNumber={settings.jobNumber}
+                              boardIndex={index + 1}
+                              totalBoards={boards.length}
+                              groupNames={groupNames}
+                              title={title}
+                              buyLines={planIndex === 0 && index === 0 ? buyLines : undefined}
+                            />
+                          ))}
+                        </section>
+                      );
+                    })}
                   </div>
                 ) : (
                   <div className="flex flex-col items-center justify-center h-80 text-gray-400 border-2 border-dashed border-gray-300 dark:border-gray-700 rounded-2xl p-6 text-center">
