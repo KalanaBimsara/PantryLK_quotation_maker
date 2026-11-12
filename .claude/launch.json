@@ -6,6 +6,12 @@
       "runtimeExecutable": "npx",
       "runtimeArgs": ["next", "dev", "-p", "3005"],
       "port": 3005
+    },
+    {
+      "name": "quotation-prod",
+      "runtimeExecutable": "npx",
+      "runtimeArgs": ["next", "start", "-p", "3006"],
+      "port": 3006
     }
   ]
 }
